@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { MainBody } from "./Body";
-import { PATH_NAME } from "@/constants";
+import Link from 'next/link';
+import { PATH_NAME } from '@/constants';
+import { MainBody } from './Body';
 
 export default function MainContainer() {
   return (
