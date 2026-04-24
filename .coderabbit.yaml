@@ -9,6 +9,9 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+    base_branches:
+      - main
+      - dev
 
   path_filters:
     - "!node_modules/**"
@@ -67,11 +70,6 @@ reviews:
         - 사소한 취향 차이는 nitpick으로 표시해주세요.
         - 단순 지적보다 왜 문제인지와 어떻게 고치면 좋은지를 함께 설명해주세요.
         - 새 의존성 추가가 있다면 필요성과 대안을 확인해주세요.
-
-    - path: "**/*.stories.{ts,tsx}"
-      instructions: |
-        Storybook 파일은 컴포넌트의 주요 상태와 variant를 충분히 보여주는지 확인해주세요.
-        공통 컴포넌트(Button, Chip, Badge 등)는 가능한 상태별 케이스를 스토리로 작성하도록 제안해주세요.
 
     - path: ".github/**"
       instructions: |
