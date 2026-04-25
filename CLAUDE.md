@@ -12,7 +12,7 @@ CLAUDE.md는 작업 중 항상 떠올려야 하는 최소한만 담습니다.
 - `any` 사용 → `unknown` 또는 정확한 타입
 - `useEffect`로 데이터 패칭 → TanStack Query 사용
 - `React.FC` 사용 → 명시적 props 타입 + arrow function
-- **`interface` 선언 → `type` 사용**
+- **`interface` 대신 `type` 우선 — 정말 불가피한 경우에만 `interface` 허용**
 - **명명 함수 선언 `function foo()` → arrow function `const foo = () => {}`**
 - **`import type { … }` 분리 구문 → `import { type … }` 인라인**
 - `default export` (페이지 `app/**/page.tsx`와 Container `components/pages/<Page>/index.tsx`에서만 허용)

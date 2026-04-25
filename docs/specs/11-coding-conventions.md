@@ -121,7 +121,7 @@ export const ClassLists = ({
 ## 타입 사용
 
 - ❌ **`any` 금지** → `unknown` 또는 정확한 타입 사용.
-- ❌ **`interface` 선언 금지** → 모든 타입 선언은 `type`으로 통일.
+- ✅ 타입 선언은 **`type`** 우선. 정말 불가피한 경우에만 `interface` 사용.
 - ✅ 확장이 필요한 경우 `&`(intersection)로 결합. (`extends` 대신)
 - ✅ `as const`로 readonly 보장이 필요한 객체 상수 표현.
 

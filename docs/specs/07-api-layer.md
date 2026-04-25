@@ -208,6 +208,6 @@ schemas/
 - ✅ 타입 import는 인라인 형식 — `import { type ApiResponse } from '@/lib';`
 - ✅ SSR/CSR 함수가 한 도메인에서 동시에 필요하면 `*.client.ts` 분리.
 - ✅ service 함수는 arrow function (`export const getNoticeList = async (req) => {…}`).
-- ❌ `interface` 선언 금지 (`extends` 대신 `&`).
+- ✅ 타입 선언은 `type` 우선. 정말 불가피한 경우에만 `interface` 허용 (`extends` 대신 `&` 사용).
 - ❌ `useEffect` + `fetch`로 데이터 패칭 금지 → TanStack Query 사용.
 - ❌ `any` 사용 금지 — `unknown` 또는 정확한 타입을 사용.
