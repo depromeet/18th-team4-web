@@ -23,23 +23,23 @@
   --color-gray-200: #a9adad;
   --color-gray-300: #858a8a;
   --color-gray-400: #737777;
-  --color-gray-500: #5c5e5e;
+  --color-gray-500: #595c5c;
   --color-gray-600: #474a4a;
   --color-gray-700: #2f3131;
   --color-gray-800: #222726;
-  --color-gray-900: #0d0d0d;
+  --color-gray-900: #171c1b;
 
-  --color-gray-alpha-10: color-mix(in srgb, #0d0d0d 3%, transparent);
-  --color-gray-alpha-50: color-mix(in srgb, #0d0d0d 5%, transparent);
-  --color-gray-alpha-100: color-mix(in srgb, #0d0d0d 10%, transparent);
-  --color-gray-alpha-200: color-mix(in srgb, #0d0d0d 20%, transparent);
-  --color-gray-alpha-300: color-mix(in srgb, #0d0d0d 30%, transparent);
-  --color-gray-alpha-400: color-mix(in srgb, #0d0d0d 40%, transparent);
-  --color-gray-alpha-500: color-mix(in srgb, #0d0d0d 50%, transparent);
-  --color-gray-alpha-600: color-mix(in srgb, #0d0d0d 60%, transparent);
-  --color-gray-alpha-700: color-mix(in srgb, #0d0d0d 70%, transparent);
-  --color-gray-alpha-800: color-mix(in srgb, #0d0d0d 80%, transparent);
-  --color-gray-alpha-900: color-mix(in srgb, #0d0d0d 90%, transparent);
+  --color-gray-alpha-10: color-mix(in srgb, #171c1b 3%, transparent);
+  --color-gray-alpha-50: color-mix(in srgb, #171c1b 5%, transparent);
+  --color-gray-alpha-100: color-mix(in srgb, #171c1b 10%, transparent);
+  --color-gray-alpha-200: color-mix(in srgb, #171c1b 20%, transparent);
+  --color-gray-alpha-300: color-mix(in srgb, #171c1b 30%, transparent);
+  --color-gray-alpha-400: color-mix(in srgb, #171c1b 40%, transparent);
+  --color-gray-alpha-500: color-mix(in srgb, #171c1b 50%, transparent);
+  --color-gray-alpha-600: color-mix(in srgb, #171c1b 60%, transparent);
+  --color-gray-alpha-700: color-mix(in srgb, #171c1b 70%, transparent);
+  --color-gray-alpha-800: color-mix(in srgb, #171c1b 80%, transparent);
+  --color-gray-alpha-900: color-mix(in srgb, #171c1b 90%, transparent);
 
   --color-primary-base: #f1f2f6;
   --color-primary-white: #ffffff;
