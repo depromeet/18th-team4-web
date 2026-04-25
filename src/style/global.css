@@ -2,36 +2,69 @@
 @import 'tailwindcss';
 
 @theme {
+  --color-primary: #1fafa3;
+
+  --color-green-lightest: #e9fbfa;
+  --color-green-lighter: #b1e2dc;
+  --color-green-light: #94d5ce;
+  --color-green-medium: #75c9bf;
+  --color-green-neutral: #53bcb1;
+  --color-green-primary: #1fafa3;
+  --color-green-bold: #0aa99c;
+  --color-green-strong: #1d857c;
+  --color-green-dark: #195d56;
+  --color-green-darker: #123734;
+  --color-green-darkest: #041614;
+
   --color-gray-white: #ffffff;
-  --color-gray-10: #f3f5fc;
-  --color-gray-50: #d4dae7;
-  --color-gray-100: #b8bfd1;
-  --color-gray-200: #9ea6ba;
-  --color-gray-300: #939aae;
-  --color-gray-400: #7f8596;
-  --color-gray-500: #606673;
-  --color-gray-600: #41444d;
-  --color-gray-700: #4b4b4b;
-  --color-gray-800: #302f2f;
-  --color-gray-900: #222121;
+  --color-gray-10: #e7eaea;
+  --color-gray-50: #dadddd;
+  --color-gray-100: #ced1d1;
+  --color-gray-200: #a9adad;
+  --color-gray-300: #858a8a;
+  --color-gray-400: #737777;
+  --color-gray-500: #5c5e5e;
+  --color-gray-600: #474a4a;
+  --color-gray-700: #2f3131;
+  --color-gray-800: #222726;
+  --color-gray-900: #0d0d0d;
 
-  --color-gray-alpha-10: color-mix(in srgb, #222121 3%, transparent);
-  --color-gray-alpha-50: color-mix(in srgb, #222121 5%, transparent);
-  --color-gray-alpha-100: color-mix(in srgb, #222121 10%, transparent);
-  --color-gray-alpha-200: color-mix(in srgb, #222121 20%, transparent);
-  --color-gray-alpha-300: color-mix(in srgb, #222121 30%, transparent);
-  --color-gray-alpha-400: color-mix(in srgb, #222121 40%, transparent);
-  --color-gray-alpha-500: color-mix(in srgb, #222121 50%, transparent);
-  --color-gray-alpha-600: color-mix(in srgb, #222121 60%, transparent);
-  --color-gray-alpha-700: color-mix(in srgb, #222121 70%, transparent);
-  --color-gray-alpha-800: color-mix(in srgb, #222121 80%, transparent);
-  --color-gray-alpha-900: color-mix(in srgb, #222121 90%, transparent);
+  --color-gray-alpha-10: color-mix(in srgb, #0d0d0d 3%, transparent);
+  --color-gray-alpha-50: color-mix(in srgb, #0d0d0d 5%, transparent);
+  --color-gray-alpha-100: color-mix(in srgb, #0d0d0d 10%, transparent);
+  --color-gray-alpha-200: color-mix(in srgb, #0d0d0d 20%, transparent);
+  --color-gray-alpha-300: color-mix(in srgb, #0d0d0d 30%, transparent);
+  --color-gray-alpha-400: color-mix(in srgb, #0d0d0d 40%, transparent);
+  --color-gray-alpha-500: color-mix(in srgb, #0d0d0d 50%, transparent);
+  --color-gray-alpha-600: color-mix(in srgb, #0d0d0d 60%, transparent);
+  --color-gray-alpha-700: color-mix(in srgb, #0d0d0d 70%, transparent);
+  --color-gray-alpha-800: color-mix(in srgb, #0d0d0d 80%, transparent);
+  --color-gray-alpha-900: color-mix(in srgb, #0d0d0d 90%, transparent);
 
-  --color-primary-base: #f4f3f3;
+  --color-primary-base: #f1f2f6;
   --color-primary-white: #ffffff;
-  --color-dim: color-mix(in srgb, #222121 50%, transparent);
+  --color-dim: color-mix(in srgb, #171c1b 50%, transparent);
   --color-negative: #e65a5a;
-  --color-disabled: #f1f1f1;
+  --color-disabled: #f0f1f1;
+
+  --color-text-white: #ffffff;
+  --color-text-disable: #a9adad;
+  --color-text-caption: #858a8a;
+  --color-text-description: #474a4a;
+  --color-text-default: #171c1b;
+
+  --color-icon-white: #ffffff;
+  --color-icon-disabled: #ced1d1;
+  --color-icon-quaternary: #a9adad;
+  --color-icon-tertiary: #595c5c;
+  --color-icon-secondary: #2f3131;
+  --color-icon-primary: #171c1b;
+
+  --color-background-primary-base: #f1f2f6;
+  --color-background-primary-white: #ffffff;
+
+  --color-border-default: #ced1d1;
+  --color-border-white: #ffffff;
 
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
