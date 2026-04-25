@@ -8,11 +8,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full bg-gray-50 flex justify-center">
-        <div className="relative w-full max-w-[375px] min-h-dvh bg-primary-base flex flex-col overflow-x-hidden">
-          <main className="flex-1">
-            {children}
-          </main>
-        </div>
+        <main className="relative w-full max-w-150 min-h-dvh bg-primary-base flex flex-col overflow-x-hidden">
+          {children}
+        </main>
       </body>
     </html>
   );
