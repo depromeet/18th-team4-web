@@ -7,5 +7,6 @@ type Props = {
 
 export const ArrowIcon = (props: Props) => {
   const { className } = props;
+
   return <Arrow className={cn('size-8 fill-black', className)} />;
 };
