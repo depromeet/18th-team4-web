@@ -2,16 +2,11 @@ import { Dot } from '@/assets';
 import { cn } from '@/lib/utils';
 
 type Props = {
-  size?: number | string;
   className?: string;
 };
 
-export const DotIcon = ({ size = 24, className }: Props) => {
-  return (
-    <Dot
-      width={size}
-      height={size}
-      className={cn('fill-current', className)}
-    />
-  );
+export const DotIcon = (props: Props) => {
+  const { className } = props;
+
+  return <Dot className={cn('size-8 fill-black', className)} />;
 };

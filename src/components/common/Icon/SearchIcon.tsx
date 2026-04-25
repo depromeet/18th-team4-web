@@ -2,16 +2,11 @@ import { Search } from '@/assets';
 import { cn } from '@/lib/utils';
 
 type Props = {
-  size?: number | string;
   className?: string;
 };
 
-export const SearchIcon = ({ size = 24, className }: Props) => {
-  return (
-    <Search
-      width={size}
-      height={size}
-      className={cn('fill-current', className)}
-    />
-  );
+export const SearchIcon = (props: Props) => {
+  const { className } = props;
+
+  return <Search className={cn('size-8 fill-black', className)} />;
 };
