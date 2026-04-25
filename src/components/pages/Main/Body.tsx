@@ -2,9 +2,7 @@ export const MainBody = () => {
   return (
     <>
       <section className="flex flex-col items-center justify-center pt-20 pb-12 px-6 text-center">
-        <h1 className="text-4xl font-black tracking-tight text-zinc-900 mb-3">
-          Readum
-        </h1>
+        <h1 className="text-4xl font-black tracking-tight text-zinc-900 mb-3">Readum</h1>
         <p className="text-sm text-zinc-500 leading-relaxed">
           사유하는 독서가인
           <br />

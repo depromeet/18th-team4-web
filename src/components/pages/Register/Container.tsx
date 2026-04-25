@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
 export default function RegisterContainer() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center">
       <div className="w-full max-w-sm bg-zinc-50 flex flex-col min-h-screen">
         <header className="px-5 pt-14 pb-4">
-          <button className="text-zinc-600 text-lg mb-5">‹</button>
+          <button className="text-zinc-600 text-lg mb-5">{'<'}</button>
           <h1 className="text-xl font-bold text-zinc-900">책 추가하기</h1>
         </header>
 

@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 type UserPayload = {
   id: number;
@@ -24,6 +24,5 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLogin: false,
   userPayload: null,
   setIsLogin: (flag) => set({ isLogin: flag }),
-  setUserPayload: (payload: UserPayload | null) =>
-    set({ userPayload: payload }),
+  setUserPayload: (payload: UserPayload | null) => set({ userPayload: payload }),
 }));

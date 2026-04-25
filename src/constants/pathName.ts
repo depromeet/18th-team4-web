@@ -1,7 +1,7 @@
 export const PATH_NAME = {
-  main: () => "/",
+  main: () => '/',
 
   register: {
-    list: () => "/register",
+    list: () => '/register',
   },
-};
+} as const;
