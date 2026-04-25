@@ -35,116 +35,123 @@
 
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
-  --text-headline1: 24px / 1.35;
-  --text-headline2: 20px / 1.4;
-  --text-title1: 18px / 1.4;
-  --text-body1: 16px / 1.5;
-  --text-body2: 14px / 1.5;
-  --text-caption1: 12px / 1.4;
+  --text-headline1: 24px;
+  --text-headline2: 20px;
+  --text-title1: 18px;
+  --text-body1: 16px;
+  --text-body2: 14px;
+  --text-caption1: 12px;
+
+  --leading-headline1: 1.35;
+  --leading-headline2: 1.4;
+  --leading-title1: 1.4;
+  --leading-body1: 1.5;
+  --leading-body2: 1.5;
+  --leading-caption1: 1.4;
 }
 
 @utility headline1-medium {
   font-family: var(--font-sans);
-  font-size: 24px;
-  line-height: 1.35;
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
   font-weight: 500;
 }
 
 @utility headline1-bold {
   font-family: var(--font-sans);
-  font-size: 24px;
-  line-height: 1.35;
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
   font-weight: 700;
 }
 
 @utility headline1-extrabold {
   font-family: var(--font-sans);
-  font-size: 24px;
-  line-height: 1.35;
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
   font-weight: 800;
 }
 
 @utility headline2-medium {
   font-family: var(--font-sans);
-  font-size: 20px;
-  line-height: 1.4;
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
   font-weight: 500;
 }
 
 @utility headline2-bold {
   font-family: var(--font-sans);
-  font-size: 20px;
-  line-height: 1.4;
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
   font-weight: 700;
 }
 
 @utility headline2-extrabold {
   font-family: var(--font-sans);
-  font-size: 20px;
-  line-height: 1.4;
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
   font-weight: 800;
 }
 
 @utility title1-medium {
   font-family: var(--font-sans);
-  font-size: 18px;
-  line-height: 1.4;
+  font-size: var(--text-title1);
+  line-height: var(--leading-title1);
   font-weight: 500;
 }
 
 @utility title1-bold {
   font-family: var(--font-sans);
-  font-size: 18px;
-  line-height: 1.4;
+  font-size: var(--text-title1);
+  line-height: var(--leading-title1);
   font-weight: 700;
 }
 
 @utility body1-medium {
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
   font-weight: 500;
 }
 
 @utility body1-bold {
   font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
   font-weight: 700;
 }
 
 @utility body2-medium {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
   font-weight: 500;
 }
 
 @utility body2-semibold {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
   font-weight: 600;
 }
 
 @utility body2-bold {
   font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
   font-weight: 700;
 }
 
 @utility caption1-medium {
   font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1);
   font-weight: 500;
 }
 
 @utility caption1-bold {
   font-family: var(--font-sans);
-  font-size: 12px;
-  line-height: 1.4;
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1);
   font-weight: 700;
 }
 
