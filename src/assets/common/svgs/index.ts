@@ -1,5 +1,10 @@
-export { default as File } from './file.svg';
-export { default as Globe } from './globe.svg';
-export { default as NextLogo } from './next.svg';
-export { default as Vercel } from './vercel.svg';
-export { default as Window } from './window.svg';
+export { default as Arrow } from './ic-arrow.svg';
+export { default as Bookmark } from './ic-bookmark.svg';
+export { default as Check } from './ic-check.svg';
+export { default as Chevron } from './ic-chevron.svg';
+export { default as Dot } from './ic-dot.svg';
+export { default as Menu } from './ic-menu.svg';
+export { default as Plus } from './ic-plus.svg';
+export { default as Reload } from './ic-reload.svg';
+export { default as Search } from './ic-search.svg';
+export { default as Warning } from './ic-warning.svg';
