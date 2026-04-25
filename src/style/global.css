@@ -35,12 +35,12 @@
 
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
-  --text-headline1: 24px;
-  --text-headline2: 20px;
-  --text-title1: 18px;
-  --text-body1: 16px;
-  --text-body2: 14px;
-  --text-caption1: 12px;
+  --text-headline1: 2.4rem;
+  --text-headline2: 2rem;
+  --text-title1: 1.8rem;
+  --text-body1: 1.6rem;
+  --text-body2: 1.4rem;
+  --text-caption1: 1.2rem;
 
   --leading-headline1: 1.35;
   --leading-headline2: 1.4;
@@ -157,6 +157,7 @@
 
 @layer base {
   html {
+    font-size: 62.5%; /* 1rem = 10px */
     font-family: var(--font-sans);
   }
 }
