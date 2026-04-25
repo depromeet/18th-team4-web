@@ -1,1 +1,148 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/suit@v1.0.6/dist/variable.min.css');
 @import 'tailwindcss';
+
+@theme {
+  --color-gray-white: #ffffff;
+  --color-gray-10: #f3f5fc;
+  --color-gray-50: #d4dae7;
+  --color-gray-100: #b8bfd1;
+  --color-gray-200: #9ea6ba;
+  --color-gray-300: #939aae;
+  --color-gray-400: #7f8596;
+  --color-gray-500: #606673;
+  --color-gray-600: #41444d;
+  --color-gray-700: #4b4b4b;
+  --color-gray-800: #302f2f;
+  --color-gray-900: #222121;
+
+  --color-gray-alpha-10: color-mix(in srgb, #222121 3%, transparent);
+  --color-gray-alpha-50: color-mix(in srgb, #222121 5%, transparent);
+  --color-gray-alpha-100: color-mix(in srgb, #222121 10%, transparent);
+  --color-gray-alpha-200: color-mix(in srgb, #222121 20%, transparent);
+  --color-gray-alpha-300: color-mix(in srgb, #222121 30%, transparent);
+  --color-gray-alpha-400: color-mix(in srgb, #222121 40%, transparent);
+  --color-gray-alpha-500: color-mix(in srgb, #222121 50%, transparent);
+  --color-gray-alpha-600: color-mix(in srgb, #222121 60%, transparent);
+  --color-gray-alpha-700: color-mix(in srgb, #222121 70%, transparent);
+  --color-gray-alpha-800: color-mix(in srgb, #222121 80%, transparent);
+  --color-gray-alpha-900: color-mix(in srgb, #222121 90%, transparent);
+
+  --color-primary-base: #f4f3f3;
+  --color-primary-white: #ffffff;
+  --color-dim: color-mix(in srgb, #222121 50%, transparent);
+  --color-negative: #e65a5a;
+  --color-disabled: #f1f1f1;
+
+  --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
+
+  --text-headline1: 24px / 1.35;
+  --text-headline2: 20px / 1.4;
+  --text-title1: 18px / 1.4;
+  --text-body1: 16px / 1.5;
+  --text-body2: 14px / 1.5;
+  --text-caption1: 12px / 1.4;
+}
+
+@utility headline1-medium {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+@utility headline1-bold {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+@utility headline1-extrabold {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+
+@utility headline2-medium {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+@utility headline2-bold {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+@utility headline2-extrabold {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+@utility title1-medium {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+@utility title1-bold {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+@utility body1-medium {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@utility body1-bold {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+@utility body2-medium {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@utility body2-bold {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+@utility caption1-medium {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+@utility caption1-bold {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+}
