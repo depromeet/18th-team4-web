@@ -88,7 +88,7 @@ export const buttonVariants = cva('', {
 
 현재 페이지 수가 적기 때문에 FSD처럼 기능 단위로 미리 분리하지 않습니다.
 PR에서 팀원에게 충분히 설명하고, 자주 들어간다고 판단되면 `common/`으로 승격합니다.
-이때 컴포넌트 상단 주석에 사용 의도(Description)를 남깁니다.
+이때 컴포넌트 상단에 **JSDoc**(`/** ... */`)으로 사용 의도(Description)를 남깁니다.
 
 ## pages — 페이지 컴포넌트
 
@@ -159,7 +159,7 @@ export default MypageDetailContainer;
 
 ## DO / DON'T
 
-- ✅ 컴포넌트는 **arrow function**(`const Foo = () => {}`)으로 작성. `default export`는 페이지(`page.tsx`)와 Container(`pages/<Page>/index.tsx`)에 한해 허용.
+- ✅ 컴포넌트는 일괄적으로 **arrow function**(`const Foo = () => {}`)으로 작성. `default export`는 페이지(`page.tsx`)와 Container(`pages/<Page>/index.tsx`)에 한해 허용.
 - ✅ Props 타입은 컴포넌트 위에 선언, 명칭은 `Props` (또는 외부 노출 시 `[ComponentName]Props`). 타입 선언은 `type`으로 통일 — `interface` 금지.
 - ✅ Props는 `props` 파라미터로 받고 함수 본문에서 구조분해. → [11-coding-conventions.md](./11-coding-conventions.md#props-처리)
 - ❌ 명명 함수 선언 `function Foo()` 금지.

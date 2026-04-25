@@ -7,7 +7,6 @@
 ├── AGENTS.md           # AI 도구 전역 룰 (Next.js 버전 주의 사항)
 ├── CLAUDE.md           # AI 도구 프로젝트 룰 (AGENTS.md 참조)
 ├── amplify.yml
-├── deploy.yml
 ├── eslint.config.mjs
 ├── next.config.ts
 ├── next-env.d.ts
@@ -112,6 +111,8 @@ src/
 └── style/
     └── global.css
 ```
+
+> `common/` 하위 컴포넌트가 모두 위의 `Button`처럼 복잡한 폴더 구조를 가질 필요는 없습니다. 동일한 시각적 스타일을 공유하되 **기능을 다르게 나누어야 할 때**(파생 컴포넌트 추가, Variant 분기 등)에만 폴더를 만들고 `cva`로 관리합니다.
 
 ## Import Alias
 
