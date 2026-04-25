@@ -41,11 +41,30 @@
   --color-gray-alpha-800: color-mix(in srgb, #0d0d0d 80%, transparent);
   --color-gray-alpha-900: color-mix(in srgb, #0d0d0d 90%, transparent);
 
-  --color-primary-base: #edefef;
+  --color-primary-base: #f1f2f6;
   --color-primary-white: #ffffff;
-  --color-dim: color-mix(in srgb, #0d0d0d 50%, transparent);
+  --color-dim: color-mix(in srgb, #171c1b 50%, transparent);
   --color-negative: #e65a5a;
   --color-disabled: #f0f1f1;
+
+  --color-text-white: #ffffff;
+  --color-text-disable: #a9adad;
+  --color-text-caption: #858a8a;
+  --color-text-description: #474a4a;
+  --color-text-default: #171c1b;
+
+  --color-icon-white: #ffffff;
+  --color-icon-disabled: #ced1d1;
+  --color-icon-quaternary: #a9adad;
+  --color-icon-tertiary: #595c5c;
+  --color-icon-secondary: #2f3131;
+  --color-icon-primary: #171c1b;
+
+  --color-background-primary-base: #f1f2f6;
+  --color-background-primary-white: #ffffff;
+
+  --color-border-default: #ced1d1;
+  --color-border-white: #ffffff;
 
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
