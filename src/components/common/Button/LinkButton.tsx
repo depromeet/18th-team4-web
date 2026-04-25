@@ -13,7 +13,7 @@ type Props = React.ComponentProps<'a'> &
   };
 
 export const LinkButton = (props: Props) => {
-  const { variant, size, className } = props;
+  const { variant, size, className, ...rest } = props;
 
-  return <Link className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+  return <Link className={cn(buttonVariants({ variant, size, className }))} {...rest} />;
 };
