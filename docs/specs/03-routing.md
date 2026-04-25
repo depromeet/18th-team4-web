@@ -15,19 +15,21 @@
 
 ```tsx
 // src/app/page.tsx
-import type { Metadata } from 'next';
+import { type Metadata } from 'next';
 import { MainContainer } from '@/components';
 
-export async function generateMetadata(): Promise<Metadata> {
+export const generateMetadata = async (): Promise<Metadata> => {
   return {
     title: 'Readum',
     description: 'Readum:사유하는 독서가인 당신을 위해',
   };
-}
+};
 
-export default function MainPage() {
+const MainPage = () => {
   return <MainContainer />;
-}
+};
+
+export default MainPage;
 ```
 
 ## `params` / `searchParams` 처리
@@ -35,31 +37,36 @@ export default function MainPage() {
 `params` / `searchParams`는 `Promise`로 들어오므로 페이지에서 **resolve 후** 하위로 내립니다.
 
 ```tsx
-import type { Metadata } from 'next';
 import MypageDetailContainer from '@/components/pages/mypage/(apply)/detail';
 
-export interface SearchParams {
+export type SearchParams = {
   id: string;
   page: number;
   mode: 'create' | 'edit' | 'resubmit';
   step: 'first' | 'second' | 'third';
   view?: 'participation' | 'not-participation';
-}
+};
 
-export default async function page({
-  searchParams,
-}: {
+type Props = {
   searchParams: Promise<SearchParams>;
-}) {
+};
+
+const Page = async (props: Props) => {
+  const { searchParams } = props;
   const resolvedSearchParams = await Promise.resolve(searchParams);
 
   return <MypageDetailContainer searchParams={resolvedSearchParams} />;
-}
+};
+
+export default Page;
 ```
 
 ## DO / DON'T
 
-- ✅ `default export`는 페이지 컴포넌트(=`page.tsx`)에서만 허용. 다른 곳에서는 named export 사용.
+- ✅ `default export`는 페이지(`page.tsx`)와 Container(`components/pages/<Page>/index.tsx`)에서만 허용. 다른 곳에서는 named export 사용.
+- ✅ 페이지/Container도 **arrow function**으로 작성하고 마지막 줄에서 `export default Foo`로 내보냄.
+- ✅ 타입 import는 `import { type Metadata } from 'next'`처럼 인라인 형식 사용.
 - ✅ 데이터 fetch는 가능하면 페이지가 아닌 **Container 컴포넌트**에서 마무리. → [04-components.md](./04-components.md#container-pattern)
 - ✅ 페이지는 서버 컴포넌트로 유지. 클라이언트 코드가 필요하면 하위 컴포넌트로 분산.
 - ❌ 페이지에서 직접 상태 관리, 조건부 렌더링 분기, fetch 호출을 작성하지 않습니다.
+- ❌ `function Page() {}` 같은 명명 함수 선언, `interface` 사용 금지.

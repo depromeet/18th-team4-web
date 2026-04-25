@@ -22,9 +22,9 @@ hooks/
 
 import { useEffect, useState } from 'react';
 
-interface Props {
+type Props = {
   kind: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-}
+};
 
 const BREAKPOINTS = {
   sm: 640,

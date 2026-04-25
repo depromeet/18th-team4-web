@@ -67,7 +67,9 @@ type Props = {
   onClick?: () => void;
 };
 
-export const CloseIcon = ({ className, onClick }: Props) => {
+export const CloseIcon = (props: Props) => {
+  const { className, onClick } = props;
+
   return <Close onClick={onClick} className={cn('size-8 cursor-pointer fill-black', className)} />;
 };
 ```

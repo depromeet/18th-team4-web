@@ -42,49 +42,65 @@ export { default as ButcheryText } from './ButcheryText';
 // ...
 ```
 
-### `import type`
+### 타입 import
 
-타입 전용 import는 **반드시 `import type`** 사용 (ESLint에서 강제).
+타입 import는 **인라인 `type` 키워드**를 사용합니다. `import type { … }` 분리 구문은 사용하지 않습니다.
 
 ```ts
+// GOOD
+import { type Metadata } from 'next';
+import { type NoticeListResponse } from '@/lib';
+import { Button, type ButtonProps } from '@/components';
+
+// BAD — 분리된 import type 구문 사용 금지
 import type { Metadata } from 'next';
-import type { NoticeListResponse } from '@/lib';
 ```
 
 ## 컴포넌트 / 함수 선언
 
-- 최상위 export 컴포넌트는 **named function declaration** 사용. arrow function 지양.
-- `default export`는 페이지 컴포넌트(`app/**/page.tsx`) + Container(`pages/<Page>/index.tsx`)에 한해 허용. 그 외에는 named export.
-- `React.FC` 사용 금지 — 명시적 props 인터페이스 + function declaration.
+- 컴포넌트와 함수는 **arrow function**(`const Foo = () => {}`)으로 작성합니다. **명명 함수 선언(`function Foo()`) 금지.**
+- `default export`는 페이지 컴포넌트(`app/**/page.tsx`) + Container(`components/pages/<Page>/index.tsx`)에 한해 허용. 그 외에는 named export.
+- `React.FC` 사용 금지 — 명시적 props 타입 + arrow function.
 
 ```tsx
 // GOOD
-interface Props {
+type Props = {
   className?: string;
-}
+};
 
-export default function TermFooter(props: Props) {
+const TermFooter = (props: Props) => {
   const { className } = props;
+  // ...
+};
+
+export default TermFooter;
+```
+
+```tsx
+// BAD — 명명 함수 선언 금지
+export default function TermFooter(props: Props) {
   // ...
 }
 ```
 
 ## Props 처리
 
-- Props 인터페이스는 컴포넌트 위에 선언.
+- Props 타입은 컴포넌트 위에 선언.
 - 외부 노출 시 `[ComponentName]Props`, 내부 한정이면 `Props`로 명명.
 - 함수 시그니처에서 구조분해하지 말고, **`props`로 받아 본문에서 구조분해**합니다.
 
 ```tsx
 // GOOD
-interface Props {
+type Props = {
   className?: string;
-}
+};
 
-export default function TermFooter(props: Props) {
+const TermFooter = (props: Props) => {
   const { className } = props;
   // ...
-}
+};
+
+export default TermFooter;
 ```
 
 ```tsx
@@ -105,8 +121,21 @@ export const ClassLists = ({
 ## 타입 사용
 
 - ❌ **`any` 금지** → `unknown` 또는 정확한 타입 사용.
-- ✅ API 요청/응답 타입은 `interface` 통일. 필요한 경우에만 `type` 사용. → [07-api-layer.md](./07-api-layer.md#types--api-요청응답-타입)
+- ❌ **`interface` 선언 금지** → 모든 타입 선언은 `type`으로 통일.
+- ✅ 확장이 필요한 경우 `&`(intersection)로 결합. (`extends` 대신)
 - ✅ `as const`로 readonly 보장이 필요한 객체 상수 표현.
+
+```ts
+// GOOD
+type ApiRequestInit = RequestInit & {
+  responseType?: 'blob' | 'json';
+};
+
+// BAD
+interface ApiRequestInit extends RequestInit {
+  responseType?: 'blob' | 'json';
+}
+```
 
 ## 콘솔 / 사이드 이펙트
 

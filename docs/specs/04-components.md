@@ -26,10 +26,10 @@ components/
 
 ```tsx
 // Button.tsx
-import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib';
-import { ButtonSize, ButtonVariant, buttonVariants } from './buttonVariants';
+import { buttonVariants, type ButtonSize, type ButtonVariant } from './buttonVariants';
 
 type Props = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
@@ -46,11 +46,11 @@ export const Button = (props: Props) => {
 
 ```tsx
 // LinkButton.tsx
-import { type VariantProps } from 'class-variance-authority';
-import Link from 'next/link';
 import * as React from 'react';
+import Link from 'next/link';
+import { type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-import { ButtonSize, ButtonVariant, buttonVariants } from './buttonVariants';
+import { buttonVariants, type ButtonSize, type ButtonVariant } from './buttonVariants';
 
 type Props = React.ComponentProps<'a'> &
   VariantProps<typeof buttonVariants> & {
@@ -108,7 +108,7 @@ import Link from 'next/link';
 import { PATH_NAME } from '@/constants';
 import { MainBody } from './Body';
 
-export default function MainContainer() {
+const MainContainer = () => {
   return (
     <div className="min-h-screen bg-zinc-100 flex justify-center">
       <div className="w-full max-w-sm bg-zinc-50 flex flex-col min-h-screen">
@@ -123,7 +123,9 @@ export default function MainContainer() {
       </div>
     </div>
   );
-}
+};
+
+export default MainContainer;
 ```
 
 ```tsx
@@ -132,11 +134,12 @@ import { getCounsellingReservationDetail } from '@/lib';
 import Step1Container from './Step1';
 import Step2Container from './Step2';
 
-interface Props {
+type Props = {
   searchParams: SearchParams;
-}
+};
 
-export default async function MypageDetailContainer({ searchParams }: Props) {
+const MypageDetailContainer = async (props: Props) => {
+  const { searchParams } = props;
   const { data } = await getCounsellingReservationDetail({ reservationId: Number(searchParams.id) });
   const newSearchParams = { ...searchParams, page: searchParams.page || 1 };
   const step = (newSearchParams as SearchParams).step;
@@ -149,13 +152,16 @@ export default async function MypageDetailContainer({ searchParams }: Props) {
   if (data.counsellingType === '2단계 정책참여') {
     return <Step2Container data={data} searchParams={newSearchParams} />;
   }
-}
+};
+
+export default MypageDetailContainer;
 ```
 
 ## DO / DON'T
 
-- ✅ 최상위 export 컴포넌트는 **named function declaration**(arrow 지양). default export는 페이지(`page.tsx`)와 Container(`pages/<Page>/index.tsx`)에 한해 허용.
-- ✅ Props 인터페이스는 컴포넌트 위에 선언, 명칭은 `Props` (또는 외부 노출 시 `[ComponentName]Props`).
+- ✅ 컴포넌트는 **arrow function**(`const Foo = () => {}`)으로 작성. `default export`는 페이지(`page.tsx`)와 Container(`pages/<Page>/index.tsx`)에 한해 허용.
+- ✅ Props 타입은 컴포넌트 위에 선언, 명칭은 `Props` (또는 외부 노출 시 `[ComponentName]Props`). 타입 선언은 `type`으로 통일 — `interface` 금지.
 - ✅ Props는 `props` 파라미터로 받고 함수 본문에서 구조분해. → [11-coding-conventions.md](./11-coding-conventions.md#props-처리)
-- ❌ `React.FC` 사용 금지 — 명시적 props 인터페이스 + function declaration 사용.
+- ❌ 명명 함수 선언 `function Foo()` 금지.
+- ❌ `React.FC` 사용 금지 — 명시적 props 타입 + arrow function 사용.
 - ❌ `useEffect`로 데이터 패칭 금지 → TanStack Query 사용. → [08-state-management.md](./08-state-management.md)
