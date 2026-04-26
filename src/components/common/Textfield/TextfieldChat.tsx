@@ -4,9 +4,6 @@ import { SendIcon } from '@/components/common/Icon';
 import { cn } from '@/lib';
 import { BaseInput } from './BaseInput';
 
-export type TextfieldChatStatus = 'default' | 'disabled' | 'error';
-export type TextfieldChatBgVariant = 'gray' | 'white';
-
 const containerVariants = cva(
   'flex items-center justify-center gap-[2rem] pl-[2.4rem] pr-[1.6rem] py-[2.2rem] rounded-[2.4rem] w-full',
   {
@@ -52,14 +49,21 @@ const sendButtonVariants = cva('', {
 
 type Props = Omit<React.ComponentProps<'input'>, 'disabled'> &
   VariantProps<typeof containerVariants> & {
-    onSend?: () => void;
+    onSend: () => void;
   };
 
 export const TextfieldChat = (props: Props) => {
   const { status = 'default', bgVariant = 'gray', onSend, ...rest } = props;
   const DEFAULT_PLACEHOLDER = '오늘은 어떤 얘기를 해볼까요?';
   const DISABLED_PLACEHOLDER = '연결을 확인해주세요';
-  const placeholder = status === 'disabled' ? DISABLED_PLACEHOLDER : DEFAULT_PLACEHOLDER;
+  const ERROR_PLACEHOLDER = '잘못된 입력';
+
+  const placeholder =
+    status === 'disabled'
+      ? DISABLED_PLACEHOLDER
+      : status === 'error'
+        ? ERROR_PLACEHOLDER
+        : DEFAULT_PLACEHOLDER;
 
   return (
     <div className={cn(containerVariants({ bgVariant, status }))}>
