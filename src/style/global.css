@@ -65,6 +65,13 @@
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
 
+  --background-image-gradient-line: linear-gradient(
+    90deg,
+    rgba(207, 220, 220, 0) 0%,
+    #cfdcdc 50%,
+    rgba(207, 220, 220, 0) 100%
+  );
+
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
   --text-headline1: 2.4rem;
