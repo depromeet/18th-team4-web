@@ -30,7 +30,7 @@ export const TextfieldChat = (props: Props) => {
         {...rest}
       />
       <button
-        type="submit"
+        type="button"
         onClick={onSend}
         disabled={isDisabled}
         className={cn(sendButtonVariants({ status }))}
