@@ -2,11 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { TextfieldChat } from '@/components/common/Textfield/TextfieldChat';
-import {
-  CHAT_BG_VARIANT,
-  CHAT_STATUS,
-  TEXTFIELD_CHAT_PLACEHOLDER,
-} from '@/constants/textfieldChat';
+import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants/textfieldChat';
 
 const meta = {
   title: 'Common/Textfield/TextfieldChat',
@@ -44,7 +40,7 @@ export const Default: Story = {
   args: {
     status: CHAT_STATUS.DEFAULT,
     bgVariant: CHAT_BG_VARIANT.GRAY,
-    placeholder: TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
+    placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
   },
 };
 
@@ -63,7 +59,7 @@ export const Writing: Story = {
   },
   args: {
     bgVariant: CHAT_BG_VARIANT.GRAY,
-    placeholder: TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
+    placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
   },
 };
 
@@ -81,7 +77,7 @@ export const Disabled: Story = {
   args: {
     status: CHAT_STATUS.DISABLED,
     bgVariant: CHAT_BG_VARIANT.GRAY,
-    placeholder: TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED],
+    placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED],
   },
 };
 
@@ -90,7 +86,7 @@ export const Error: Story = {
   args: {
     status: CHAT_STATUS.ERROR,
     bgVariant: CHAT_BG_VARIANT.GRAY,
-    placeholder: TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.ERROR],
+    placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.ERROR],
   },
 };
 
@@ -99,7 +95,7 @@ export const WhiteBackground: Story = {
   args: {
     status: CHAT_STATUS.DEFAULT,
     bgVariant: CHAT_BG_VARIANT.WHITE,
-    placeholder: TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
+    placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
   },
 };
 
@@ -111,7 +107,7 @@ export const AllStates: Story = {
       <TextfieldChat
         status={CHAT_STATUS.DEFAULT}
         bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
       />
       <TextfieldChat
         status={CHAT_STATUS.DEFAULT}
@@ -121,18 +117,18 @@ export const AllStates: Story = {
       <TextfieldChat
         status={CHAT_STATUS.DISABLED}
         bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
       />
       <TextfieldChat
         status={CHAT_STATUS.ERROR}
         bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
       />
       <p className="caption1-medium text-text-caption mt-[0.8rem]">white 배경</p>
       <TextfieldChat
         status={CHAT_STATUS.DEFAULT}
         bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
       />
       <TextfieldChat
         status={CHAT_STATUS.DEFAULT}
@@ -142,12 +138,12 @@ export const AllStates: Story = {
       <TextfieldChat
         status={CHAT_STATUS.DISABLED}
         bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
       />
       <TextfieldChat
         status={CHAT_STATUS.ERROR}
         bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={TEXTFIELD_CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
+        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
       />
     </div>
   ),
