@@ -49,7 +49,7 @@ const sendButtonVariants = cva('', {
 
 type Props = Omit<React.ComponentProps<'input'>, 'disabled'> &
   VariantProps<typeof containerVariants> & {
-    onSend: () => void;
+    onSend?: () => void;
   };
 
 export const TextfieldChat = (props: Props) => {
