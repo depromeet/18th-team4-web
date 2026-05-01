@@ -102,49 +102,53 @@ export const WhiteBackground: Story = {
 export const AllStates: Story = {
   name: '전체 상태 비교',
   render: () => (
-    <div className="flex flex-col gap-[1.6rem] w-[32.7rem]">
-      <p className="caption1-medium text-text-caption">gray 배경</p>
-      <TextfieldChat
-        status={CHAT_STATUS.DEFAULT}
-        bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.DEFAULT}
-        bgVariant={CHAT_BG_VARIANT.GRAY}
-        defaultValue="입력완료"
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.DISABLED}
-        bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.ERROR}
-        bgVariant={CHAT_BG_VARIANT.GRAY}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
-      />
-      <p className="caption1-medium text-text-caption mt-[0.8rem]">white 배경</p>
-      <TextfieldChat
-        status={CHAT_STATUS.DEFAULT}
-        bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.DEFAULT}
-        bgVariant={CHAT_BG_VARIANT.WHITE}
-        defaultValue="입력완료"
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.DISABLED}
-        bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
-      />
-      <TextfieldChat
-        status={CHAT_STATUS.ERROR}
-        bgVariant={CHAT_BG_VARIANT.WHITE}
-        placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
-      />
+    <div className="flex gap-[1.6rem] w-[70rem]">
+      <div className="flex flex-col gap-[1.6rem] w-[32.7rem]">
+        <p className="caption1-medium text-text-caption">gray 배경</p>
+        <TextfieldChat
+          status={CHAT_STATUS.DEFAULT}
+          bgVariant={CHAT_BG_VARIANT.GRAY}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.DEFAULT}
+          bgVariant={CHAT_BG_VARIANT.GRAY}
+          defaultValue="입력완료"
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.DISABLED}
+          bgVariant={CHAT_BG_VARIANT.GRAY}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.ERROR}
+          bgVariant={CHAT_BG_VARIANT.GRAY}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
+        />
+      </div>
+      <div className="flex flex-col gap-[1.6rem] w-[32.7rem]">
+        <p className="caption1-medium text-text-caption mt-[0.8rem]">white 배경</p>
+        <TextfieldChat
+          status={CHAT_STATUS.DEFAULT}
+          bgVariant={CHAT_BG_VARIANT.WHITE}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT]}
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.DEFAULT}
+          bgVariant={CHAT_BG_VARIANT.WHITE}
+          defaultValue="입력완료"
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.DISABLED}
+          bgVariant={CHAT_BG_VARIANT.WHITE}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.DISABLED]}
+        />
+        <TextfieldChat
+          status={CHAT_STATUS.ERROR}
+          bgVariant={CHAT_BG_VARIANT.WHITE}
+          placeholder={CHAT_PLACEHOLDER[CHAT_STATUS.ERROR]}
+        />
+      </div>
     </div>
   ),
 };
