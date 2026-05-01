@@ -66,6 +66,7 @@
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
 
+  --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
   --text-headline1: 2.4rem;
