@@ -15,7 +15,7 @@ type Props = VariantProps<typeof containerVariants> & {
   message: string;
 };
 
-const Chat = (props: Props) => {
+export const Chat = (props: Props) => {
   const { user = CHAT_USER.ME, message } = props;
 
   return (
@@ -24,5 +24,3 @@ const Chat = (props: Props) => {
     </div>
   );
 };
-
-export default Chat;
