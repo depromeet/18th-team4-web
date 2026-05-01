@@ -2,13 +2,13 @@ import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { SendIcon } from '@/components/common/Icon';
 import {
+  BaseInput,
   containerVariants,
   inputVariants,
   sendButtonVariants,
-} from '@/components/common/Textfield/textfieldChatVariants';
-import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants/textfieldChat';
+} from '@/components/common/Textfield';
+import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
 import { cn } from '@/lib';
-import { BaseInput } from './BaseInput';
 
 type Props = Omit<React.ComponentProps<'input'>, 'disabled'> &
   VariantProps<typeof containerVariants> & {
