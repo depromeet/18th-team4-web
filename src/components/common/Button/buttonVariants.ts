@@ -1,6 +1,13 @@
 import { cva } from 'class-variance-authority';
 
-export type ButtonVariant = 'black' | 'gray' | 'red' | 'lightgray';
+export const BUTTON_VARIANT = {
+  BLACK: 'black',
+  GRAY: 'gray',
+  RED: 'red',
+  LIGHTGRAY: 'lightgray',
+} as const;
+
+export type ButtonVariant = (typeof BUTTON_VARIANT)[keyof typeof BUTTON_VARIANT];
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'full';
 
 export const buttonVariants = cva(
