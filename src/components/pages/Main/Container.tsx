@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { PATH_NAME } from '@/constants';
-import { Header } from '@/components/common/Header';
+import { Header } from '@/components';
 import { MainBody } from './Body';
 
 export default function MainContainer() {
