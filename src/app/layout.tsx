@@ -2,11 +2,9 @@ import { type Metadata } from "next";
 import localFont from "next/font/local";
 import { type ReactNode } from "react";
 
-import "@/style/global.css";
-
 const suit = localFont({
   src: "../../public/fonts/SUIT-Variable.woff2",
-  variable: "--font-suit",
+  variable: "--font-sans",
   display: "swap",
 });
 
