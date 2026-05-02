@@ -1,8 +1,6 @@
 import { type VariantProps } from "class-variance-authority";
-
-import { Button } from "@/components/common/Button";
-import { ArrowIcon, PlusIcon } from "@/components/common/Icon";
-import { cn } from "@/lib/utils";
+import { Button, ArrowIcon, PlusIcon } from "@/components";
+import { cn } from "@/lib";
 import { headerVariants } from "./headerVariants";
 import { Logo } from "@/assets";
 import Image from "next/image";
