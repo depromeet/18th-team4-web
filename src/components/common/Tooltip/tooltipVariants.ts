@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-export type TooltipArrowSide = 'top';
+export type TooltipArrowSide = 'top' | 'bottom';
 export type TooltipArrowAlignment = 'left' | 'middle' | 'right';
 
 export const tooltipVariants = cva(
@@ -8,16 +8,17 @@ export const tooltipVariants = cva(
 );
 
 export const tooltipArrowVariants = cva(
-  'pointer-events-none absolute h-[8px] w-[41px] text-gray-800',
+  'pointer-events-none absolute h-[8px] w-[20px] text-gray-800',
   {
     variants: {
       arrowSide: {
         top: '-top-[8px]',
+        bottom: '-bottom-[8px] rotate-180',
       },
       arrowAlignment: {
-        left: 'left-3',
+        left: 'left-[1.31rem]',
         middle: 'left-1/2 -translate-x-1/2',
-        right: 'right-3',
+        right: 'right-[1.31rem]',
       },
     },
     defaultVariants: {

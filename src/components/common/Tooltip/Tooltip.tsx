@@ -8,10 +8,9 @@ import {
   tooltipVariants,
 } from './tooltipVariants';
 
-export type TooltipProps = Omit<React.ComponentProps<'div'>, 'children'> &
+export type TooltipProps = Omit<React.ComponentProps<'div'>, 'children' | 'className'> &
   VariantProps<typeof tooltipVariants> &
   VariantProps<typeof tooltipArrowVariants> & {
-    className?: string;
     arrowClassName?: string;
     content: React.ReactNode;
     arrowSide?: TooltipArrowSide;
@@ -19,24 +18,24 @@ export type TooltipProps = Omit<React.ComponentProps<'div'>, 'children'> &
   };
 
 export const Tooltip = (props: TooltipProps) => {
-  const {
-    className,
-    arrowClassName,
-    content,
-    arrowSide,
-    arrowAlignment,
-    role = 'tooltip',
-    ...rest
-  } = props;
+  const { arrowClassName, content, arrowSide, arrowAlignment, role = 'tooltip', ...rest } = props;
 
   return (
-    <div className={cn(tooltipVariants({ className }))} role={role} {...rest}>
+    <div className={cn(tooltipVariants())} role={role} {...rest}>
       <span
         aria-hidden="true"
         className={cn(tooltipArrowVariants({ arrowSide, arrowAlignment }), arrowClassName)}
       >
-        <svg className="block size-full" viewBox="0 0 41 8" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 8C9.25 8 12.5 0 20.5 0C28.5 0 31.75 8 41 8H0Z" fill="currentColor" />
+        <svg
+          className="block size-full"
+          viewBox="0 0 20 8"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+        >
+          <path
+            d="M8.12591 0.65735C9.22157 -0.219175 10.7784 -0.219176 11.8741 0.657349L20 8H0L8.12591 0.65735Z"
+            fill="currentColor"
+          />
         </svg>
       </span>
       {content}
