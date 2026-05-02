@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { PATH_NAME } from '@/constants';
 import { Header } from '@/components';
 import { MainBody } from './Body';
+import { HEADER_VARIANT } from '@/components';
 
 export default function MainContainer() {
   return (
     <>
-      <Header variant="home" />
+      <Header variant={HEADER_VARIANT.HOME} />
       <MainBody />
 
       <section className="px-6 pb-10">
