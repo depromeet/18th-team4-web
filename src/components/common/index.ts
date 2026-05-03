@@ -1,3 +1,4 @@
+export * from './BottomSheet';
 export * from './Button';
 export * from './Header';
 export * from './Icon';
