@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const containerVariants = cva(
-  'flex items-center justify-center gap-[2rem] pl-[2.4rem] pr-[1.6rem] py-[2.2rem] rounded-[2.4rem] w-full',
+  'flex items-center justify-center gap-[2rem] pl-[2.4rem] pr-[1.6rem] py-[1.6rem] rounded-[2.4rem] w-full',
   {
     variants: {
       bgVariant: {
@@ -22,7 +22,7 @@ export const containerVariants = cva(
 );
 
 export const inputVariants = cva(
-  'body1-medium placeholder:text-text-caption placeholder:body1-medium',
+  'body1-medium placeholder:text-text-caption placeholder:body1-medium py-[0.6rem]',
   {
     variants: {
       status: {
