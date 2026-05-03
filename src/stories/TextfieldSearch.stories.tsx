@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
-import { TextfieldSearch } from '@/components/common/Textfield/TextfieldSearch';
+import { TextfieldSearch } from '@/components';
 
 const meta = {
   title: 'Common/Textfield/TextfieldSearch',

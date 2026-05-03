@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
-import { TextfieldChat } from '@/components/common/Textfield/TextfieldChat';
-import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants/textfieldChat';
+import { TextfieldChat } from '@/components';
+import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
 
 const meta = {
   title: 'Common/Textfield/TextfieldChat',
