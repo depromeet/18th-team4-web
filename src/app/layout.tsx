@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { type Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/style/global.css';
@@ -20,9 +21,9 @@ type Props = {
 const RootLayout = (props: Props): React.ReactElement => {
   const { children } = props;
   return (
-    <html lang="ko" className={`${suit.variable} antialiased`}>
-      <body className="min-h-dvh bg-gray-50">
-        <main className="mx-auto min-h-dvh w-full max-w-150 bg-primary-base overflow-x-hidden">
+    <html lang="ko" className={`${suit.variable} overflow-x-clip antialiased`}>
+      <body className="min-h-dvh overflow-x-clip bg-gray-50">
+        <main className="mx-auto min-h-dvh w-full max-w-150 overflow-x-clip bg-primary-base">
           {children}
         </main>
       </body>
