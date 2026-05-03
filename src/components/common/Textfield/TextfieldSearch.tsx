@@ -1,4 +1,4 @@
-import { SearchIcon } from '@/components/common/Icon';
+import { SearchIcon } from '@/components';
 import { BaseInput } from './BaseInput';
 
 type Props = React.ComponentProps<'input'> & {

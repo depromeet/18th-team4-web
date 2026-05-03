@@ -1,12 +1,7 @@
 import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { BaseInput, containerVariants, inputVariants, sendButtonVariants } from '@/components';
 import { SendIcon } from '@/components/common/Icon';
-import {
-  BaseInput,
-  containerVariants,
-  inputVariants,
-  sendButtonVariants,
-} from '@/components/common/Textfield';
 import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
 import { cn } from '@/lib';
 
