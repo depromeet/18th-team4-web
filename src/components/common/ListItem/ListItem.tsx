@@ -1,4 +1,5 @@
 import { type VariantProps } from 'class-variance-authority';
+import Image from 'next/image';
 import { CheckIcon } from '@/components';
 import { cn } from '@/lib';
 import { listItemVariants } from './listItemVariants';
@@ -35,11 +36,7 @@ export const ListItem = (props: Props) => {
         className={cn(listItemVariants({ selected }), className)}
       >
         <div className="relative h-[7.3rem] w-20 shrink-0 overflow-hidden rounded-[0.6rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.12)]">
-          <img
-            src={imageSrc}
-            alt={imageAlt}
-            className="pointer-events-none absolute inset-0 size-full object-cover"
-          />
+          <Image src={imageSrc} alt={imageAlt} fill className="pointer-events-none object-cover" />
         </div>
 
         <div className="flex min-w-0 flex-1 flex-col items-start">
