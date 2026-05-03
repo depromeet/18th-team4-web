@@ -23,7 +23,7 @@ export const tooltipArrowVariants = cva(
     },
     defaultVariants: {
       arrowSide: 'top',
-      arrowAlignment: 'middle',
+      arrowAlignment: 'right',
     },
   },
 );
