@@ -7,4 +7,5 @@ export { default as Menu } from './ic-menu.svg';
 export { default as Plus } from './ic-plus.svg';
 export { default as Reload } from './ic-reload.svg';
 export { default as Search } from './ic-search.svg';
+export { default as TooltipArrow } from './ic-tooltip-arrow.svg';
 export { default as Warning } from './ic-warning.svg';
