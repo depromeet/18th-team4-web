@@ -28,12 +28,12 @@ export const ListItem = (props: Props) => {
   } = props;
 
   return (
-    <li>
+    <li className="min-w-0 max-w-full">
       <button
         type="button"
         aria-pressed={selected}
         onClick={onClick}
-        className={cn(listItemVariants({ selected }), className)}
+        className={cn(listItemVariants({ selected }), 'min-w-0 max-w-full', className)}
       >
         <div className="relative h-[7.3rem] w-20 shrink-0 overflow-hidden rounded-[0.6rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.12)]">
           <Image src={imageSrc} alt={imageAlt} fill className="pointer-events-none object-cover" />
