@@ -4,7 +4,7 @@ export type TooltipArrowSide = 'top' | 'bottom';
 export type TooltipArrowAlignment = 'left' | 'middle' | 'right';
 
 export const tooltipVariants = cva(
-  'body2-bold relative inline-block whitespace-nowrap rounded-[0.625rem] bg-gray-800 px-3 py-[0.63rem] text-center text-gray-white tracking-[-0.03em] select-none',
+  'body2-bold relative inline-block whitespace-nowrap rounded-[0.625rem] bg-gray-800 px-3 py-[0.63rem] text-center text-gray-white tracking-[-0.03rem] select-none',
 );
 
 export const tooltipArrowVariants = cva(
