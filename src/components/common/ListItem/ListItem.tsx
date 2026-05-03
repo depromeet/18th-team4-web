@@ -20,7 +20,7 @@ export const ListItem = (props: Props) => {
     imageSrc,
     imageAlt = '',
     title,
-    year = '2000',
+    year = 2000,
     publisher = '출판사/저자',
     selected = false,
     className,
