@@ -14,11 +14,12 @@ export const metadata: Metadata = {
   description: "나만의 독서 기록 서비스",
 };
 
-type RootLayoutProps = {
+type Props = {
   children: ReactNode;
 };
 
-const RootLayout = ({ children }: RootLayoutProps): React.ReactElement => {
+const RootLayout = (props: Props): React.ReactElement => {
+  const { children } = props;
   return (
     <html lang="ko" className={`${suit.variable} antialiased`}>
       <body className="min-h-dvh bg-gray-50">
