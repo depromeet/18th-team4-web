@@ -8,4 +8,5 @@ export { default as Plus } from './ic-plus.svg?react';
 export { default as Reload } from './ic-reload.svg?react';
 export { default as Search } from './ic-search.svg?react';
 export { default as Send } from './ic-send.svg?react';
+export { default as TooltipArrow } from './ic-tooltip-arrow.svg?react';
 export { default as Warning } from './ic-warning.svg?react';
