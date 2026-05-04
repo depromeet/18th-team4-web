@@ -1,9 +1,9 @@
 'use client';
 
-import { Logo } from '@/assets';
-import { BottomSheet, ChevronIcon, ListItem } from '@/components';
-import { cn } from '@/lib';
 import { useLayoutEffect, useRef, useState } from 'react';
+import { Logo } from '@/assets';
+import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
+import { cn } from '@/lib';
 
 type BookOption = {
   id: string;
@@ -21,32 +21,72 @@ const BOOK_OPTIONS: BookOption[] = [
 ];
 const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
 
-const MainFooter = () => {
+const gridRowsTransition =
+  'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none';
+
+export const MainFooter = () => {
+  const peekRef = useRef<HTMLDivElement | null>(null);
+
   const [sheetOpen, setSheetOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
-  const headerRef = useRef<HTMLElement | null>(null);
-  const [collapsedCap, setCollapsedCap] = useState('12rem');
+  const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
   const selectedBook = BOOK_OPTIONS.find((b) => b.id === selectedId) ?? BOOK_OPTIONS[0];
 
   useLayoutEffect(() => {
-    const el = headerRef.current;
+    const el = peekRef.current;
     if (!el) {
       return;
     }
+
     const sync = () => {
+      if (sheetOpen) {
+        return;
+      }
       const h = el.offsetHeight;
       if (h > 0) {
-        setCollapsedCap(`${h}px`);
+        setCollapsedCap((prev) => {
+          const next = `${h}px`;
+          if (prev === undefined) {
+            return next;
+          }
+          const prevN = Number.parseFloat(prev);
+          if (Number.isNaN(prevN)) {
+            return next;
+          }
+          // 전환 중 일시적으로 작은 높이면 cap을 줄이지 않음
+          return h >= prevN * 0.92 ? next : prev;
+        });
       }
     };
+
     sync();
+
+    let rafOuter = 0;
+    let rafInner = 0;
+    rafOuter = requestAnimationFrame(() => {
+      rafInner = requestAnimationFrame(sync);
+    });
+
+    let cancelled = false;
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      void document.fonts.ready.then(() => {
+        if (!cancelled) {
+          sync();
+        }
+      });
+    }
+
     const ro = new ResizeObserver(sync);
     ro.observe(el);
+
     return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafOuter);
+      cancelAnimationFrame(rafInner);
       ro.disconnect();
     };
-  }, []);
+  }, [sheetOpen]);
 
   const clickSection = () => {
     setSheetOpen((prev) => !prev);
@@ -62,30 +102,61 @@ const MainFooter = () => {
     >
       <div
         className={cn(
-          'grid min-h-0 min-w-0 max-w-full flex-1 overflow-hidden transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
+          'grid min-h-0 min-w-0 max-w-full flex-1 gap-y-0 overflow-hidden',
+          gridRowsTransition,
           sheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
         )}
       >
-        <section
-          ref={headerRef}
-          className="flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.8rem] pt-[3.2rem] pb-[max(2.8rem,env(safe-area-inset-bottom,0px))]"
-          onClick={clickSection}
+        <div
+          ref={peekRef}
+          className={cn(
+            'grid min-h-min min-w-0 grid-cols-1 gap-y-0 overflow-hidden',
+            sheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
+          )}
         >
-          <p className="headline2-extrabold text-text-default">
-            {selectedBook?.title ?? '해리 포터와 마법사의 돌 1'}
-          </p>
-          <ChevronIcon
+          <section
             className={cn(
-              'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-              sheetOpen ? 'rotate-0' : 'rotate-180',
+              'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
+              sheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
             )}
-          />
-        </section>
-        <div className={cn('min-h-0 min-w-0 overflow-hidden', !sheetOpen && 'pointer-events-none')}>
+            onClick={clickSection}
+          >
+            <p className="headline2-extrabold text-text-default">
+              {selectedBook?.title ?? '해리 포터와 마법사의 돌 1'}
+            </p>
+            <ChevronIcon
+              className={cn(
+                'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
+                sheetOpen ? 'rotate-0' : 'rotate-180',
+              )}
+            />
+          </section>
+
+          <div
+            className={cn(
+              'min-h-0 w-full overflow-hidden px-[2.4rem] pt-[1.8rem] pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]',
+              sheetOpen && 'hidden',
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            role="presentation"
+          >
+            <TextfieldChat />
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            'relative z-10 min-h-0 min-w-0 overflow-hidden',
+            sheetOpen && 'bg-primary-white',
+            !sheetOpen && 'pointer-events-none',
+          )}
+        >
           <ul
             className={cn(
               'h-full min-h-0 min-w-0 max-w-full list-none overflow-x-hidden overflow-y-auto overscroll-contain bg-primary-white',
-              sheetOpen ? 'pb-[max(2.8rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
+              sheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
             {BOOK_OPTIONS.map((book) => (
@@ -108,5 +179,3 @@ const MainFooter = () => {
     </BottomSheet>
   );
 };
-
-export default MainFooter;

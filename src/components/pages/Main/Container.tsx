@@ -1,11 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { useRouter } from 'next/navigation';
-import MainFooter from './Footer';
+import { MainFooter } from './Footer';
 
-export default function MainContainer() {
+export const MainContainer = () => {
   const router = useRouter();
 
   return (
@@ -19,4 +19,4 @@ export default function MainContainer() {
       <MainFooter />
     </>
   );
-}
+};
