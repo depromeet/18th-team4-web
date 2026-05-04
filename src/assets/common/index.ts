@@ -1,2 +1,2 @@
-export { default as Logo } from './logo.webp';
 export * from './svgs';
+export * from './webps';
