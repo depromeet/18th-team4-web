@@ -1,0 +1,114 @@
+name: Notify Slack when PR is opened or ready
+
+on:
+  pull_request_target:
+    types: [opened, ready_for_review]
+    branches: [dev]
+
+permissions: {}
+
+jobs:
+  notify-slack:
+    if: ${{ github.event.action == 'ready_for_review' || github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Slack message
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_AUTHOR_AVATAR: ${{ github.event.pull_request.user.avatar_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BASE: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$SLACK_BOT_TOKEN" ] || [ -z "$SLACK_CHANNEL_ID" ]; then
+            echo "Slack 설정이 없습니다. SLACK_BOT_TOKEN과 SLACK_CHANNEL_ID secret을 확인해 주세요."
+            exit 1
+          fi
+
+          payload=$(
+            jq -n \
+              --arg channel "$SLACK_CHANNEL_ID" \
+              --arg pr_url "$PR_URL" \
+              --arg pr_number "$PR_NUMBER" \
+              --arg pr_title "$PR_TITLE" \
+              --arg author "$PR_AUTHOR" \
+              --arg avatar "$PR_AUTHOR_AVATAR" \
+              --arg base "$PR_BASE" \
+              --arg head "$PR_HEAD" \
+              '{
+                channel: $channel,
+                text: "<!here> PR이 생성되었습니다. 리뷰해 주세요!",
+                blocks: [
+                  {
+                    type: "section",
+                    text: {
+                      type: "mrkdwn",
+                      text: ("<!here> PR이 생성되었습니다. 리뷰해 주세요!\n*<" + $pr_url + "|#" + $pr_number + " " + $pr_title + ">*")
+                    }
+                  },
+                  {
+                    type: "section",
+                    fields: [
+                      {
+                        type: "mrkdwn",
+                        text: ("*작성자*\n" + $author)
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: ("*브랜치*\n`" + $head + "` → `" + $base + "`")
+                      }
+                    ]
+                  },
+                  {
+                    type: "actions",
+                    elements: [
+                      {
+                        type: "button",
+                        text: {
+                          type: "plain_text",
+                          text: "PR 보러가기",
+                          emoji: true
+                        },
+                        url: $pr_url,
+                        style: "primary"
+                      }
+                    ]
+                  },
+                  {
+                    type: "context",
+                    elements: [
+                      {
+                        type: "image",
+                        image_url: $avatar,
+                        alt_text: $author
+                      },
+                      {
+                        type: "mrkdwn",
+                        text: $author
+                      }
+                    ]
+                  }
+                ]
+              }'
+          )
+
+          response=$(curl -fsS --connect-timeout 5 --max-time 20 --retry 3 -X POST \
+            -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
+            -H "Content-type: application/json" \
+            --data "$payload" \
+            "https://slack.com/api/chat.postMessage")
+
+          echo "Slack API response: $response"
+
+          # ok 필드가 true가 아니면 실패 처리
+          if ! echo "$response" | jq -e '.ok == true' > /dev/null; then
+            echo "Slack 메시지 전송 실패"
+            exit 1
+          fi
