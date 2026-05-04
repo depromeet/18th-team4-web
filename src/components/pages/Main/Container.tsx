@@ -1,8 +1,6 @@
-import { LinkButton } from '@/components';
+import { Header, HEADER_VARIANT, LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { Header } from '@/components';
 import { MainBody } from './Body';
-import { HEADER_VARIANT } from '@/components';
 
 export default function MainContainer() {
   return (

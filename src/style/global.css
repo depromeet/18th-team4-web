@@ -65,6 +65,7 @@
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
 
+  --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
   --background-image-gradient-line: linear-gradient(
     90deg,
     rgba(207, 220, 220, 0) 0%,

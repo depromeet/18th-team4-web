@@ -1,12 +1,11 @@
-import { type VariantProps } from "class-variance-authority";
-import { Button, ArrowIcon, PlusIcon } from "@/components";
-import { cn } from "@/lib";
-import { headerVariants, HEADER_VARIANT } from "./headerVariants";
-import { Logo } from "@/assets";
-import Image from "next/image";
+import { type VariantProps } from 'class-variance-authority';
+import Image from 'next/image';
+import { Logo } from '@/assets';
+import { ArrowIcon, Button, PlusIcon } from '@/components';
+import { cn } from '@/lib';
+import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
-type HeaderProps =
-  React.ComponentProps<'header'> &
+type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
     summarizeActive?: boolean;
     onBack?: () => void;
@@ -14,21 +13,21 @@ type HeaderProps =
   };
 
 export const Header = (props: HeaderProps) => {
-  const { variant = HEADER_VARIANT.HOME, className, summarizeActive = false, onBack, onCta, ...rest } = props;
+  const {
+    variant = HEADER_VARIANT.HOME,
+    className,
+    summarizeActive = false,
+    onBack,
+    onCta,
+    ...rest
+  } = props;
 
   return (
-    <header 
-      className={cn(headerVariants({ variant }), className)}
-      {...rest}
-    >
+    <header className={cn(headerVariants({ variant }), className)} {...rest}>
       {variant === HEADER_VARIANT.HOME && (
         <>
           <div className="relative h-[2.9rem] w-[12.3rem] shrink-0 overflow-hidden">
-            <Image
-              src={Logo}
-              alt="logo"
-              className="absolute"
-            />
+            <Image src={Logo} alt="logo" className="absolute" />
           </div>
           <Button
             aria-label="책 등록하기"
@@ -52,9 +51,9 @@ export const Header = (props: HeaderProps) => {
 
       {variant === HEADER_VARIANT.CHAT && (
         <span
-          className={cn("body1-bold tracking-[-0.048rem]", {
-            "text-icon-primary": summarizeActive,
-            "text-icon-disabled": !summarizeActive,
+          className={cn('body1-bold tracking-[-0.048rem]', {
+            'text-icon-primary': summarizeActive,
+            'text-icon-disabled': !summarizeActive,
           })}
         >
           요약하기
