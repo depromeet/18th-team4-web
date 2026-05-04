@@ -8,7 +8,7 @@ type BottomSheetProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
-  /** 접힘 시 패널 상한(헤더 실측 등). 없으면 `12rem` */
+  /** 접힘 시 패널 상한. 첫 측정 전 `undefined`면 열림과 동일한 상한(길이)으로 두어 `none`→`px` 비보간 스냅 방지 */
   collapsedMaxHeight?: string;
   /** 패널 `max-height` 트랜지션 종료 시점(닫힘·열림 모두). 자식 레이아웃을 트랜지션 후에 맞출 때 사용 */
   onMaxHeightTransitionEnd?: (openAfterTransition: boolean) => void;
@@ -65,7 +65,7 @@ export const BottomSheet = (props: BottomSheetProps) => {
   const maxPanelHeight =
     'min(80dvh, calc(100dvh - env(safe-area-inset-bottom, 0px)))';
 
-  const collapsedFallback = collapsedMaxHeight ?? '12rem';
+  const collapsedResolved = collapsedMaxHeight ?? maxPanelHeight;
 
   return createPortal(
     <div
@@ -89,7 +89,7 @@ export const BottomSheet = (props: BottomSheetProps) => {
         role="dialog"
         onTransitionEnd={handleAsideTransitionEnd}
         style={{
-          maxHeight: open ? maxPanelHeight : collapsedFallback,
+          maxHeight: open ? maxPanelHeight : collapsedResolved,
         }}
       >
         <div className="flex min-h-0 min-w-0 w-full max-w-full flex-1 flex-col overflow-hidden">
