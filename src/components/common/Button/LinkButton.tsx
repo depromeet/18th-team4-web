@@ -10,10 +10,22 @@ type Props = React.ComponentProps<'a'> &
     size?: ButtonSize;
     variant?: ButtonVariant;
     href: string;
+    disabled?: boolean;
   };
 
 export const LinkButton = (props: Props) => {
-  const { variant, size, className, ...rest } = props;
+  const { disabled = false, variant, size, className, href, children, ...rest } = props;
 
-  return <Link className={cn(buttonVariants({ variant, size, className }))} {...rest} />;
+  return (
+    <Link
+      href={href}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        disabled && 'pointer-events-none cursor-not-allowed bg-gray-50 text-text-disable',
+      )}
+      {...rest}
+    >
+      {children}
+    </Link>
+  );
 };
