@@ -65,6 +65,15 @@
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
 
+  /* 카드 색상 variant 텍스트 (palette/sub) */
+  --color-sub-teal: #086767;
+  --color-sub-magenta: #60183d;
+  --color-sub-yellow: #864c16;
+  --color-sub-sky: #256d85;
+  --color-sub-green: #385c0a;
+  --color-sub-purple: #3b3d88;
+  --color-sub-blue: #325390;
+
   --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
   --background-image-gradient-line: linear-gradient(
     90deg,
