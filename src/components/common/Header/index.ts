@@ -1,2 +1,3 @@
 export { Header } from './Header';
-export { headerVariants, HEADER_VARIANT } from './headerVariants';
+export { HEADER_VARIANT, headerVariants } from './headerVariants';
+
