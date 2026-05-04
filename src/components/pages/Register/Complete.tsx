@@ -1,6 +1,6 @@
 import { ColorSymbolIcon } from '@/components/common/Icon/ColorSymbolIcon';
 
-export default function RegisterComplete() {
+export const RegisterComplete = () => {
   return (
     <main className="flex flex-col h-dvh gap-[2.4rem] justify-center items-center">
       <ColorSymbolIcon className="w-[7.3rem] h-[2.7rem]" />
@@ -11,4 +11,4 @@ export default function RegisterComplete() {
       </p>
     </main>
   );
-}
+};
