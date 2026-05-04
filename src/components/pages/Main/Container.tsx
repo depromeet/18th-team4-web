@@ -1,21 +1,18 @@
-import Link from 'next/link';
+import { Header, HEADER_VARIANT, LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { MainBody } from './Body';
 
 export default function MainContainer() {
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center">
-      <div className="w-full max-w-sm bg-primary-base flex flex-col min-h-screen">
-        <MainBody />
+    <>
+      <Header variant={HEADER_VARIANT.HOME} />
+      <MainBody />
 
-        <section className="px-6 pb-10">
-          <Link href={PATH_NAME.register.list()}>
-            <button className="w-full h-14 bg-gray-900 text-primary-white rounded-full body2-bold tracking-wide hover:bg-gray-800 transition-colors">
-              책 등록하기
-            </button>
-          </Link>
-        </section>
-      </div>
-    </div>
+      <section className="flex justify-center py-[2.4rem]">
+        <LinkButton href={PATH_NAME.register.list()} size="lg" variant="black">
+          시작하기
+        </LinkButton>
+      </section>
+    </>
   );
 }

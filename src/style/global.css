@@ -1,4 +1,3 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/suit@v1.0.6/dist/variable.min.css');
 @import 'tailwindcss';
 
 @theme {
@@ -67,6 +66,13 @@
   --color-border-white: #ffffff;
 
   --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
+  --background-image-gradient-line: linear-gradient(
+    90deg,
+    rgba(207, 220, 220, 0) 0%,
+    #cfdcdc 50%,
+    rgba(207, 220, 220, 0) 100%
+  );
+
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
   --text-headline1: 2.4rem;
