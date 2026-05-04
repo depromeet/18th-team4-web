@@ -3,6 +3,7 @@ name: Notify Slack when PR is opened or ready
 on:
   pull_request_target:
     types: [opened, ready_for_review]
+    branches: [dev]
 
 permissions: {}
 
@@ -98,7 +99,7 @@ jobs:
               }'
           )
 
-          response=$(curl -fsS --retry 3 -X POST \
+          response=$(curl -fsS --connect-timeout 5 --max-time 20 --retry 3 -X POST \
             -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
             -H "Content-type: application/json" \
             --data "$payload" \
