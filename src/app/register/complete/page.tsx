@@ -8,6 +8,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RegisterCompletePage() {
+export default function page() {
   return <RegisterComplete />;
 }

@@ -8,6 +8,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function MainPage() {
+export default function page() {
   return <MainContainer />;
 }

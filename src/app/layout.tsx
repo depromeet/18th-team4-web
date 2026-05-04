@@ -1,7 +1,7 @@
-import { type ReactNode } from 'react';
+import '@/style/global.css';
 import { type Metadata } from 'next';
 import localFont from 'next/font/local';
-import '@/style/global.css';
+import { type ReactNode } from 'react';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
