@@ -4,14 +4,15 @@ import localFont from 'next/font/local';
 import '@/style/global.css';
 
 const suit = localFont({
-  src: "../../public/fonts/SUIT-Variable.woff2",
-  variable: "--font-sans",
-  display: "swap",
+  src: '../../public/fonts/SUIT-Variable.woff2',
+  variable: '--font-sans',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "Readum",
-  description: "나만의 독서 기록 서비스",
+  title: 'Readum',
+  description: '나만의 독서 기록 서비스',
+  icons: { icon: [{ url: '/icon.svg', type: 'image/svg+xml' }] },
 };
 
 type Props = {
