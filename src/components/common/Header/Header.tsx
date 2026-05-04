@@ -40,13 +40,13 @@ export const Header = (props: HeaderProps) => {
       )}
 
       {(variant === HEADER_VARIANT.BACK || variant === HEADER_VARIANT.CHAT) && (
-        <Button
+        <button
           aria-label="뒤로가기"
           onClick={onBack}
           className="flex shrink-0 items-center justify-center"
         >
           <ArrowIcon className="-rotate-90 size-[2.4rem] fill-icon-primary" />
-        </Button>
+        </button>
       )}
 
       {variant === HEADER_VARIANT.CHAT && (
