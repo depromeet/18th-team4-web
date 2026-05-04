@@ -1,6 +1,6 @@
 import { VariantProps } from 'class-variance-authority';
-import { containerVariants } from '@/components/pages/Chat/chatVariants';
 import { cn } from '@/lib';
+import { containerVariants } from './chatVariants';
 
 // constant/textfield 폴더로 빼기
 export const CHAT_USER = {
