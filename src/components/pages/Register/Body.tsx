@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { LinkButton, ListItem, TextfieldSearch } from '@/components';
+import { Header, HEADER_VARIANT, LinkButton, ListItem, TextfieldSearch } from '@/components';
 import { Logo } from '@/assets';
 import { PATH_NAME } from '@/constants';
+import { useRouter } from 'next/navigation';
 
 type BookOption = {
   id: string;
@@ -22,6 +23,8 @@ const BOOK_OPTIONS: BookOption[] = [
 const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
 
 export default function RegisterBody() {
+  const router = useRouter();
+
   const [query, setQuery] = useState('');
   const [committedQuery, setCommittedQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -36,6 +39,8 @@ export default function RegisterBody() {
     return BOOK_OPTIONS.filter((book) => book.title.toLowerCase().includes(q));
   }, [committedQuery, showResults]);
 
+  const clickBack = () => router.back();
+
   const runSearch = () => {
     const next = query.trim();
     if (!next) {
@@ -46,50 +51,54 @@ export default function RegisterBody() {
   };
 
   return (
-    <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
-      <section className="shrink-0 px-[2.4rem] py-[0.8rem] text-text-default headline1-extrabold">
-        어떤 책으로
-        <br />
-        대화를 나눠볼까요?
-      </section>
+    <>
+      <Header variant={HEADER_VARIANT.BACK} className="shrink-0" onBack={clickBack} />
 
-      <section className="shrink-0 px-[2.4rem]">
-        <TextfieldSearch
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onSearch={runSearch}
-          onKeyDown={(e) => {
-            if (e.key !== 'Enter') return;
-            e.preventDefault();
-            runSearch();
-          }}
-        />
-      </section>
+      <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
+        <section className="shrink-0 px-[2.4rem] py-[0.8rem] text-text-default headline1-extrabold">
+          어떤 책으로
+          <br />
+          대화를 나눠볼까요?
+        </section>
 
-      {showResults ? (
-        <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem]">
-          <ul className="flex min-h-0 flex-1 list-none flex-col overflow-y-auto overscroll-y-contain px-4">
-            {filteredBooks.map((book) => (
-              <ListItem
-                key={book.id}
-                imageSrc={coverSrc}
-                imageAlt={`${book.title} 표지`}
-                title={book.title}
-                year={book.year}
-                publisher={book.publisher}
-                selected={selectedId === book.id}
-                onClick={() => setSelectedId(book.id)}
-              />
-            ))}
-          </ul>
+        <section className="shrink-0 px-[2.4rem]">
+          <TextfieldSearch
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onSearch={runSearch}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter') return;
+              e.preventDefault();
+              runSearch();
+            }}
+          />
+        </section>
 
-          <section className="shrink-0 bg-primary-base px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
-            <LinkButton size="lg" disabled={!selectedId} href={PATH_NAME.register.complete()}>
-              책 등록하기
-            </LinkButton>
-          </section>
-        </div>
-      ) : null}
-    </div>
+        {showResults ? (
+          <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem]">
+            <ul className="flex min-h-0 flex-1 list-none flex-col overflow-y-auto overscroll-y-contain px-4">
+              {filteredBooks.map((book) => (
+                <ListItem
+                  key={book.id}
+                  imageSrc={coverSrc}
+                  imageAlt={`${book.title} 표지`}
+                  title={book.title}
+                  year={book.year}
+                  publisher={book.publisher}
+                  selected={selectedId === book.id}
+                  onClick={() => setSelectedId(book.id)}
+                />
+              ))}
+            </ul>
+
+            <section className="shrink-0 bg-primary-base px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
+              <LinkButton size="lg" disabled={!selectedId} href={PATH_NAME.register.complete()}>
+                책 등록하기
+              </LinkButton>
+            </section>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 }
