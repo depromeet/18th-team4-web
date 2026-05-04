@@ -7,4 +7,5 @@ export { MenuIcon } from './MenuIcon';
 export { PlusIcon } from './PlusIcon';
 export { ReloadIcon } from './ReloadIcon';
 export { SearchIcon } from './SearchIcon';
+export { SendIcon } from './SendIcon';
 export { WarningIcon } from './WarningIcon';
