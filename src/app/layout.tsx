@@ -1,7 +1,9 @@
 import '@/style/global.css';
 import { type Metadata } from 'next';
 import localFont from 'next/font/local';
+import Image from 'next/image';
 import { type ReactNode } from 'react';
+import { Background } from '@/assets/common';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
@@ -22,10 +24,19 @@ type Props = {
 const RootLayout = (props: Props): React.ReactElement => {
   const { children } = props;
   return (
-    <html lang="ko" className={`${suit.variable} overflow-x-clip antialiased`}>
-      <body className="min-h-dvh overflow-x-clip bg-gray-50">
-        <main className="mx-auto min-h-dvh w-full max-w-150 overflow-x-clip bg-primary-base">
-          {children}
+    <html lang="ko" className={`${suit.variable} antialiased`}>
+      <body className="min-h-dvh bg-gray-50">
+        <main className="relative mx-auto min-h-dvh w-full max-w-150 overflow-x-hidden bg-primary-base">
+          <Image
+            aria-hidden="true"
+            alt="common background texture"
+            src={Background}
+            fill
+            preload
+            sizes="375px"
+            className="pointer-events-none object-cover"
+          />
+          <div className="relative">{children}</div>
         </main>
       </body>
     </html>

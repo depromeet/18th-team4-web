@@ -65,6 +65,16 @@
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
 
+  /* 카드 색상 variant 텍스트 (palette/sub) */
+  --color-sub-teal: #086767;
+  --color-sub-magenta: #60183d;
+  --color-sub-yellow: #864c16;
+  --color-sub-sky: #256d85;
+  --color-sub-green: #385c0a;
+  --color-sub-purple: #3b3d88;
+  --color-sub-blue: #325390;
+
+  --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
   --background-image-gradient-line: linear-gradient(
     90deg,
     rgba(207, 220, 220, 0) 0%,
@@ -88,6 +98,9 @@
   --leading-body2: 1.5;
   --leading-caption1: 1.4;
 }
+
+@source inline("text-sub-teal text-sub-magenta text-sub-yellow text-sub-sky text-sub-green text-sub-purple text-sub-blue");
+@source inline("fill-sub-teal fill-sub-magenta fill-sub-yellow fill-sub-sky fill-sub-green fill-sub-purple fill-sub-blue");
 
 @utility headline1-medium {
   font-family: var(--font-sans);
@@ -201,47 +214,15 @@
   }
 }
 
-@keyframes loading-wave-dot {
-  0%,
-  100% {
-    transform: translateY(0);
+@layer utilities {
+  .scrollbar-hide {
+    /* IE and Edge */
+    -ms-overflow-style: none;
+    /* Firefox */
+    scrollbar-width: none;
   }
-
-  50% {
-    transform: translateY(-0.65rem);
-  }
-}
-
-@layer components {
-  .loading-wave {
-    display: flex;
-    align-items: center;
-    gap: 1.4rem;
-  }
-
-  .loading-wave__dot {
-    width: 0.8rem;
-    height: 0.8rem;
-    border-radius: 9999px;
-    background-color: var(--color-gray-200);
-    animation: loading-wave-dot 1s ease-in-out infinite;
-  }
-
-  .loading-wave__dot:nth-child(1) {
-    animation-delay: 0s;
-  }
-
-  .loading-wave__dot:nth-child(2) {
-    animation-delay: 1s;
-  }
-
-  .loading-wave__dot:nth-child(3) {
-    animation-delay: 2s;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .loading-wave__dot {
-      animation: none;
-    }
+  /* Chrome, Safari, Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

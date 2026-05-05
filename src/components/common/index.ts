@@ -1,5 +1,6 @@
 export * from './BottomSheet';
 export * from './Button';
+export * from './ChatCard';
 export * from './Empty';
 export * from './Header';
 export * from './Icon';
