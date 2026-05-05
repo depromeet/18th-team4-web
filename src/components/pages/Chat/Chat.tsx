@@ -1,14 +1,7 @@
 import { VariantProps } from 'class-variance-authority';
+import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
 import { containerVariants } from './chatVariants';
-
-// constant/textfield 폴더로 빼기
-export const CHAT_USER = {
-  ME: 'me',
-  AI: 'ai',
-} as const;
-
-export type ChatUser = (typeof CHAT_USER)[keyof typeof CHAT_USER];
 
 type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
