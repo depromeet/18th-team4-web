@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Logo } from '@/assets';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
 import { cn } from '@/lib';
@@ -22,9 +22,6 @@ const BOOK_OPTIONS: BookOption[] = [
 
 const COVER_SRC = typeof Logo === 'string' ? Logo : Logo.src;
 
-const GRID_ROWS_TRANSITION =
-  'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none';
-
 export const MainFooter = () => {
   const peekRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,7 +29,7 @@ export const MainFooter = () => {
   const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = peekRef.current;
     if (!el) {
       return;
@@ -102,7 +99,7 @@ export const MainFooter = () => {
       <div
         className={cn(
           'grid min-h-0 min-w-0 max-w-full flex-1 gap-y-0 overflow-hidden',
-          GRID_ROWS_TRANSITION,
+          'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
           isSheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
         )}
       >
