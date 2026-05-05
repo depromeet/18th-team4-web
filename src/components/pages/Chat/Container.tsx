@@ -8,7 +8,7 @@ const Container = () => {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background-primary-white">
+    <div className="relative min-h-screen overflow-hidden">
       <div className="bg-gradient-chat pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 flex min-h-screen flex-col">
