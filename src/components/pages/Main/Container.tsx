@@ -3,8 +3,10 @@ import { PATH_NAME } from '@/constants';
 import { BookBottomBar } from './BookBottomBar';
 import { MainBody } from './Body';
 import { EmptyRecordsBody } from './EmptyRecordsBody';
+import { RecordsBody } from './RecordsBody';
 
-const hasBook = false; 
+const hasBook = true;
+const hasRecords = true;
 
 const MainContainer = () => {
   if (!hasBook) {
@@ -23,10 +25,20 @@ const MainContainer = () => {
     );
   }
 
+  if (!hasRecords) {
+    return (
+      <div className="flex min-h-dvh flex-col">
+        <Header variant={HEADER_VARIANT.HOME} />
+        <EmptyRecordsBody />
+        <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-dvh flex-col">
       <Header variant={HEADER_VARIANT.HOME} />
-      <EmptyRecordsBody />
+      <RecordsBody />
       <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
     </div>
   );
