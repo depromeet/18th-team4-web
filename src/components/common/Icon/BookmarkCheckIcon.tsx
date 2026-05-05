@@ -1,5 +1,6 @@
-import { cn } from '@/lib';
+import { useId } from 'react';
 import { type ChatCardColor } from '@/components';
+import { cn } from '@/lib';
 
 type Props = {
   color: ChatCardColor;
@@ -25,10 +26,12 @@ const COLOR_CONFIG: Record<ChatCardColor, ColorConfig> = {
 };
 
 export const BookmarkCheckIcon = ({ color, className }: Props) => {
+  const uid = useId();
   const { gradientStart, gradientEnd, shadowR, shadowG, shadowB } = COLOR_CONFIG[color];
-  const gradientId = `bmck-grad-${color}`;
-  const filterId = `bmck-filter-${color}`;
 
+  const gradientId = `bmck-grad-${uid}`;
+  const filterId = `bmck-filter-${uid}`;
+  
   return (
     <svg
       viewBox="16 16 20 22"
