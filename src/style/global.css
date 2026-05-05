@@ -220,6 +220,10 @@
   font-weight: 700;
 }
 
+@utility z-modal {
+  z-index: 100;
+}
+
 @layer base {
   html {
     font-size: 62.5%; /* 1rem = 10px */

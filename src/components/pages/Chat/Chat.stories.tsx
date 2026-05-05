@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Chat, CHAT_USER } from './Chat';
+import { CHAT_USER } from '@/constants';
+import { Chat } from './Chat';
 
 const meta = {
   title: 'Components/Chat',
