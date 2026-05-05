@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, ChatMessage } from '@/constants';
 import { useModal } from '@/hooks';
@@ -13,10 +13,15 @@ const Container = () => {
   const router = useRouter();
   const { isOpen, open, close } = useModal();
 
+  const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState('');
   const [chats, setChats] = useState<ChatMessage[]>([]);
 
-  const canSummarize = chats.some((chat) => chat.user === CHAT_USER.AI);
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chats]);
+
+  const canSummarize = chats.filter((chat) => chat.user === CHAT_USER.AI).length >= 2;
 
   const handleSend = () => {
     const trimmedMessage = message.trim();
@@ -51,11 +56,12 @@ const Container = () => {
           onCta={open}
         />
 
-        <main className="flex-1 overflow-y-auto px-[2.4rem] py-[2.4rem]">
+        <main className="scrollbar-hide flex-1 overflow-y-auto px-[2.4rem]">
           <div className="flex flex-col gap-[2.8rem]">
             {chats.map((chat) => (
               <Chat key={chat.id} user={chat.user} message={chat.message} />
             ))}
+            <div ref={bottomRef} />
           </div>
         </main>
 

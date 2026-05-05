@@ -224,6 +224,13 @@
   z-index: 100;
 }
 
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   html {
     font-size: 62.5%; /* 1rem = 10px */
