@@ -1,4 +1,5 @@
 export { ArrowIcon } from './ArrowIcon';
+export { BookmarkCheckIcon } from './BookmarkCheckIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { CheckIcon } from './CheckIcon';
 export { ChevronIcon } from './ChevronIcon';
