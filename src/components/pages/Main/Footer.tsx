@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Logo } from '@/assets';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
 import { cn } from '@/lib';
@@ -19,23 +19,27 @@ const BOOK_OPTIONS: BookOption[] = [
   { id: '4', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
   { id: '5', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
 ];
-const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
+
+const COVER_SRC = typeof Logo === 'string' ? Logo : Logo.src;
+
+const GRID_ROWS_TRANSITION =
+  'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none';
 
 export const MainFooter = () => {
   const peekRef = useRef<HTMLDivElement | null>(null);
 
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = peekRef.current;
     if (!el) {
       return;
     }
 
     const sync = () => {
-      if (sheetOpen) {
+      if (isSheetOpen) {
         return;
       }
       const h = el.offsetHeight;
@@ -81,38 +85,38 @@ export const MainFooter = () => {
       cancelAnimationFrame(rafInner);
       ro.disconnect();
     };
-  }, [sheetOpen]);
+  }, [isSheetOpen]);
 
   const clickSection = () => {
-    setSheetOpen((prev) => !prev);
+    setIsSheetOpen((prev) => !prev);
   };
 
   return (
     <BottomSheet
-      open={sheetOpen}
+      open={isSheetOpen}
       collapsedMaxHeight={collapsedCap}
       onClose={() => {
-        setSheetOpen(false);
+        setIsSheetOpen(false);
       }}
     >
-      <footer
+      <div
         className={cn(
           'grid min-h-0 min-w-0 max-w-full flex-1 gap-y-0 overflow-hidden',
-          'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-          sheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
+          GRID_ROWS_TRANSITION,
+          isSheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
         )}
       >
-        <section
+        <div
           ref={peekRef}
           className={cn(
             'grid min-h-min min-w-0 grid-cols-1 gap-y-0 overflow-hidden',
-            sheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
+            isSheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
           )}
         >
           <section
             className={cn(
               'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
-              sheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
+              isSheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
             )}
             onClick={clickSection}
           >
@@ -120,15 +124,15 @@ export const MainFooter = () => {
             <ChevronIcon
               className={cn(
                 'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-                sheetOpen ? 'rotate-0' : 'rotate-180',
+                isSheetOpen ? 'rotate-0' : 'rotate-180',
               )}
             />
           </section>
 
-          <section
+          <div
             className={cn(
               'min-h-0 w-full overflow-hidden px-[2.4rem] pt-[1.8rem] pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]',
-              sheetOpen && 'hidden',
+              isSheetOpen && 'hidden',
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -136,26 +140,26 @@ export const MainFooter = () => {
             role="presentation"
           >
             <TextfieldChat />
-          </section>
-        </section>
+          </div>
+        </div>
 
-        <section
+        <div
           className={cn(
             'relative z-10 min-h-0 min-w-0 overflow-hidden',
-            sheetOpen && 'bg-primary-white',
-            !sheetOpen && 'pointer-events-none',
+            isSheetOpen && 'bg-primary-white',
+            !isSheetOpen && 'pointer-events-none',
           )}
         >
           <ul
             className={cn(
               'h-full min-h-0 min-w-0 max-w-full list-none overflow-x-hidden overflow-y-auto overscroll-contain bg-primary-white',
-              sheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
+              isSheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
             {BOOK_OPTIONS.map((book) => (
               <ListItem
                 key={book.id}
-                imageSrc={coverSrc}
+                imageSrc={COVER_SRC}
                 imageAlt={`${book.title} 표지`}
                 title={book.title}
                 year={book.year}
@@ -167,8 +171,8 @@ export const MainFooter = () => {
               />
             ))}
           </ul>
-        </section>
-      </footer>
+        </div>
+      </div>
     </BottomSheet>
   );
 };
