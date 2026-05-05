@@ -1,4 +1,4 @@
-import { BookmarkCheckIcon, ReloadIcon } from '@/components/common/Icon';
+import { BookmarkCheckIcon, ReloadIcon } from '@/components';
 import { cn } from '@/lib';
 import {
   chatCardIconColor,
