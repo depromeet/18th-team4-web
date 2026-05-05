@@ -36,10 +36,11 @@ const MainContainer = () => {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <Header variant={HEADER_VARIANT.HOME} />
+    <div className="flex h-dvh flex-col">
       <RecordsBody />
-      <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
+      <div className="relative z-10 -mt-[6.4rem]">
+        <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
+      </div>
     </div>
   );
 };
