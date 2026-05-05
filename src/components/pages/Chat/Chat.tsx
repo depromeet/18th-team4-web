@@ -13,7 +13,7 @@ export const Chat = (props: Props) => {
 
   return (
     <div className={cn(containerVariants({ user }))}>
-      <p className="text-text-default body2-semibold">{message}</p>
+      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
     </div>
   );
 };
