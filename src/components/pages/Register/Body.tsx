@@ -7,13 +7,13 @@ import { Empty, Header, HEADER_VARIANT, LinkButton, ListItem, TextfieldSearch } 
 import { PATH_NAME } from '@/constants';
 import { useDebouncing } from '@/hooks';
 
+// Mock 데이터 API 연동 후 삭제 예정 Start
 type BookOption = {
   id: string;
   title: string;
   year: number;
   publisher: string;
 };
-
 const BOOK_OPTIONS: BookOption[] = [
   { id: '1', title: '해리포터와 마법사의 돌 1', year: 2007, publisher: '양재서' },
   { id: '6', title: '해리포터와 마법사의 돌 2', year: 2007, publisher: '양재서' },
@@ -27,9 +27,10 @@ const BOOK_OPTIONS: BookOption[] = [
   { id: '4', title: '기묘한 이야기', year: 2026, publisher: '서지윤' },
   { id: '5', title: '메이저러너 시즌 1', year: 2014, publisher: '오승민' },
 ];
+const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
+// Mock 데이터 API 연동 후 삭제 예정 End
 
 const SEARCH_DEBOUNCE_MS = 500;
-const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
 
 export const RegisterBody = () => {
   const router = useRouter();

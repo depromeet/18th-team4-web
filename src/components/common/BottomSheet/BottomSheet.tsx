@@ -81,7 +81,10 @@ export const BottomSheet = (props: BottomSheetProps) => {
       <aside
         aria-label="책 선택"
         aria-modal={open ? 'true' : undefined}
-        className="pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-0 min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden rounded-t-4xl bg-white shadow-[0_-8px_32px_rgb(23_39_35/0.1)] outline-none transition-[max-height] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
+        className={cn(
+          'pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-0 min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white shadow-[0_-8px_32px_rgb(23_39_35/0.1)] outline-none transition-[max-height,border-top-left-radius,border-top-right-radius] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
+          open ? 'rounded-t-4xl' : 'rounded-t-none',
+        )}
         role="dialog"
         onTransitionEnd={handleAsideTransitionEnd}
         style={{

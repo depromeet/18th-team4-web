@@ -5,13 +5,13 @@ import { Logo } from '@/assets';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
 import { cn } from '@/lib';
 
+// Mock 데이터 API 연동 후 삭제 예정 Start
 type BookOption = {
   id: string;
   title: string;
   year: number;
   publisher: string;
 };
-
 const BOOK_OPTIONS: BookOption[] = [
   { id: '1', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
   { id: '2', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
@@ -19,8 +19,8 @@ const BOOK_OPTIONS: BookOption[] = [
   { id: '4', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
   { id: '5', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
 ];
-
 const COVER_SRC = typeof Logo === 'string' ? Logo : Logo.src;
+// Mock 데이터 API 연동 후 삭제 예정 End
 
 export const MainFooter = () => {
   const peekRef = useRef<HTMLDivElement | null>(null);
@@ -29,6 +29,7 @@ export const MainFooter = () => {
   const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
+  // 버튼 레이아웃 높이 계산
   useEffect(() => {
     const el = peekRef.current;
     if (!el) {
@@ -110,6 +111,7 @@ export const MainFooter = () => {
             isSheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
           )}
         >
+          {/* 버튼 레이아웃 */}
           <button
             type="button"
             className={cn(
@@ -127,6 +129,7 @@ export const MainFooter = () => {
             />
           </button>
 
+          {/* 인풋 레이아웃 */}
           <div
             className={cn(
               'min-h-0 w-full overflow-hidden px-[2.4rem] pt-[1.8rem] pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]',
@@ -141,6 +144,7 @@ export const MainFooter = () => {
           </div>
         </div>
 
+        {/* 목록 레이아웃 */}
         <div
           className={cn(
             'relative z-10 min-h-0 min-w-0 overflow-hidden',
