@@ -1,4 +1,4 @@
-import RegisterBody from './Body';
+import { RegisterBody } from './Body';
 
 export const RegisterContainer = () => {
   return (

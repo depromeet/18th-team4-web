@@ -31,7 +31,7 @@ const BOOK_OPTIONS: BookOption[] = [
 const SEARCH_DEBOUNCE_MS = 500;
 const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
 
-export default function RegisterBody() {
+export const RegisterBody = () => {
   const router = useRouter();
 
   const [query, setQuery] = useState('');
@@ -142,4 +142,4 @@ export default function RegisterBody() {
       </div>
     </>
   );
-}
+};
