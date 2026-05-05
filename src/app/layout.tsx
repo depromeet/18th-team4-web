@@ -19,7 +19,7 @@ type Props = {
   children: ReactNode;
 };
 
-export const RootLayout = (props: Props): React.ReactElement => {
+const RootLayout = (props: Props): React.ReactElement => {
   const { children } = props;
   return (
     <html lang="ko" className={`${suit.variable} overflow-x-clip antialiased`}>
@@ -31,3 +31,5 @@ export const RootLayout = (props: Props): React.ReactElement => {
     </html>
   );
 };
+
+export default RootLayout;

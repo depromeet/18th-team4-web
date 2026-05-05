@@ -8,6 +8,8 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-export const page = () => {
+const page = () => {
   return <RegisterComplete />;
 };
+
+export default page;
