@@ -30,9 +30,11 @@ export const ChatCard = (props: ChatCardProps) => {
     onRefresh,
   } = props;
 
-  const isDefault = status === CHAT_CARD_STATUS.DEFAULT;
-  const isLoading = status === CHAT_CARD_STATUS.LOADING;
-  const isError = status === CHAT_CARD_STATUS.ERROR;
+  const [isDefault, isLoading, isError] = [
+    CHAT_CARD_STATUS.DEFAULT,
+    CHAT_CARD_STATUS.LOADING,
+    CHAT_CARD_STATUS.ERROR,
+  ].map((s) => status === s);
 
   return (
     <article className={cn(chatCardVariants({ color }), className)}>
