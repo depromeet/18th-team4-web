@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { Chat } from '@/components/pages/Chat/Chat';
+import { Modal } from '@/components/pages/Chat/Modal';
 import { CHAT_BG_VARIANT, CHAT_USER, ChatMessage } from '@/constants';
 import { chatData } from '@/lib/mocks/chatData';
 
@@ -12,6 +13,9 @@ const Container = () => {
 
   const [message, setMessage] = useState('');
   const [chats, setChats] = useState<ChatMessage[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const canSummarize = chats.some((chat) => chat.user === CHAT_USER.AI);
 
   const handleSend = () => {
     const trimmedMessage = message.trim();
@@ -39,7 +43,12 @@ const Container = () => {
       <div className="bg-gradient-chat pointer-events-none absolute inset-0" />
 
       <div className="relative z-10 flex h-screen flex-col">
-        <Header variant={HEADER_VARIANT.CHAT} onBack={() => router.back()} />
+        <Header
+          variant={HEADER_VARIANT.CHAT}
+          summarizeActive={canSummarize}
+          onBack={() => router.back()}
+          onCta={() => setIsModalOpen(true)}
+        />
 
         <main className="flex-1 overflow-y-auto px-[2.4rem] py-[2.4rem]">
           <div className="flex flex-col gap-[2.8rem]">
@@ -59,6 +68,12 @@ const Container = () => {
           />
         </footer>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
