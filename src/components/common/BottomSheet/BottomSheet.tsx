@@ -1,26 +1,26 @@
 'use client';
 
-import { cn } from '@/lib';
-import { type ReactNode, type TransitionEvent, useEffect, useState } from 'react';
+import { type ReactNode, type TransitionEvent, useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
+import { cn } from '@/lib';
 
 type BottomSheetProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
-  /** 접힘 시 패널 상한. 첫 측정 전 `undefined`면 열림과 동일한 상한(길이)으로 두어 `none`→`px` 비보간 스냅 방지 */
   collapsedMaxHeight?: string;
-  /** 패널 `max-height` 트랜지션 종료 시점(닫힘·열림 모두). 자식 레이아웃을 트랜지션 후에 맞출 때 사용 */
   onMaxHeightTransitionEnd?: (openAfterTransition: boolean) => void;
 };
 
+const noOpSubscribe = () => () => {};
+
 export const BottomSheet = (props: BottomSheetProps) => {
   const { children, collapsedMaxHeight, onClose, onMaxHeightTransitionEnd, open } = props;
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    noOpSubscribe,
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
     if (!open) {
@@ -48,10 +48,6 @@ export const BottomSheet = (props: BottomSheetProps) => {
     };
   }, [open, onClose]);
 
-  if (!mounted) {
-    return null;
-  }
-
   const handleAsideTransitionEnd = (e: TransitionEvent<HTMLElement>) => {
     if (e.target !== e.currentTarget) {
       return;
@@ -62,10 +58,9 @@ export const BottomSheet = (props: BottomSheetProps) => {
     onMaxHeightTransitionEnd?.(open);
   };
 
-  const maxPanelHeight =
-    'min(80dvh, calc(100dvh - env(safe-area-inset-bottom, 0px)))';
-
-  const collapsedResolved = collapsedMaxHeight ?? maxPanelHeight;
+  if (!mounted) {
+    return null;
+  }
 
   return createPortal(
     <div
@@ -89,7 +84,9 @@ export const BottomSheet = (props: BottomSheetProps) => {
         role="dialog"
         onTransitionEnd={handleAsideTransitionEnd}
         style={{
-          maxHeight: open ? maxPanelHeight : collapsedResolved,
+          maxHeight: open
+            ? 'min(80dvh, calc(100dvh - env(safe-area-inset-bottom, 0px)))'
+            : (collapsedMaxHeight ?? 'min(80dvh, calc(100dvh - env(safe-area-inset-bottom, 0px)))'),
         }}
       >
         <div className="flex min-h-0 min-w-0 w-full max-w-full flex-1 flex-col overflow-hidden">
