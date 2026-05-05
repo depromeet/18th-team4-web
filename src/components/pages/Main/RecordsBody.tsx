@@ -15,7 +15,7 @@ export const RecordsBody = () => {
     <div className="relative flex-1 flex flex-col bg-background-primary-base overflow-y-hidden">
       <Header variant={HEADER_VARIANT.HOME} className="absolute top-0 z-10" />
       <div className="flex-1" />
-      <div ref={containerRef} className="relative flex flex-col overflow-y-auto py-[6.4rem]">
+      <div ref={containerRef} className="relative flex flex-col overflow-y-auto py-[6.4rem] scrollbar-hide">
         <ChatCard
           color={CHAT_CARD_COLOR.MAGENTA}
           status={CHAT_CARD_STATUS.DEFAULT}
