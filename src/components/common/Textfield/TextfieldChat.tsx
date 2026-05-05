@@ -20,7 +20,7 @@ export const TextfieldChat = (props: Props) => {
     <div className={cn(containerVariants({ bgVariant, status }))}>
       <BaseInput
         disabled={isDisabled}
-        className={inputVariants({ status })}
+        className={cn(inputVariants({ status }))}
         placeholder={placeholder}
         {...rest}
       />
