@@ -30,19 +30,21 @@ export const ChatCard = (props: ChatCardProps) => {
     onRefresh,
   } = props;
 
-  const isDefault = status === CHAT_CARD_STATUS.DEFAULT;
-  const isLoading = status === CHAT_CARD_STATUS.LOADING;
-  const isError = status === CHAT_CARD_STATUS.ERROR;
+  const [isDefault, isLoading, isError] = [
+    CHAT_CARD_STATUS.DEFAULT,
+    CHAT_CARD_STATUS.LOADING,
+    CHAT_CARD_STATUS.ERROR,
+  ].map((s) => status === s);
 
   return (
-    <div className={cn(chatCardVariants({ color }), className)}>
+    <article className={cn(chatCardVariants({ color }), className)}>
       <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_4px_32px_0px_rgba(255,255,255,0.65)]" />
 
       <div className="relative flex min-w-0 flex-1 flex-col gap-[0.4rem]">
         {(isDefault || isLoading) && date && (
-          <p className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
+          <time dateTime={date} className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
             {date}
-          </p>
+          </time>
         )}
         {isError && (
           <p className="body1-medium shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
@@ -54,7 +56,7 @@ export const ChatCard = (props: ChatCardProps) => {
         {isDefault && (
           <p
             className={cn(
-              'headline2-bold whitespace-nowrap w-full tracking-[-0.06rem]',
+              'headline2-bold truncate w-full tracking-[-0.06rem]',
               chatCardTitleColor[color],
             )}
           >
@@ -98,6 +100,6 @@ export const ChatCard = (props: ChatCardProps) => {
           <ReloadIcon className={cn('size-[2.4rem]', chatCardIconColor[color])} />
         </button>
       )}
-    </div>
+    </article>
   );
 };

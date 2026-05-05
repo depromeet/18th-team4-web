@@ -99,9 +99,8 @@
   --leading-caption1: 1.4;
 }
 
-/* chatCardVariants.ts의 동적 클래스 — Tailwind 스캐너가 순수 TS 파일을 감지 못할 경우를 대비해 강제 생성 */
-@source inline("text-sub-{teal,magenta,yellow,sky,green,purple,blue}");
-@source inline("fill-sub-{teal,magenta,yellow,sky,green,purple,blue}");
+@source inline("text-sub-teal text-sub-magenta text-sub-yellow text-sub-sky text-sub-green text-sub-purple text-sub-blue");
+@source inline("fill-sub-teal fill-sub-magenta fill-sub-yellow fill-sub-sky fill-sub-green fill-sub-purple fill-sub-blue");
 
 @utility headline1-medium {
   font-family: var(--font-sans);
@@ -212,5 +211,18 @@
   html {
     font-size: 62.5%; /* 1rem = 10px */
     font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    /* IE and Edge */
+    -ms-overflow-style: none;
+    /* Firefox */
+    scrollbar-width: none;
+  }
+  /* Chrome, Safari, Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
