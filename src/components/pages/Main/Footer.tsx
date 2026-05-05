@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Logo } from '@/assets';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
 import { cn } from '@/lib';
@@ -21,9 +21,6 @@ const BOOK_OPTIONS: BookOption[] = [
 ];
 const coverSrc = typeof Logo === 'string' ? Logo : Logo.src;
 
-const gridRowsTransition =
-  'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none';
-
 export const MainFooter = () => {
   const peekRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,9 +28,7 @@ export const MainFooter = () => {
   const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
-  const selectedBook = BOOK_OPTIONS.find((b) => b.id === selectedId) ?? BOOK_OPTIONS[0];
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = peekRef.current;
     if (!el) {
       return;
@@ -100,14 +95,14 @@ export const MainFooter = () => {
         setSheetOpen(false);
       }}
     >
-      <div
+      <footer
         className={cn(
           'grid min-h-0 min-w-0 max-w-full flex-1 gap-y-0 overflow-hidden',
-          gridRowsTransition,
+          'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
           sheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
         )}
       >
-        <div
+        <section
           ref={peekRef}
           className={cn(
             'grid min-h-min min-w-0 grid-cols-1 gap-y-0 overflow-hidden',
@@ -121,9 +116,7 @@ export const MainFooter = () => {
             )}
             onClick={clickSection}
           >
-            <p className="headline2-extrabold text-text-default">
-              {selectedBook?.title ?? '해리 포터와 마법사의 돌 1'}
-            </p>
+            <p className="headline2-extrabold text-text-default">해리 포터와 마법사의 돌 1</p>
             <ChevronIcon
               className={cn(
                 'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
@@ -132,7 +125,7 @@ export const MainFooter = () => {
             />
           </section>
 
-          <div
+          <section
             className={cn(
               'min-h-0 w-full overflow-hidden px-[2.4rem] pt-[1.8rem] pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]',
               sheetOpen && 'hidden',
@@ -143,10 +136,10 @@ export const MainFooter = () => {
             role="presentation"
           >
             <TextfieldChat />
-          </div>
-        </div>
+          </section>
+        </section>
 
-        <div
+        <section
           className={cn(
             'relative z-10 min-h-0 min-w-0 overflow-hidden',
             sheetOpen && 'bg-primary-white',
@@ -174,8 +167,8 @@ export const MainFooter = () => {
               />
             ))}
           </ul>
-        </div>
-      </div>
+        </section>
+      </footer>
     </BottomSheet>
   );
 };
