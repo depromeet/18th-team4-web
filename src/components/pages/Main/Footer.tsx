@@ -113,7 +113,8 @@ export const MainFooter = () => {
             isSheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
           )}
         >
-          <section
+          <button
+            type="button"
             className={cn(
               'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
               isSheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
@@ -127,7 +128,7 @@ export const MainFooter = () => {
                 isSheetOpen ? 'rotate-0' : 'rotate-180',
               )}
             />
-          </section>
+          </button>
 
           <div
             className={cn(
