@@ -6,7 +6,7 @@ export const CHAT_USER = {
 export type ChatUser = (typeof CHAT_USER)[keyof typeof CHAT_USER];
 
 export type ChatMessage = {
-  id: number;
+  id: string;
   user: (typeof CHAT_USER)[keyof typeof CHAT_USER];
   message: string;
 };

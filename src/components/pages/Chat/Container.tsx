@@ -17,25 +17,21 @@ const Container = () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage) return;
 
-    setChats((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        user: CHAT_USER.ME,
-        message: trimmedMessage,
-      },
-    ]);
+    const newUserMessage = {
+      id: crypto.randomUUID(),
+      user: CHAT_USER.ME,
+      message: trimmedMessage,
+    };
+
+    const newAiMessage = chatData.map((msg) => ({
+      id: crypto.randomUUID(),
+      user: CHAT_USER.AI,
+      message: msg,
+    }));
+
+    setChats((prev) => [...prev, newUserMessage, ...newAiMessage]);
 
     setMessage('');
-
-    setChats((prev) => [
-      ...prev,
-      ...chatData.map((msg, idx) => ({
-        id: Date.now() + idx + 1,
-        user: CHAT_USER.AI,
-        message: msg,
-      })),
-    ]);
   };
 
   return (
