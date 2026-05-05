@@ -57,7 +57,7 @@ export const ChatCard = (props: ChatCardProps) => {
         {isDefault && (
           <p
             className={cn(
-              'headline2-bold whitespace-nowrap w-full tracking-[-0.06rem]',
+              'headline2-bold truncate w-full tracking-[-0.06rem]',
               chatCardTitleColor[color],
             )}
           >
