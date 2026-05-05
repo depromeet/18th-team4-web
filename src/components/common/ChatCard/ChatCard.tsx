@@ -35,15 +35,15 @@ export const ChatCard = (props: ChatCardProps) => {
   const isError = status === CHAT_CARD_STATUS.ERROR;
 
   return (
-    <div className={cn(chatCardVariants({ color }), className)}>
+    <article className={cn(chatCardVariants({ color }), className)}>
       <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_4px_32px_0px_rgba(255,255,255,0.65)]" />
 
       <div className="relative flex min-w-0 flex-1 flex-col gap-[0.4rem]">
 
         {(isDefault || isLoading) && date && (
-          <p className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
+          <time dateTime={date} className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
             {date}
-          </p>
+          </time>
         )}
         {isError && (
           <p className="body1-medium shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
@@ -99,6 +99,6 @@ export const ChatCard = (props: ChatCardProps) => {
           <ReloadIcon className={cn('size-[2.4rem]', chatCardIconColor[color])} />
         </button>
       )}
-    </div>
+    </article>
   );
 };
