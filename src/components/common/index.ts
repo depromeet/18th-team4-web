@@ -4,3 +4,4 @@ export * from './Icon';
 export * from './ListItem';
 export * from './Textfield';
 export * from './Tooltip';
+export * from './ChatCard';
