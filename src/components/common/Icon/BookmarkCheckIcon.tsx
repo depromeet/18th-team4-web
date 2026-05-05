@@ -16,13 +16,55 @@ type ColorConfig = {
 };
 
 const COLOR_CONFIG: Record<ChatCardColor, ColorConfig> = {
-  teal:    { gradientStart: '#468D8D', gradientEnd: '#086767', shadowR: 0.0314, shadowG: 0.4039, shadowB: 0.4039 },
-  magenta: { gradientStart: '#853965', gradientEnd: '#60193D', shadowR: 0.3765, shadowG: 0.0941, shadowB: 0.2392 },
-  yellow:  { gradientStart: '#A47950', gradientEnd: '#864c16', shadowR: 0.5255, shadowG: 0.2980, shadowB: 0.0863 },
-  sky:     { gradientStart: '#5C92A4', gradientEnd: '#256d85', shadowR: 0.1451, shadowG: 0.4275, shadowB: 0.5216 },
-  green:   { gradientStart: '#6A8547', gradientEnd: '#385c0a', shadowR: 0.2196, shadowG: 0.3608, shadowB: 0.0392 },
-  purple:  { gradientStart: '#6C6EA6', gradientEnd: '#3b3d88', shadowR: 0.2314, shadowG: 0.2392, shadowB: 0.5333 },
-  blue:    { gradientStart: '#657EAC', gradientEnd: '#325390', shadowR: 0.1961, shadowG: 0.3255, shadowB: 0.5647 },
+  teal: {
+    gradientStart: '#468D8D',
+    gradientEnd: '#086767',
+    shadowR: 0.0314,
+    shadowG: 0.4039,
+    shadowB: 0.4039,
+  },
+  magenta: {
+    gradientStart: '#853965',
+    gradientEnd: '#60193D',
+    shadowR: 0.3765,
+    shadowG: 0.0941,
+    shadowB: 0.2392,
+  },
+  yellow: {
+    gradientStart: '#A47950',
+    gradientEnd: '#864c16',
+    shadowR: 0.5255,
+    shadowG: 0.298,
+    shadowB: 0.0863,
+  },
+  sky: {
+    gradientStart: '#5C92A4',
+    gradientEnd: '#256d85',
+    shadowR: 0.1451,
+    shadowG: 0.4275,
+    shadowB: 0.5216,
+  },
+  green: {
+    gradientStart: '#6A8547',
+    gradientEnd: '#385c0a',
+    shadowR: 0.2196,
+    shadowG: 0.3608,
+    shadowB: 0.0392,
+  },
+  purple: {
+    gradientStart: '#6C6EA6',
+    gradientEnd: '#3b3d88',
+    shadowR: 0.2314,
+    shadowG: 0.2392,
+    shadowB: 0.5333,
+  },
+  blue: {
+    gradientStart: '#657EAC',
+    gradientEnd: '#325390',
+    shadowR: 0.1961,
+    shadowG: 0.3255,
+    shadowB: 0.5647,
+  },
 };
 
 export const BookmarkCheckIcon = ({ color, className }: Props) => {
@@ -31,7 +73,7 @@ export const BookmarkCheckIcon = ({ color, className }: Props) => {
 
   const gradientId = `bmck-grad-${uid}`;
   const filterId = `bmck-filter-${uid}`;
-  
+
   return (
     <svg
       viewBox="16 16 20 22"
@@ -67,7 +109,14 @@ export const BookmarkCheckIcon = ({ color, className }: Props) => {
           <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
           <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
         </filter>
-        <linearGradient id={gradientId} x1="26" y1="16" x2="26" y2="39" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id={gradientId}
+          x1="26"
+          y1="16"
+          x2="26"
+          y2="39"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor={gradientStart} />
           <stop offset="1" stopColor={gradientEnd} />
         </linearGradient>

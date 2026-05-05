@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { ChatCard, CHAT_CARD_COLOR, CHAT_CARD_STATUS, Header, HEADER_VARIANT } from '@/components';
+import { CHAT_CARD_COLOR, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VARIANT } from '@/components';
 
 export const RecordsBody = () => {
   const containerRef = useRef<HTMLOListElement>(null);

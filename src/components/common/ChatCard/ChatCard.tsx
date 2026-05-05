@@ -1,12 +1,12 @@
 import { BookmarkCheckIcon, ReloadIcon } from '@/components';
 import { cn } from '@/lib';
 import {
-  chatCardIconColor,
-  chatCardTitleColor,
-  chatCardVariants,
   CHAT_CARD_STATUS,
   type ChatCardColor,
+  chatCardIconColor,
   type ChatCardStatus,
+  chatCardTitleColor,
+  chatCardVariants,
 } from './chatCardVariants';
 
 export type ChatCardProps = {
@@ -41,7 +41,6 @@ export const ChatCard = (props: ChatCardProps) => {
       <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_4px_32px_0px_rgba(255,255,255,0.65)]" />
 
       <div className="relative flex min-w-0 flex-1 flex-col gap-[0.4rem]">
-
         {(isDefault || isLoading) && date && (
           <time dateTime={date} className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
             {date}
