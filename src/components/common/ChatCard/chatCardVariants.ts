@@ -20,7 +20,7 @@ export type ChatCardColor = (typeof CHAT_CARD_COLOR)[keyof typeof CHAT_CARD_COLO
 export type ChatCardStatus = (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS];
 
 export const chatCardVariants = cva(
-  'relative flex items-start gap-[0.8rem] rounded-tl-[2.4rem] rounded-tr-[2.4rem] pb-[8rem] pt-[2.4rem] px-[2.4rem]',
+  'relative flex items-start gap-[0.8rem] rounded-tl-[2.4rem] rounded-tr-[2.4rem] border border-white pb-[8rem] pt-[2.4rem] px-[2.4rem]',
   {
     variants: {
       color: {
