@@ -19,6 +19,11 @@ export const LinkButton = (props: Props) => {
   return (
     <Link
       href={href}
+      aria-disabled={disabled || undefined}
+      tabIndex={disabled ? -1 : undefined}
+      onClick={
+        disabled ? (e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault() : undefined
+      }
       className={cn(
         buttonVariants({ variant, size, className }),
         disabled && 'pointer-events-none cursor-not-allowed bg-gray-50 text-text-disable',
