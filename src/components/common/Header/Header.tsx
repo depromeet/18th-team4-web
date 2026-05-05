@@ -1,9 +1,9 @@
 import { type VariantProps } from 'class-variance-authority';
-import { Button, ArrowIcon, PlusIcon } from '@/components';
-import { cn } from '@/lib';
-import { headerVariants, HEADER_VARIANT } from './headerVariants';
-import { Logo } from '@/assets';
 import Image from 'next/image';
+import { Logo } from '@/assets';
+import { ArrowIcon, Button, PlusIcon } from '@/components';
+import { cn } from '@/lib';
+import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
 type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
