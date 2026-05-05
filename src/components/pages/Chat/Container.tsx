@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
-import { Chat } from '@/components/pages/Chat/Chat';
-import { Modal } from '@/components/pages/Chat/Modal';
 import { CHAT_BG_VARIANT, CHAT_USER, ChatMessage } from '@/constants';
 import { useModal } from '@/hooks';
-import { chatData } from '@/lib/mocks/chatData';
+import { chatData } from '@/lib';
+import { Chat } from './Chat';
+import { Modal } from './Modal';
 
 const Container = () => {
   const router = useRouter();
