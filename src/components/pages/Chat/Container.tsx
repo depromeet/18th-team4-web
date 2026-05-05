@@ -56,7 +56,7 @@ const Container = () => {
           onCta={open}
         />
 
-        <main className="scrollbar-hide flex-1 overflow-y-auto px-[2.4rem]">
+        <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
             {chats.map((chat) => (
               <Chat key={chat.id} user={chat.user} message={chat.message} />
@@ -65,7 +65,7 @@ const Container = () => {
           </div>
         </main>
 
-        <footer className="bg-gradient-footer rounded-t-[24px] px-[2.4rem] py-[2rem]">
+        <footer className="bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-border-white/30 border-b-0 px-[2.4rem] py-8 backdrop-blur-md">
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
             placeholder="이야기를 나눠보세요"
