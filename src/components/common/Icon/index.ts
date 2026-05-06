@@ -7,6 +7,8 @@ export { ColorSymbolIcon } from './ColorSymbolIcon';
 export { DotIcon } from './DotIcon';
 export { MenuIcon } from './MenuIcon';
 export { PlusIcon } from './PlusIcon';
+export { ReadumMarkIcon } from './ReadumMarkIcon';
+export { ReadumMarkLoadingIcon } from './ReadumMarkLoadingIcon';
 export { ReloadIcon } from './ReloadIcon';
 export { SearchIcon } from './SearchIcon';
 export { SendIcon } from './SendIcon';
