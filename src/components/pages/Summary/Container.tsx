@@ -1,8 +1,5 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { Header, HEADER_VARIANT } from '@/components';
 import { SummaryCard, type SummarySection } from './SummaryCard';
+import { SummaryHeader } from './SummaryHeader';
 
 const MOCK_SECTIONS: SummarySection[] = [
   {
@@ -20,11 +17,9 @@ const MOCK_SECTIONS: SummarySection[] = [
 ];
 
 export const SummaryContainer = () => {
-  const router = useRouter();
-
   return (
     <>
-      <Header variant={HEADER_VARIANT.BACK} onBack={() => router.back()} />
+      <SummaryHeader />
       <section className="flex flex-col">
         <div className="px-[2.4rem]">
           <SummaryCard sections={MOCK_SECTIONS} />
