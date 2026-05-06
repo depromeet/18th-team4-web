@@ -1,0 +1,61 @@
+name: Deploy Storybook
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag, or SHA to deploy. Defaults to the selected workflow ref.'
+        required: false
+        type: string
+
+concurrency:
+  group: storybook-gh-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  HUSKY: 0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm run build-storybook
+
+      - name: Disable Jekyll
+        run: touch storybook-static/.nojekyll
+
+      - name: Deploy Storybook to Pages root
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: storybook-static
+          clean: true
+          clean-exclude: |
+            pr-*
+            pr-*/**
+          force: false
+          attempt-limit: 5

@@ -1,0 +1,36 @@
+name: Reset Storybook Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type RESET_STORYBOOK_PAGES to remove all Storybook Pages deployments.'
+        required: true
+        type: string
+
+concurrency:
+  group: storybook-gh-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  reset:
+    if: ${{ inputs.confirm == 'RESET_STORYBOOK_PAGES' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create empty Pages directory
+        run: |
+          mkdir empty-pages
+          touch empty-pages/.nojekyll
+
+      - name: Reset gh-pages branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: empty-pages
+          clean: true
+          single-commit: true
+
