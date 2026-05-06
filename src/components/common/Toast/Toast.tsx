@@ -1,8 +1,9 @@
+import { type ReactNode } from 'react';
 import { WarningIcon } from '@/components';
 import { cn } from '@/lib';
 import { toastGlowVariants, toastIconVariants, type ToastType } from './toastVariants';
 
-const TOAST_ICON: Record<ToastType, (className: string) => React.ReactNode> = {
+const TOAST_ICON: Record<ToastType, (className: string) => ReactNode> = {
   error: (className) => <WarningIcon className={className} />,
 };
 
