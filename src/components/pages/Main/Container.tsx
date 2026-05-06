@@ -16,8 +16,6 @@ export const MainContainer = ({ session }: Props) => {
     return null;
   }
 
-  console.log(session);
-
   // 2. 온보딩 미완료
   if (!session.onboardingCompleted) {
     return (

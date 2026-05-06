@@ -64,18 +64,6 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
       status: 503,
     });
   }
-
-  console.groupCollapsed('api call');
-  console.log('METHOD:', options.method);
-  console.log('URL:', url);
-  console.log('HEADERS:', {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
-  });
-  console.groupEnd();
-  console.groupCollapsed('api response');
-  console.log(res);
-  console.groupEnd();
   if (!res.ok) {
     let message = 'API Error';
     let errorCode: string | undefined;

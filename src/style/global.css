@@ -274,6 +274,11 @@
   }
 }
 
+.page-fade-in {
+  animation: fade-in 0.5s ease-in-out both;
+  pointer-events: auto;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

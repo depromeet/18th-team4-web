@@ -20,9 +20,9 @@ export const OnboardingSkipButton = () => {
       type="button"
       onClick={handleSkip}
       disabled={isPending}
-      className="body1-bold text-center tracking-[-0.048rem] text-text-caption disabled:opacity-50"
+      className="body1-bold cursor-pointer touch-manipulation px-[2.4rem] py-[1.2rem] text-center tracking-[-0.048rem] text-text-caption disabled:opacity-50"
     >
-      {isPending ? '처리 중...' : '둘러보기'}
+      {isPending ? '넘어가는중...' : '넘어가기'}
     </button>
   );
 };
