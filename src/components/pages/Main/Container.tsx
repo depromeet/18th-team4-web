@@ -16,6 +16,8 @@ export const MainContainer = ({ session }: Props) => {
     return null;
   }
 
+  console.log(session);
+
   // 2. 온보딩 미완료
   if (!session.onboardingCompleted) {
     return (
@@ -34,7 +36,7 @@ export const MainContainer = ({ session }: Props) => {
   }
 
   // 3. 온보딩 완료, 책 미등록
-  if (session.hasRegisteredBooks) {
+  if (!session.hasRegisteredBooks) {
     return (
       <div className="flex min-h-dvh flex-col">
         <MainBody />
