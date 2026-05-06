@@ -16,6 +16,8 @@ CLAUDE.md는 작업 중 항상 떠올려야 하는 최소한만 담습니다.
 - **명명 함수 선언 `function foo()` → arrow function `const foo = () => {}`**
 - **`import type { … }` 분리 구문 → `import { type … }` 인라인**
 - `default export` (페이지 `app/**/page.tsx`와 Container `components/pages/<Page>/index.tsx`에서만 허용)
+- 함수 시그니처에서 props 구조분해 → `(props: Props)`로 받고 본문에서 구조분해
+- 깊은 경로 import → `index.ts`가 있으면 항상 최상위 경로 사용 (`@/components/common/Button` ❌ → `@/components` ✅)
 - 디렉터리 경계 넘는 `../` import → 항상 `@/` alias 사용
 - commit 코드의 `console.log` (`console.warn` / `console.error`만 허용)
 - `process.env` 직접 접근 → `@/config/env`를 통해서만
