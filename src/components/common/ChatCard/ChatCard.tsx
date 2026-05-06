@@ -42,7 +42,10 @@ export const ChatCard = (props: ChatCardProps) => {
 
       <div className="relative flex min-w-0 flex-1 flex-col gap-[0.4rem]">
         {(isDefault || isLoading) && date && (
-          <time dateTime={date} className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]">
+          <time
+            dateTime={date}
+            className="body1-medium w-full shrink-0 tracking-[-0.08rem] text-[rgba(0,0,0,0.27)]"
+          >
             {date}
           </time>
         )}

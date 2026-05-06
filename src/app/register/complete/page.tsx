@@ -1,5 +1,5 @@
 import { type Metadata } from 'next';
-import { RegisterContainer } from '@/components';
+import { RegisterComplete } from '@/components';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
@@ -9,7 +9,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const page = () => {
-  return <RegisterContainer />;
+  return <RegisterComplete />;
 };
 
 export default page;

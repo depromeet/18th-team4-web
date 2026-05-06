@@ -3,5 +3,6 @@ export const PATH_NAME = {
 
   register: {
     list: () => '/register',
+    complete: () => '/register/complete',
   },
 } as const;

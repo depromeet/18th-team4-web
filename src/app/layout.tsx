@@ -14,6 +14,7 @@ const suit = localFont({
 export const metadata: Metadata = {
   title: 'Readum',
   description: '나만의 독서 기록 서비스',
+  icons: { icon: [{ url: '/icon.svg', type: 'image/svg+xml' }] },
 };
 
 type Props = {

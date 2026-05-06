@@ -1,14 +1,14 @@
 import { Header, HEADER_VARIANT, LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { MainBody } from './Body';
-import { BookBottomBar } from './BookBottomBar';
 import { EmptyRecordsBody } from './EmptyRecordsBody';
+import { MainFooter } from './Footer';
 import { RecordsBody } from './RecordsBody';
 
 const hasBook = true;
 const hasRecords = true;
 
-const MainContainer = () => {
+export const MainContainer = () => {
   if (!hasBook) {
     return (
       <div className="flex min-h-dvh flex-col">
@@ -35,10 +35,10 @@ const MainContainer = () => {
 
   if (!hasRecords) {
     return (
-      <div className="flex min-h-dvh flex-col">
+      <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
         <Header variant={HEADER_VARIANT.HOME} />
         <EmptyRecordsBody />
-        <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
+        <MainFooter />
       </div>
     );
   }
@@ -46,11 +46,8 @@ const MainContainer = () => {
   return (
     <div className="flex h-dvh flex-col">
       <RecordsBody />
-      <div className="relative z-10 -mt-[6.4rem]">
-        <BookBottomBar bookTitle="해리 포터와 마법사의 돌 1" />
-      </div>
+      <div className="mt-[10.2rem]" />
+      <MainFooter />
     </div>
   );
 };
-
-export default MainContainer;

@@ -3,6 +3,7 @@ export { BookmarkCheckIcon } from './BookmarkCheckIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { CheckIcon } from './CheckIcon';
 export { ChevronIcon } from './ChevronIcon';
+export { ColorSymbolIcon } from './ColorSymbolIcon';
 export { DotIcon } from './DotIcon';
 export { MenuIcon } from './MenuIcon';
 export { PlusIcon } from './PlusIcon';

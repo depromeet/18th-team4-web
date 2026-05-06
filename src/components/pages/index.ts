@@ -1,2 +1,3 @@
-export { default as MainContainer } from './Main/Container';
-export { default as RegisterContainer } from './Register/Container';
+export { MainContainer } from './Main/Container';
+export { RegisterComplete } from './Register/Complete';
+export { RegisterContainer } from './Register/Container';
