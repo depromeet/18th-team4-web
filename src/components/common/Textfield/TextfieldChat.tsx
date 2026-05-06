@@ -16,6 +16,13 @@ export const TextfieldChat = (props: Props) => {
   const placeholder = CHAT_PLACEHOLDER[status ?? CHAT_STATUS.DEFAULT];
   const isDisabled = status === CHAT_STATUS.DISABLED || status === CHAT_STATUS.ERROR;
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+      onSend?.();
+    }
+    rest.onKeyDown?.(e);
+  };
+
   return (
     <div className={cn(containerVariants({ bgVariant, status }))}>
       <BaseInput
@@ -23,6 +30,7 @@ export const TextfieldChat = (props: Props) => {
         className={cn(inputVariants({ status }))}
         placeholder={placeholder}
         {...rest}
+        onKeyDown={handleKeyDown}
       />
       <button
         type="button"
