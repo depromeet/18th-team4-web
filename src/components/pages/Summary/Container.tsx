@@ -19,7 +19,7 @@ const MOCK_SECTIONS: SummarySection[] = [
   },
 ];
 
-const SummaryContainer = () => {
+export const SummaryContainer = () => {
   const router = useRouter();
 
   return (
@@ -33,5 +33,3 @@ const SummaryContainer = () => {
     </>
   );
 };
-
-export default SummaryContainer;

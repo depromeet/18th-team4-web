@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Header, HEADER_VARIANT } from '@/components';
 import { SummaryLoading } from './SummaryLoading';
 
-const LoadingContainer = () => {
+export const LoadingContainer = () => {
   const router = useRouter();
 
   return (
@@ -16,5 +16,3 @@ const LoadingContainer = () => {
     </div>
   );
 };
-
-export default LoadingContainer;
