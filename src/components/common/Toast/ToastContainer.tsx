@@ -1,10 +1,16 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useToastStore } from '@/lib/stores';
+import { useToastStore } from '@/lib';
 import { Toast } from './Toast';
 
-const ToastTimer = ({ id, duration }: { id: string; duration: number }) => {
+type ToastTimerProps = {
+  id: string;
+  duration: number;
+};
+
+const ToastTimer = (props: ToastTimerProps) => {
+  const { id, duration } = props;
   const dismissToast = useToastStore((s) => s.dismissToast);
 
   useEffect(() => {

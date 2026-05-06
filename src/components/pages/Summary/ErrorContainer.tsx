@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { PATH_NAME } from '@/constants/pathName';
+import { PATH_NAME } from '@/constants';
 import { useToastStore } from '@/lib';
 
 export const ErrorContainer = () => {

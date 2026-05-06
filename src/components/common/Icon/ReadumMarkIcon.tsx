@@ -1,5 +1,5 @@
 import { ReadumMarkSm } from '@/assets';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 
 type Props = {
   className?: string;
