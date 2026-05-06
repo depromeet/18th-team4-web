@@ -13,8 +13,7 @@ import {
 } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { useDebouncing } from '@/hooks';
-import { useBookSearch } from '@/lib/api/services/books';
-import { useAddUserBook } from '@/lib/api/services/user-books';
+import { useAddUserBook, useBookSearch } from '@/lib';
 
 const SEARCH_DEBOUNCE_MS = 500;
 

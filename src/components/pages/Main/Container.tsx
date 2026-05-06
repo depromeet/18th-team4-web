@@ -1,6 +1,6 @@
 import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { type Session } from '@/lib/api/services/users';
+import { type Session } from '@/lib';
 import { MainBody } from './Body';
 import { MainFooter } from './Footer';
 import { OnboardingSkipButton } from './OnboardingSkipButton';

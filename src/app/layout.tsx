@@ -3,9 +3,8 @@ import { type Metadata } from 'next';
 import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
-import { Background } from '@/assets/common';
-import { PageTransition } from '@/providers/PageTransition';
-import { QueryProvider } from '@/providers/QueryProvider';
+import { Background } from '@/assets';
+import { PageTransition, QueryProvider } from '@/providers';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',

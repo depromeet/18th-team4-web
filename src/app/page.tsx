@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import { MainContainer } from '@/components';
-import { getUserSession } from '@/lib/api/services/users';
+import { getUserSession } from '@/lib';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {

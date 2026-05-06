@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createResponseSchema } from '@/lib/api/types';
+import { createResponseSchema } from '@/lib';
 
 export const AddUserBookRequestSchema = z.object({
   bookExternalId: z.string().min(1),

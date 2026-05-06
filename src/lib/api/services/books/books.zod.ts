@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createResponseSchema } from '@/lib/api/types';
+import { createResponseSchema } from '@/lib';
 
 export const BookItemSchema = z.object({
   coverUrl: z.string(),
