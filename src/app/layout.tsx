@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
 import { Background } from '@/assets/common';
+import { PageTransition } from '@/providers/PageTransition';
 import { QueryProvider } from '@/providers/QueryProvider';
 
 const suit = localFont({
@@ -39,7 +40,9 @@ const RootLayout = (props: Props): React.ReactElement => {
             className="pointer-events-none object-cover"
           />
           <div className="relative">
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <PageTransition>{children}</PageTransition>
+            </QueryProvider>
           </div>
         </main>
       </body>

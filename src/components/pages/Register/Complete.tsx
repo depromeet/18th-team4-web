@@ -1,26 +1,34 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ColorSymbolIcon, Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
 
-const REDIRECT_DELAY_MS = 2000;
+const FADE_START_MS = 1500;
+const NAVIGATE_MS = 2000;
 
 export const RegisterComplete = () => {
   const router = useRouter();
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      router.refresh(); // 서버 컴포넌트 캐시 무효화 → 홈에서 getUserSession 재호출
+    const fadeTimer = window.setTimeout(() => setIsFading(true), FADE_START_MS);
+    const navTimer = window.setTimeout(() => {
+      router.refresh();
       router.replace(PATH_NAME.main());
-    }, REDIRECT_DELAY_MS);
+    }, NAVIGATE_MS);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(navTimer);
+    };
   }, [router]);
 
   return (
-    <main className="flex h-dvh min-h-dvh flex-col">
+    <main
+      className={`flex h-dvh min-h-dvh flex-col transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+    >
       <Header variant={HEADER_VARIANT.BACK} onBack={() => router.push(PATH_NAME.main())} />
 
       <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-[2.4rem]">
