@@ -15,7 +15,7 @@ export const Chat = (props: Props) => {
   return (
     <div className={cn(containerVariants({ user }))}>
       <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
-      {user === 'ai' ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
+      {user === CHAT_USER.AI ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
     </div>
   );
 };
