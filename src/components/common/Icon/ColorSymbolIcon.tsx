@@ -1,6 +1,6 @@
 import { type SVGProps } from 'react';
 import { ColorSymbol } from '@/assets';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib';
 
 type Props = SVGProps<SVGSVGElement>;
 

@@ -2,7 +2,7 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon } from '@/components';
+import { ArrowIcon, PlusIcon, Tooltip } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
@@ -50,14 +50,29 @@ export const Header = (props: HeaderProps) => {
       )}
 
       {variant === HEADER_VARIANT.CHAT && (
-        <span
-          className={cn('body1-bold tracking-[-0.048rem]', {
-            'text-icon-primary': summarizeActive,
-            'text-icon-disabled': !summarizeActive,
-          })}
-        >
-          요약하기
-        </span>
+        <div className="relative">
+          <button
+            aria-label="요약하기"
+            disabled={!summarizeActive}
+            onClick={onCta}
+            className={cn('body1-bold tracking-[-0.048rem]', {
+              'cursor-pointer text-icon-primary': summarizeActive,
+              'cursor-default text-icon-disabled': !summarizeActive,
+            })}
+          >
+            요약하기
+          </button>
+          {summarizeActive && (
+            <div className="absolute right-0 top-[calc(100%+1.3rem)] z-50">
+              <Tooltip
+                role="tooltip"
+                content="이제 대화를 요약할 수 있어요"
+                arrowSide="top"
+                arrowAlignment="right"
+              />
+            </div>
+          )}
+        </div>
       )}
     </header>
   );

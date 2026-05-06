@@ -1,14 +1,8 @@
 import { VariantProps } from 'class-variance-authority';
+import { ColorSymbolIcon } from '@/components';
+import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
 import { containerVariants } from './chatVariants';
-
-// constant/textfield 폴더로 빼기
-export const CHAT_USER = {
-  ME: 'me',
-  AI: 'ai',
-} as const;
-
-export type ChatUser = (typeof CHAT_USER)[keyof typeof CHAT_USER];
 
 type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
@@ -20,7 +14,8 @@ export const Chat = (props: Props) => {
 
   return (
     <div className={cn(containerVariants({ user }))}>
-      <p className="text-text-default body2-semibold">{message}</p>
+      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
+      {user === CHAT_USER.AI ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
     </div>
   );
 };
