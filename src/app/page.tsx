@@ -1,5 +1,6 @@
 import { type Metadata } from 'next';
 import { MainContainer } from '@/components';
+import { getUserSession } from '@/lib/api/services/users';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
@@ -8,8 +9,11 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-const page = () => {
-  return <MainContainer />;
+const page = async () => {
+  const sessionData = await getUserSession().catch(() => null);
+  const session = sessionData?.session ?? null;
+
+  return <MainContainer session={session} />;
 };
 
 export default page;

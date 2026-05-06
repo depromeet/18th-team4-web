@@ -1,14 +1,19 @@
 import { Header, HEADER_VARIANT, LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
+import { type Session } from '@/lib/api/services/users';
 import { MainBody } from './Body';
 import { EmptyRecordsBody } from './EmptyRecordsBody';
 import { MainFooter } from './Footer';
 import { RecordsBody } from './RecordsBody';
 
-const hasBook = true;
-const hasRecords = true;
+type Props = {
+  session: Session | null;
+};
 
-export const MainContainer = () => {
+export const MainContainer = ({ session }: Props) => {
+  const hasBook = session?.hasRegisteredBooks ?? false;
+  const hasRecords = hasBook;
+
   if (!hasBook) {
     return (
       <div className="flex min-h-dvh flex-col">

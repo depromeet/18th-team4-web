@@ -23,6 +23,7 @@ type Props = {
 
 const RootLayout = (props: Props): React.ReactElement => {
   const { children } = props;
+
   return (
     <html lang="ko" className={`${suit.variable} antialiased`}>
       <body className="min-h-dvh bg-gray-50">

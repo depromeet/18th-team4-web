@@ -1,0 +1,35 @@
+import z from 'zod';
+import { createResponseSchema } from '@/lib';
+
+export const SessionSchema = z.object({
+  lastSelectedUserBookId: z.number(),
+  hasRegisteredBooks: z.boolean(),
+  onboardingCompleted: z.boolean(),
+});
+
+export const UserSessionDataSchema = z.object({
+  session: SessionSchema,
+});
+
+export const UserSessionResponseSchema = createResponseSchema(UserSessionDataSchema);
+
+export const UserSessionRequestSchema = z.object({
+  user_session: z.string(),
+});
+
+export const UserSchema = z.object({
+  id: z.number(),
+  createdAt: z.string(),
+});
+
+export const CreateUserSessionDataSchema = z.object({
+  user: UserSchema,
+});
+
+export const CreateUserSessionResponseSchema = createResponseSchema(CreateUserSessionDataSchema);
+
+export const CompleteOnboardingDataSchema = z.object({
+  user: UserSchema,
+});
+
+export const CompleteOnboardingResponseSchema = createResponseSchema(CompleteOnboardingDataSchema);
