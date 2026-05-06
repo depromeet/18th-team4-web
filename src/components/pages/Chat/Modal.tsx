@@ -16,7 +16,7 @@ export const Modal = ({ isOpen, onCancel, onConfirm }: Props) => {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-modal flex items-center justify-center bg-dim"
+      className="fixed inset-0 z-modal flex items-center justify-center bg-dim [will-change:transform]"
       onClick={onCancel}
     >
       <dialog
