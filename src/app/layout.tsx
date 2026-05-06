@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
 import { Background } from '@/assets/common';
+import { QueryProvider } from '@/providers/QueryProvider';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
@@ -37,7 +38,9 @@ const RootLayout = (props: Props): React.ReactElement => {
             sizes="375px"
             className="pointer-events-none object-cover"
           />
-          <div className="relative">{children}</div>
+          <div className="relative">
+            <QueryProvider>{children}</QueryProvider>
+          </div>
         </main>
       </body>
     </html>
