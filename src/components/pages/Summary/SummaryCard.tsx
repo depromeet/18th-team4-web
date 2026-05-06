@@ -1,4 +1,10 @@
-import { GrainyOverlay, ReadumMarkIcon } from '@/components';
+import {
+  chatCardBackgroundColor,
+  type ChatCardColor,
+  GrainyOverlay,
+  ReadumMarkIcon,
+} from '@/components';
+import { cn } from '@/lib';
 
 export type SummarySection = {
   heading: string;
@@ -7,13 +13,19 @@ export type SummarySection = {
 
 type Props = {
   sections: SummarySection[];
+  color: ChatCardColor;
 };
 
 export const SummaryCard = (props: Props) => {
-  const { sections } = props;
+  const { sections, color } = props;
 
   return (
-    <article className="relative rounded-[2.4rem] border border-border-white bg-summary-card-bg summary-card-shadow p-[2.4rem] overflow-hidden">
+    <article
+      className={cn(
+        'relative rounded-[2.4rem] border border-border-white summary-card-shadow p-[2.4rem] overflow-hidden',
+        chatCardBackgroundColor[color],
+      )}
+    >
       <GrainyOverlay />
 
       <header className="flex items-center gap-[0.4rem] text-gray-alpha-900">

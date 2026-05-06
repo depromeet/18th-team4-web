@@ -1,3 +1,4 @@
+import { CHAT_CARD_COLOR } from '@/components';
 import { SummaryCard, type SummarySection } from './SummaryCard';
 import { SummaryHeader } from './SummaryHeader';
 
@@ -22,7 +23,7 @@ export const SummaryContainer = () => {
       <SummaryHeader />
       <section className="flex flex-col">
         <div className="px-[2.4rem]">
-          <SummaryCard sections={MOCK_SECTIONS} />
+          <SummaryCard sections={MOCK_SECTIONS} color={CHAT_CARD_COLOR.GREEN} />
         </div>
       </section>
     </>
