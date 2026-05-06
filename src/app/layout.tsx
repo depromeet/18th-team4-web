@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
 import { Background } from '@/assets/common';
+import { ToastContainer } from '@/components';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
@@ -37,6 +38,7 @@ const RootLayout = (props: Props): React.ReactElement => {
             className="pointer-events-none object-cover"
           />
           <div className="relative">{children}</div>
+          <ToastContainer />
         </main>
       </body>
     </html>

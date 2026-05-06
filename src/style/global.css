@@ -61,6 +61,7 @@
 
   --color-background-primary-base: #f1f2f6;
   --color-background-primary-white: #ffffff;
+  --color-summary-card-bg: color-mix(in srgb, #e4f8d6 80%, transparent);
 
   --color-border-default: #ced1d1;
   --color-border-white: #ffffff;
@@ -230,6 +231,27 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+@utility summary-card-shadow {
+  box-shadow:
+    inset 0 4px 32px rgba(255, 255, 255, 0.65),
+    0 4px 20px rgba(0, 0, 0, 0.13);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.6rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility animate-toast-in {
+  animation: toast-in 0.2s ease-out both;
 }
 
 @layer base {
