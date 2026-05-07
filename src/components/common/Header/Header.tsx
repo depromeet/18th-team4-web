@@ -14,6 +14,8 @@ type HeaderProps = React.ComponentProps<'header'> &
     onCta?: () => void;
   };
 
+const SLIDE_OUT_DURATION_MS = 280;
+
 export const Header = (props: HeaderProps) => {
   const {
     variant = HEADER_VARIANT.HOME,
@@ -23,6 +25,18 @@ export const Header = (props: HeaderProps) => {
     onCta,
     ...rest
   } = props;
+
+  const handleBack = () => {
+    if (!onBack) return;
+    const pageEl = document.querySelector('[data-page-transition]') as HTMLElement | null;
+    if (pageEl) {
+      pageEl.classList.remove('page-fade-in');
+      pageEl.classList.add('page-slide-out');
+      setTimeout(onBack, SLIDE_OUT_DURATION_MS);
+    } else {
+      onBack();
+    }
+  };
 
   return (
     <header className={cn(headerVariants({ variant }), className)} {...rest}>
@@ -44,7 +58,7 @@ export const Header = (props: HeaderProps) => {
       {(variant === HEADER_VARIANT.BACK || variant === HEADER_VARIANT.CHAT) && (
         <button
           aria-label="뒤로가기"
-          onClick={onBack}
+          onClick={handleBack}
           className="flex shrink-0 items-center justify-center"
         >
           <ArrowIcon className="-rotate-90 size-[2.4rem] fill-icon-primary" />

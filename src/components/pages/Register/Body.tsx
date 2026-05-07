@@ -37,6 +37,8 @@ export const RegisterBody = () => {
   const hasQuery = query.trim().length > 0;
   const selectedBook = books.find((b) => b.isbn13 === selectedIsbn) ?? null;
 
+  const shouldShowButton = selectedBook !== null && isSettled;
+
   // 무한 스크롤 sentinel
   const sentinelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -99,7 +101,7 @@ export const RegisterBody = () => {
         </section>
 
         {hasQuery && (
-          <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem]">
+          <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem] pb-[1.6rem]">
             <div className="flex min-h-0 flex-1 flex-col px-4 overflow-y-auto overscroll-y-contain">
               {/* 디바운스 대기 중 또는 로딩 */}
               {!isSettled || isLoading ? (
@@ -131,16 +133,18 @@ export const RegisterBody = () => {
               )}
             </div>
 
-            {selectedBook !== null && isSettled && (
-              <section className="shrink-0 bg-primary-base px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
-                <Button
-                  size="lg"
-                  disabled={isPending}
-                  onClick={handleRegister}
-                  className="w-full rounded-[1.6rem]"
-                >
-                  {isPending ? '등록 중...' : '책 등록하기'}
-                </Button>
+            {shouldShowButton && (
+              <section className="btn-appear shrink-0 overflow-hidden bg-primary-base">
+                <div className="px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
+                  <Button
+                    size="lg"
+                    disabled={isPending}
+                    onClick={handleRegister}
+                    className="w-full rounded-[1.6rem]"
+                  >
+                    {isPending ? '등록 중...' : '책 등록하기'}
+                  </Button>
+                </div>
               </section>
             )}
           </div>

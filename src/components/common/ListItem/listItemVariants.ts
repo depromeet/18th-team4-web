@@ -5,7 +5,7 @@ export const listItemVariants = cva(
   {
     variants: {
       selected: {
-        true: 'bg-gray-alpha-50',
+        true: 'bg-gray-alpha-10',
         false: 'bg-transparent',
       },
     },

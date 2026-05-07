@@ -2,6 +2,7 @@ export const PATH_NAME = {
   main: () => '/',
 
   chat: {
+    list: () => '/chat',
     detail: (sessionId: string) => `/chat/${sessionId}`,
   },
 
