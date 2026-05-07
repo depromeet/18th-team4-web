@@ -1,27 +1,31 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_USER, ChatMessage } from '@/constants';
+import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage } from '@/constants';
 import { useModal } from '@/hooks';
-import { chatData } from '@/lib';
+import { chatData, useCheckSummaryEligibility } from '@/lib';
 import { Chat } from './Chat';
 import { Modal } from './Modal';
 
 const Container = () => {
   const router = useRouter();
+  const params = useParams<{ sessionId: string }>();
+  const sessionId = params.sessionId;
+
   const { isOpen, open, close } = useModal();
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState('');
   const [chats, setChats] = useState<ChatMessage[]>([]);
 
+  const { data: eligibilityData } = useCheckSummaryEligibility(sessionId);
+  const canSummarize = eligibilityData?.eligible ?? false;
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chats]);
-
-  const canSummarize = chats.filter((chat) => chat.user === CHAT_USER.AI).length >= 2;
 
   const handleSend = () => {
     const trimmedMessage = message.trim();
