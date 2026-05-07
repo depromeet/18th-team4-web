@@ -3,9 +3,16 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage } from '@/constants';
+import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
 import { useModal } from '@/hooks';
-import { streamChatMessage, useCheckSummaryEligibility, useGetMessages } from '@/lib';
+import {
+  HttpError,
+  streamChatMessage,
+  useCheckSummaryEligibility,
+  useCreateSummaryDraft,
+  useGetMessages,
+  useToastStore,
+} from '@/lib';
 import { Chat } from './Chat';
 import { Modal } from './Modal';
 
@@ -22,6 +29,26 @@ const Container = () => {
   const sessionId = params.sessionId;
 
   const { isOpen, open, close } = useModal();
+  const openToast = useToastStore((s) => s.openToast);
+  const { mutateAsync: createSummaryDraft, isPending: isCreatingSummary } = useCreateSummaryDraft();
+
+  const handleConfirmSummary = async () => {
+    if (isCreatingSummary) return;
+    try {
+      await createSummaryDraft(sessionId);
+      close();
+      router.push(PATH_NAME.summary.detail(sessionId));
+    } catch (error) {
+      if (error instanceof HttpError && error.status === 422) {
+        openToast({
+          type: 'error',
+          message: '대화가 더 필요해요. 조금 더 이야기를 나눠주세요.',
+        });
+        return;
+      }
+      openToast({ type: 'error', message: '요약을 시작하지 못했어요. 잠시 후 다시 시도해주세요.' });
+    }
+  };
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -193,7 +220,12 @@ const Container = () => {
         </footer>
       </div>
 
-      <Modal isOpen={isOpen} onCancel={close} onConfirm={open} />
+      <Modal
+        isOpen={isOpen}
+        isConfirming={isCreatingSummary}
+        onCancel={close}
+        onConfirm={handleConfirmSummary}
+      />
     </div>
   );
 };
