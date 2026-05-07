@@ -2,6 +2,14 @@
   "name": "readwith",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.33.4",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "scripts": {
     "dev": "next dev",
     "dev:host": "next dev -H 0.0.0.0",
