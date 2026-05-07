@@ -5,9 +5,16 @@ import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage } from '@/constants';
 import { useModal } from '@/hooks';
-import { chatData, useCheckSummaryEligibility, useGetMessages } from '@/lib';
+import { useCheckSummaryEligibility, useGetMessages, useSendMessage } from '@/lib';
 import { Chat } from './Chat';
 import { Modal } from './Modal';
+
+const ERROR_MESSAGES: Record<string, string> = {
+  AI_QUOTA_EXHAUSTED: '오늘 대화 한도를 초과했어요. 내일 다시 시도해주세요.',
+  AI_PROVIDER_ERROR: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
+  AI_PROVIDER_TRANSIENT: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
+  AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
+};
 
 const Container = () => {
   const router = useRouter();
@@ -32,31 +39,50 @@ const Container = () => {
       message: msg.content,
     }));
 
+  const { send, isStreaming, streamingContent } = useSendMessage(sessionId);
+
   const allChats = [...historyChats, ...newChats];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allChats.length]);
+  }, [allChats.length, streamingContent]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) return;
+    if (!trimmedMessage || isStreaming) return;
 
-    const newUserMessage: ChatMessage = {
+    setMessage('');
+
+    const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       user: CHAT_USER.ME,
       message: trimmedMessage,
     };
+    setNewChats((prev) => [...prev, userMessage]);
 
-    const newAiMessage = chatData.map((msg) => ({
-      id: crypto.randomUUID(),
-      user: CHAT_USER.AI,
-      message: msg,
-    }));
-
-    setNewChats((prev) => [...prev, newUserMessage, ...newAiMessage]);
-
-    setMessage('');
+    await send(trimmedMessage, {
+      onDone: (data, accumulated) => {
+        setNewChats((prev) => [
+          ...prev,
+          {
+            id: String(data.messageId),
+            user: CHAT_USER.AI,
+            message: accumulated,
+          },
+        ]);
+      },
+      onError: (data) => {
+        const errorMessage = ERROR_MESSAGES[data.code] ?? '오류가 발생했어요. 다시 시도해주세요.';
+        setNewChats((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            user: CHAT_USER.AI,
+            message: errorMessage,
+          },
+        ]);
+      },
+    });
   };
 
   return (
@@ -76,6 +102,9 @@ const Container = () => {
             {allChats.map((chat) => (
               <Chat key={chat.id} user={chat.user} message={chat.message} />
             ))}
+            {isStreaming && streamingContent && (
+              <Chat user={CHAT_USER.AI} message={streamingContent} />
+            )}
             <div ref={bottomRef} />
           </div>
         </main>
