@@ -2,8 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VARIANT } from '@/components';
-import { useGetSessions } from '@/lib';
-import { type SessionStatus } from '@/lib';
+import { useGetSessions, type SessionStatus } from '@/lib';
 
 // TODO: MainFooter의 selectedId(userBookId) 대체 필요
 const TEMP_USER_BOOK_ID = 1;
