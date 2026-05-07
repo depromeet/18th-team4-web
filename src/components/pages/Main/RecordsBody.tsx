@@ -4,9 +4,6 @@ import { useEffect, useRef } from 'react';
 import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VARIANT } from '@/components';
 import { useGetSessions, type SessionStatus } from '@/lib';
 
-// TODO: MainFooter의 selectedId(userBookId) 대체 필요
-const TEMP_USER_BOOK_ID = 1;
-
 const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]> = {
   ACTIVE: CHAT_CARD_STATUS.DEFAULT,
   SUMMARIZING: CHAT_CARD_STATUS.LOADING,
@@ -20,9 +17,14 @@ const formatDate = (isoDate: string) => {
   return datePart.slice(2).replace(/-/g, '.');
 };
 
-export const RecordsBody = () => {
+type Props = {
+  userBookId: number;
+};
+
+export const RecordsBody = (props: Props) => {
+  const { userBookId } = props;
   const containerRef = useRef<HTMLOListElement>(null);
-  const { data } = useGetSessions(TEMP_USER_BOOK_ID);
+  const { data } = useGetSessions(userBookId);
   const sessions = data?.sessions ?? [];
 
   useEffect(() => {
