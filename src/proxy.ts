@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 const API_PROXY_TARGET = process.env.API_PROXY_TARGET!;
 
-export const middleware = async (request: NextRequest) => {
+export const proxy = async (request: NextRequest) => {
   const userSession = request.cookies.get('user_session');
 
   // user_session 쿠키가 없으면 신규 세션 생성
