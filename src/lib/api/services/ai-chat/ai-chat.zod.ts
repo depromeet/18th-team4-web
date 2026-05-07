@@ -24,3 +24,13 @@ export const SessionListRequestSchema = z.object({
   page: z.number().int().min(1).default(1),
   size: z.number().int().min(1).default(20),
 });
+
+export const CreateSessionRequestSchema = z.object({
+  userBookId: z.number(),
+});
+
+export const CreateSessionDataSchema = z.object({
+  sessionId: z.number(),
+});
+
+export const CreateSessionResponseSchema = createResponseSchema(CreateSessionDataSchema);

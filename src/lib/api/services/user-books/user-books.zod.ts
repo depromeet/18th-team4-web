@@ -18,3 +18,18 @@ export const UserBookDataSchema = z.object({
 });
 
 export const AddUserBookResponseSchema = createResponseSchema(UserBookDataSchema);
+
+export const UserBookItemSchema = z.object({
+  userBookId: z.number(),
+  bookId: z.number(),
+  title: z.string(),
+  publisher: z.string(),
+  publishedYear: z.number(),
+  coverUrl: z.string(),
+});
+
+export const UserBookListDataSchema = z.object({
+  books: z.array(UserBookItemSchema),
+});
+
+export const UserBookListResponseSchema = createResponseSchema(UserBookListDataSchema);
