@@ -4,8 +4,8 @@ import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
 import { Background } from '@/assets';
-import { PageTransition, QueryProvider } from '@/providers';
 import { ToastContainer } from '@/components';
+import { PageTransition, QueryProvider } from '@/providers';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
@@ -45,7 +45,7 @@ const RootLayout = (props: Props): React.ReactElement => {
               <PageTransition>{children}</PageTransition>
             </QueryProvider>
           </div>
-        
+
           <ToastContainer />
         </main>
       </body>
