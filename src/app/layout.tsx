@@ -1,9 +1,7 @@
 import '@/style/global.css';
 import { type Metadata } from 'next';
 import localFont from 'next/font/local';
-import Image from 'next/image';
 import { type ReactNode } from 'react';
-import { Background } from '@/assets';
 import { ToastContainer } from '@/components';
 import { PageTransition, QueryProvider } from '@/providers';
 
@@ -30,16 +28,6 @@ const RootLayout = (props: Props): React.ReactElement => {
     <html lang="ko" className={`${suit.variable} antialiased`}>
       <body className="min-h-dvh bg-gray-50">
         <main className="relative mx-auto min-h-dvh w-full max-w-150 overflow-x-hidden bg-primary-base">
-          <Image
-            aria-hidden="true"
-            alt="common background texture"
-            src={Background}
-            fill
-            preload
-            sizes="375px"
-            className="pointer-events-none object-cover"
-          />
-
           <div className="relative">
             <QueryProvider>
               <PageTransition>{children}</PageTransition>
