@@ -7,13 +7,6 @@ export const QUERY_KEY = {
   },
 
   /*
-   * AI 채팅 세션
-   */
-  aiChat: {
-    sessions: (userBookId: number) => ['aiChat', 'sessions', userBookId] as const,
-  },
-
-  /*
    * EXAMPLE
    * 배달 권역
    */
@@ -37,7 +30,8 @@ export const QUERY_KEY = {
    * AI 채팅
    */
   aiChat: {
-    messages: (sessionId: string) => ['aiChat', 'messages', sessionId],
-    summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
+    sessions: (userBookId: number) => ['aiChat', 'sessions', userBookId] as const,
+    messages: (sessionId: string) => ['aiChat', 'messages', sessionId] as const,
+    summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId] as const,
   },
 } as const;
