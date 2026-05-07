@@ -28,15 +28,35 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
 
   const { ...fetchOptions } = options;
 
+  // 서버 사이드에서 쿠키 자동 전달
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  };
+
+  if (typeof window === 'undefined') {
+    try {
+      const { cookies } = await import('next/headers');
+      const cookieStore = await cookies();
+      const cookieString = cookieStore
+        .getAll()
+        .map((cookie) => `${cookie.name}=${cookie.value}`)
+        .join('; ');
+
+      if (cookieString) {
+        (headers as Record<string, string>)['Cookie'] = cookieString;
+      }
+    } catch (error) {
+      console.warn('Failed to get cookies:', error);
+    }
+  }
+
   let res: Response;
   try {
     res = await fetch(requestUrl, {
       credentials: 'include',
       ...fetchOptions,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {}),
-      },
+      headers,
     });
   } catch (error) {
     throw new HttpError({
@@ -44,18 +64,6 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
       status: 503,
     });
   }
-
-  console.groupCollapsed('api call');
-  console.log('METHOD:', options.method);
-  console.log('URL:', url);
-  console.log('HEADERS:', {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
-  });
-  console.groupEnd();
-  console.groupCollapsed('api response');
-  console.log(res);
-  console.groupEnd();
   if (!res.ok) {
     let message = 'API Error';
     let errorCode: string | undefined;

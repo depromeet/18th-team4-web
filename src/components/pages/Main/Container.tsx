@@ -1,15 +1,40 @@
-import { Header, HEADER_VARIANT, LinkButton } from '@/components';
+import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
+import { type Session } from '@/lib';
 import { MainBody } from './Body';
-import { EmptyRecordsBody } from './EmptyRecordsBody';
 import { MainFooter } from './Footer';
+import { OnboardingSkipButton } from './OnboardingSkipButton';
 import { RecordsBody } from './RecordsBody';
 
-const hasBook = true;
-const hasRecords = true;
+type Props = {
+  session: Session | null;
+};
 
-export const MainContainer = () => {
-  if (!hasBook) {
+export const MainContainer = ({ session }: Props) => {
+  // 1. 세션 데이터 없음 — API 호출 실패 또는 첫 렌더 race condition 폴백
+  if (session === null) {
+    return null;
+  }
+
+  // 2. 온보딩 미완료
+  if (!session.onboardingCompleted) {
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-[2.4rem] px-[2.4rem]">
+        <div className="flex flex-col items-center gap-[0.8rem]">
+          <p className="headline2-extrabold text-center tracking-[-0.06rem] text-text-primary">
+            Readum에 오신 걸 환영해요
+          </p>
+          <p className="body1-medium text-center tracking-[-0.048rem] text-text-caption">
+            온보딩을 건너뛰고 바로 시작할 수 있어요
+          </p>
+        </div>
+        <OnboardingSkipButton />
+      </div>
+    );
+  }
+
+  // 3. 온보딩 완료, 책 미등록
+  if (!session.hasRegisteredBooks) {
     return (
       <div className="flex min-h-dvh flex-col">
         <MainBody />
@@ -33,16 +58,7 @@ export const MainContainer = () => {
     );
   }
 
-  if (!hasRecords) {
-    return (
-      <div className="flex h-dvh min-h-0 flex-col overflow-hidden">
-        <Header variant={HEADER_VARIANT.HOME} />
-        <EmptyRecordsBody />
-        <MainFooter />
-      </div>
-    );
-  }
-
+  // 4. 온보딩 완료 + 책 등록 완료 — 풀버전 (records 있는 것으로 처리)
   return (
     <div className="flex h-dvh flex-col">
       <RecordsBody />

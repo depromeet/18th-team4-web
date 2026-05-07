@@ -272,4 +272,51 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  .loading-wave {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .loading-wave__dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 4rem;
+    background-color: var(--color-text-disable);
+    animation: loading-bar-grow 1.2s ease-in-out infinite;
+  }
+
+  .loading-wave__dot:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .loading-wave__dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+}
+
+.page-fade-in {
+  animation: fade-in 0.5s ease-in-out both;
+  pointer-events: auto;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-bar-grow {
+  0%,
+  100% {
+    height: 0.8rem;
+  }
+  40%,
+  60% {
+    height: 2.8rem;
+  }
 }

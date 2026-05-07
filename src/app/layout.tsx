@@ -3,7 +3,8 @@ import { type Metadata } from 'next';
 import localFont from 'next/font/local';
 import Image from 'next/image';
 import { type ReactNode } from 'react';
-import { Background } from '@/assets/common';
+import { Background } from '@/assets';
+import { PageTransition, QueryProvider } from '@/providers';
 import { ToastContainer } from '@/components';
 
 const suit = localFont({
@@ -24,6 +25,7 @@ type Props = {
 
 const RootLayout = (props: Props): React.ReactElement => {
   const { children } = props;
+
   return (
     <html lang="ko" className={`${suit.variable} antialiased`}>
       <body className="min-h-dvh bg-gray-50">
@@ -37,7 +39,13 @@ const RootLayout = (props: Props): React.ReactElement => {
             sizes="375px"
             className="pointer-events-none object-cover"
           />
-          <div className="relative">{children}</div>
+
+          <div className="relative">
+            <QueryProvider>
+              <PageTransition>{children}</PageTransition>
+            </QueryProvider>
+          </div>
+        
           <ToastContainer />
         </main>
       </body>
