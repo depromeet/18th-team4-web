@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage } from '@/constants';
 import { useModal } from '@/hooks';
-import { chatData, useCheckSummaryEligibility } from '@/lib';
+import { chatData, useCheckSummaryEligibility, useGetMessages } from '@/lib';
 import { Chat } from './Chat';
 import { Modal } from './Modal';
 
@@ -18,20 +18,31 @@ const Container = () => {
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState('');
-  const [chats, setChats] = useState<ChatMessage[]>([]);
+  const [newChats, setNewChats] = useState<ChatMessage[]>([]);
 
   const { data: eligibilityData } = useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
 
+  const { data: messagesData } = useGetMessages(sessionId);
+  const historyChats: ChatMessage[] = (messagesData?.pages ?? [])
+    .flatMap((page) => page.messages)
+    .map((msg) => ({
+      id: msg.id,
+      user: msg.role === 'user' ? CHAT_USER.ME : CHAT_USER.AI,
+      message: msg.content,
+    }));
+
+  const allChats = [...historyChats, ...newChats];
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chats]);
+  }, [allChats.length]);
 
   const handleSend = () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage) return;
 
-    const newUserMessage = {
+    const newUserMessage: ChatMessage = {
       id: crypto.randomUUID(),
       user: CHAT_USER.ME,
       message: trimmedMessage,
@@ -43,7 +54,7 @@ const Container = () => {
       message: msg,
     }));
 
-    setChats((prev) => [...prev, newUserMessage, ...newAiMessage]);
+    setNewChats((prev) => [...prev, newUserMessage, ...newAiMessage]);
 
     setMessage('');
   };
@@ -62,7 +73,7 @@ const Container = () => {
 
         <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
-            {chats.map((chat) => (
+            {allChats.map((chat) => (
               <Chat key={chat.id} user={chat.user} message={chat.message} />
             ))}
             <div ref={bottomRef} />
