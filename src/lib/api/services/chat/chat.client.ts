@@ -16,7 +16,7 @@ export const createChatSession = async (): Promise<number> => {
 };
 
 export type StreamCallbacks = {
-  onToken: (delta: string) => void;
+  onToken: (delta: string) => void | Promise<void>;
   onDone: (data: DoneEvent) => void;
   onError: (data: ErrorEvent) => void;
 };
@@ -93,7 +93,7 @@ export const streamChatMessage = async (
       if (eventType === 'token') {
         const parsed = TokenEventSchema.safeParse(data);
         if (parsed.success) {
-          callbacks.onToken(parsed.data.delta);
+          await callbacks.onToken(parsed.data.delta);
         } else {
           console.warn('[SSE] token schema failed:', parsed.error.issues, data);
         }
