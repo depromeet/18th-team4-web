@@ -7,6 +7,11 @@ if (!API_PROXY_TARGET) {
 }
 
 const nextConfig: NextConfig = {
+  // 빌드 타임에 읽은 값을 번들에 bake → Amplify SSR 런타임에서도 process.env로 접근 가능
+  env: {
+    API_PROXY_TARGET,
+  },
+
   async rewrites() {
     return [
       {
@@ -50,8 +55,6 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-
-  output: 'standalone',
 };
 
 export default nextConfig;

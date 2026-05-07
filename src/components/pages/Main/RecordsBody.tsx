@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VARIANT } from '@/components';
 import { useGetSessions, type SessionStatus } from '@/lib';
 
-// TODO: MainFooter의 selectedId(userBookId) 대체 필요
 const TEMP_USER_BOOK_ID = 1;
 
 const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]> = {
