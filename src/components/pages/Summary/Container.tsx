@@ -1,29 +1,66 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { CHAT_CARD_COLOR } from '@/components';
+import { PATH_NAME } from '@/constants';
+import { type SummaryData, useSummary, useToastStore } from '@/lib';
 import { SummaryCard, type SummarySection } from './SummaryCard';
 import { SummaryHeader } from './SummaryHeader';
+import { SummaryLoading } from './SummaryLoading';
 
-const MOCK_SECTIONS: SummarySection[] = [
-  {
-    heading: '마법 세계의 향수',
-    body: '오랜만에 다시 읽으니, 어릴 적 설레었던 마음이 되살아나는 듯했습니다. 호그와트의 입학 편지를 기다리던 순수한 시절의 제가 떠올랐습니다.',
-  },
-  {
-    heading: '롤링의 필력에 감탄',
-    body: '촘촘하게 짜인 플롯과 매력적인 캐릭터들은 여전히 빛났습니다. 롤링 작가의 상상력과 글 솜씨에 다시 한번 감탄했습니다.',
-  },
-  {
-    heading: '인생의 교훈',
-    body: '해리포터는 단순한 판타지 소설이 아닌, 용기, 우정, 사랑의 중요성을 일깨워주는 이야기입니다. 제 삶의 지침이 되어주었습니다.',
-  },
-];
+const toSections = (data: SummaryData): SummarySection[] => {
+  const sections: SummarySection[] = [{ heading: data.title, body: data.body }];
+  if (data.quote) {
+    sections.push({ heading: '인용', body: data.quote });
+  }
+  return sections;
+};
 
-export const SummaryContainer = () => {
+type Props = {
+  sessionId: string;
+  initialSummary: SummaryData | null;
+};
+
+export const SummaryContainer = (props: Props) => {
+  const { sessionId, initialSummary } = props;
+  const router = useRouter();
+  const openToast = useToastStore((s) => s.openToast);
+
+  const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
+
+  const handledRef = useRef(false);
+
+  useEffect(() => {
+    if (handledRef.current) return;
+    if (data) return;
+
+    if (isError) {
+      handledRef.current = true;
+      openToast({ type: 'error', message: '요약을 불러오지 못했어요. 다시 시도해주세요.' });
+      router.replace(PATH_NAME.main());
+    }
+  }, [data, isError, openToast, router]);
+
+  if (!data) {
+    return (
+      <div className="flex flex-col min-h-dvh">
+        <SummaryHeader />
+        <div className="flex w-full px-[2.4rem] flex-1 items-center justify-center">
+          <SummaryLoading />
+        </div>
+      </div>
+    );
+  }
+
+  const sections = toSections(data);
+
   return (
     <>
       <SummaryHeader />
       <section className="flex flex-col">
         <div className="px-[2.4rem]">
-          <SummaryCard sections={MOCK_SECTIONS} color={CHAT_CARD_COLOR.GREEN} />
+          <SummaryCard sections={sections} color={CHAT_CARD_COLOR.GREEN} />
         </div>
       </section>
     </>
