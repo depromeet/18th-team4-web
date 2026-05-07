@@ -157,7 +157,7 @@ export const MainFooter = (props: Props) => {
               isSheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
-            {books.map((book, index) => (
+            {books.map((book) => (
               <ListItem
                 key={book.userBookId}
                 imageSrc={book.coverUrl}
