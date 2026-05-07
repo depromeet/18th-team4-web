@@ -90,8 +90,6 @@ export const streamChatMessage = async (
         continue;
       }
 
-      console.warn('[SSE] event:', eventType, data);
-
       if (eventType === 'token') {
         const parsed = TokenEventSchema.safeParse(data);
         if (parsed.success) {
@@ -111,7 +109,7 @@ export const streamChatMessage = async (
         if (parsed.success) {
           if (parsed.data.code === 'AI_RATE_LIMIT_BURST' && retryCount < SSE_RETRY_MAX) {
             const retryAfter = parsed.data.rateLimit?.retryAfterSeconds ?? 5;
-            reader.cancel();
+            await reader.cancel();
             callbacks.onRetry?.();
             await sleep(retryAfter * 1000);
             return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
