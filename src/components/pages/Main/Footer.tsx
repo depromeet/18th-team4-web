@@ -168,6 +168,7 @@ export const MainFooter = (props: Props) => {
                 selected={selectedId === book.userBookId}
                 onClick={() => {
                   setSelectedId(book.userBookId);
+                  setIsSheetOpen(false);
                 }}
               />
             ))}
