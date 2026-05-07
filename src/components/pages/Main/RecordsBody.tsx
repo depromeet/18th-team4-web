@@ -8,8 +8,7 @@ import {
   Header,
   HEADER_VARIANT,
 } from '@/components';
-import { useGetSessions } from '@/lib';
-import { type SessionStatus } from '@/lib';
+import { type SessionStatus, useGetSessions } from '@/lib';
 
 // TODO: MainFooter의 selectedId(userBookId) 대체 필요
 const TEMP_USER_BOOK_ID = 1;
