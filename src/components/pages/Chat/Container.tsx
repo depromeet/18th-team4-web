@@ -33,9 +33,10 @@ const Container = () => {
   const { data: messagesData } = useGetMessages(sessionId);
   const historyChats: ChatMessage[] = (messagesData?.pages ?? [])
     .flatMap((page) => page.messages)
+    .reverse()
     .map((msg) => ({
       id: msg.id,
-      user: msg.role === 'user' ? CHAT_USER.ME : CHAT_USER.AI,
+      user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
     }));
 

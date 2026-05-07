@@ -3,7 +3,7 @@ import { createResponseSchema } from '@/lib';
 
 export const MessageItemSchema = z.object({
   id: z.string(),
-  role: z.enum(['user', 'assistant']),
+  role: z.enum(['USER', 'ASSISTANT']),
   content: z.string(),
   createdAt: z.string(),
 });
