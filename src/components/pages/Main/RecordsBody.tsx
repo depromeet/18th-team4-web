@@ -12,10 +12,17 @@ import {
 } from '@/components';
 import { type SessionStatus, useGetSessions } from '@/lib';
 
+<<<<<<< HEAD
 const SESSION_STATUS_TO_CARD: Record<
   SessionStatus,
   (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]
 > = {
+=======
+// TODO: MainFooter의 selectedId(userBookId) 대체 필요
+const TEMP_USER_BOOK_ID = 1;
+
+const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]> = {
+>>>>>>> 2d2fae9 (fix: formatDate가 datetime에서 깨지는 문제 해결)
   ACTIVE: CHAT_CARD_STATUS.DEFAULT,
   SUMMARIZING: CHAT_CARD_STATUS.LOADING,
   CLOSED: CHAT_CARD_STATUS.DEFAULT,
