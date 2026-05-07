@@ -341,6 +341,20 @@
   }
 }
 
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@utility animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 @keyframes loading-bar-grow {
   0%,
   100% {

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import { GradientSky } from '@/assets';
 import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { type Session } from '@/lib';
@@ -48,9 +50,18 @@ export const MainContainer = ({ session }: Props) => {
   // 3. 온보딩 완료, 책 미등록
   if (!session.hasRegisteredBooks) {
     return (
-      <div className="flex min-h-dvh flex-col">
+      <div className="relative flex min-h-dvh flex-col bg-background-primary-white">
+        <div className="pointer-events-none absolute inset-x-0 top-1/2 bottom-0 z-0" aria-hidden>
+          <Image
+            src={GradientSky}
+            alt="GradientSky"
+            fill
+            className="origin-top scale-[1.8] object-cover object-top"
+            sizes="100vw"
+          />
+        </div>
         <MainBody />
-        <div className="flex flex-col gap-[1.6rem] px-[2.4rem] pb-[2.4rem]">
+        <div className="relative z-10 flex flex-col gap-[1.6rem] px-[2.4rem] pb-[2.4rem]">
           <LinkButton
             href={PATH_NAME.register.list()}
             size="lg"

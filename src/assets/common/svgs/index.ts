@@ -1,4 +1,5 @@
 export { default as Arrow } from './ic-arrow.svg?react';
+export { default as BookLogo } from './ic-book-logo.svg?react';
 export { default as Bookmark } from './ic-bookmark.svg?react';
 export { default as Check } from './ic-check.svg?react';
 export { default as Chevron } from './ic-chevron.svg?react';
