@@ -8,13 +8,13 @@ export const HEADER_VARIANT = {
 
 export type HeaderVariant = (typeof HEADER_VARIANT)[keyof typeof HEADER_VARIANT];
 
-export const headerVariants = cva('flex w-full items-center', {
+export const headerVariants = cva('sticky top-0 z-40 flex w-full items-center', {
   variants: {
     variant: {
       [HEADER_VARIANT.HOME]:
         'flex justify-between items-center border-b border-white bg-white/5 backdrop-blur-md px-[2.4rem] py-[1.6rem]',
-      [HEADER_VARIANT.BACK]: 'pl-[1.8rem] pr-[2.4rem] py-[2.2rem]',
-      [HEADER_VARIANT.CHAT]: 'justify-between pl-[1.8rem] pr-[2.4rem] py-[2.2rem]',
+      [HEADER_VARIANT.BACK]: 'bg-primary-base pl-[1.8rem] pr-[2.4rem] py-[2.2rem]',
+      [HEADER_VARIANT.CHAT]: 'justify-between bg-primary-base pl-[1.8rem] pr-[2.4rem] py-[2.2rem]',
     },
   },
   defaultVariants: {

@@ -310,6 +310,37 @@
   }
 }
 
+.page-slide-out {
+  animation: slide-out-right 0.28s ease-in both;
+  pointer-events: none;
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0.6;
+  }
+}
+
+.btn-appear {
+  max-height: 16rem;
+  opacity: 1;
+  transition:
+    max-height 0.35s ease-out,
+    opacity 0.3s ease-out;
+}
+
+@starting-style {
+  .btn-appear {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
 @keyframes loading-bar-grow {
   0%,
   100% {
