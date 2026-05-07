@@ -16,8 +16,8 @@ export const TokenEventSchema = z.object({
 });
 
 export const DoneEventSchema = z.object({
-  messageId: z.number(),
-  tokenCount: z.number(),
+  messageId: z.coerce.number(),
+  tokenCount: z.coerce.number(),
   createdAt: z.string(),
 });
 
