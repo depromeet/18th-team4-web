@@ -61,11 +61,11 @@ export const MainContainer = async ({ session }: Props) => {
   // 4. 온보딩 완료 + 책 등록 완료 — 풀버전 (records 있는 것으로 처리)
   const userBooksData = await getUserBooks().catch(() => null);
   const books = userBooksData?.books ?? [];
-  const userBookId = session.lastSelectedUserBookId ?? books[0]?.id;
+  const userBookId = session.lastSelectedUserBookId || books[0]?.userBookId;
 
   return (
     <div className="flex h-dvh flex-col">
-      {userBookId !== undefined && <RecordsBody userBookId={userBookId} />}
+      {!!userBookId && <RecordsBody userBookId={userBookId} />}
       <div className="mt-[10.2rem]" />
       <MainFooter books={books} />
     </div>
