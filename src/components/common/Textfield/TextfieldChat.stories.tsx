@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 import { TextfieldChat } from '@/components';
@@ -44,19 +44,21 @@ export const Default: Story = {
   },
 };
 
+const WritingStory = (args: React.ComponentProps<typeof TextfieldChat>) => {
+  const [value, setValue] = useState('');
+  return (
+    <TextfieldChat
+      {...args}
+      status={CHAT_STATUS.DEFAULT}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  );
+};
+
 export const Writing: Story = {
   name: '입력 중',
-  render: (args) => {
-    const [value, setValue] = useState('');
-    return (
-      <TextfieldChat
-        {...args}
-        status={CHAT_STATUS.DEFAULT}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-    );
-  },
+  render: (args) => <WritingStory {...args} />,
   args: {
     bgVariant: CHAT_BG_VARIANT.GRAY,
     placeholder: CHAT_PLACEHOLDER[CHAT_STATUS.DEFAULT],
