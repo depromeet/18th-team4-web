@@ -66,27 +66,43 @@ export const streamChatMessage = async (
     buffer = parts.pop() ?? '';
 
     for (const part of parts) {
-      const eventMatch = part.match(/^event: (\w+)/m);
-      const dataMatch = part.match(/^data: (.+)/m);
-      if (!eventMatch || !dataMatch) continue;
+      const lines = part.split('\n');
+      let eventType = '';
+      const dataLines: string[] = [];
 
-      const eventType = eventMatch[1];
+      for (const line of lines) {
+        if (line.startsWith('event:')) {
+          eventType = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          dataLines.push(line.slice(5).trim());
+        }
+      }
+
+      if (!eventType || dataLines.length === 0) continue;
+
       let data: unknown;
       try {
-        data = JSON.parse(dataMatch[1]);
+        data = JSON.parse(dataLines.join('\n'));
       } catch {
+        console.warn('[SSE] JSON parse failed for event:', eventType, dataLines.join('\n'));
         continue;
       }
+
+      console.warn('[SSE] event:', eventType, data);
 
       if (eventType === 'token') {
         const parsed = TokenEventSchema.safeParse(data);
         if (parsed.success) {
           callbacks.onToken(parsed.data.delta);
+        } else {
+          console.warn('[SSE] token schema failed:', parsed.error.issues, data);
         }
       } else if (eventType === 'done') {
         const parsed = DoneEventSchema.safeParse(data);
         if (parsed.success) {
           callbacks.onDone(parsed.data);
+        } else {
+          console.warn('[SSE] done schema failed:', parsed.error.issues, data);
         }
       } else if (eventType === 'error') {
         const parsed = ErrorEventSchema.safeParse(data);
@@ -98,6 +114,8 @@ export const streamChatMessage = async (
             return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
           }
           callbacks.onError(parsed.data);
+        } else {
+          console.warn('[SSE] error schema failed:', parsed.error.issues, data);
         }
       }
     }
