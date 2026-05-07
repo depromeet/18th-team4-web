@@ -1,3 +1,4 @@
+export * from './ai-chat';
 export * from './books';
 export * from './chat';
 export * from './messages';
