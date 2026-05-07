@@ -11,16 +11,16 @@ type Props = {
 };
 
 export const MainFooter = (props: Props) => {
-  const { books } = props;
+  const { books = [] } = props;
   const router = useRouter();
   const { mutate: createSession } = useCreateSession();
   const peekRef = useRef<HTMLDivElement | null>(null);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number>(books[0]?.id ?? 0);
+  const [selectedId, setSelectedId] = useState<number>(books[0]?.userBookId ?? 0);
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
 
-  const selectedBook = books.find((b) => b.id === selectedId);
+  const selectedBook = books.find((b) => b.userBookId === selectedId);
 
   const handleSend = () => {
     createSession(selectedId, {
@@ -157,17 +157,17 @@ export const MainFooter = (props: Props) => {
               isSheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
-            {books.map((book) => (
+            {books.map((book, index) => (
               <ListItem
-                key={book.id}
+                key={book.userBookId}
                 imageSrc={book.coverUrl}
                 imageAlt={`${book.title} 표지`}
                 title={book.title}
                 year={book.publishedYear}
                 publisher={book.publisher}
-                selected={selectedId === book.id}
+                selected={selectedId === book.userBookId}
                 onClick={() => {
-                  setSelectedId(book.id);
+                  setSelectedId(book.userBookId);
                 }}
               />
             ))}
