@@ -60,3 +60,13 @@ export const chatCardIconColor: Record<ChatCardColor, string> = {
   purple: 'fill-sub-purple',
   blue: 'fill-sub-blue',
 };
+
+export const CHAT_CARD_COLOR_SEQUENCE: readonly ChatCardColor[] = [
+  CHAT_CARD_COLOR.TEAL,
+  CHAT_CARD_COLOR.GREEN,
+  CHAT_CARD_COLOR.PURPLE,
+  CHAT_CARD_COLOR.YELLOW,
+  CHAT_CARD_COLOR.MAGENTA,
+  CHAT_CARD_COLOR.SKY,
+  CHAT_CARD_COLOR.BLUE,
+];
