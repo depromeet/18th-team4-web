@@ -59,6 +59,9 @@ export const ENDPOINTS = {
 
     // 감상문 초안 생성
     createSummaryDraft: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary-draft`,
+
+    // 감상문 조회
+    getSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
   },
 
   /*
