@@ -10,8 +10,10 @@ export const OnboardingSkipButton = () => {
 
   const handleSkip = () => {
     startTransition(async () => {
-      await completeOnboardingAction();
-      router.refresh();
+      const result = await completeOnboardingAction();
+      if (result.success) {
+        router.refresh();
+      }
     });
   };
 

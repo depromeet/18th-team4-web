@@ -90,12 +90,14 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
     return (await res.blob()) as T;
   }
 
+  // 204 No Content 또는 응답 본문이 없는 경우
+  if (res.status === 204 || res.headers.get('content-length') === '0') {
+    return undefined as T;
+  }
+
   const contentType = res.headers.get('content-type') ?? '';
   if (!contentType.includes('application/json')) {
-    throw new HttpError({
-      message: 'Invalid API response format',
-      status: res.status || 502,
-    });
+    return undefined as T;
   }
 
   try {
