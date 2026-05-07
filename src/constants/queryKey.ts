@@ -13,6 +13,7 @@ export const QUERY_KEY = {
     sessions: (userBookId: number) => ['aiChat', 'sessions', userBookId] as const,
     messages: (sessionId: string) => ['aiChat', 'messages', sessionId] as const,
     summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId] as const,
+    summary: (sessionId: string) => ['aiChat', 'summary', sessionId] as const,
   },
 
   /*
