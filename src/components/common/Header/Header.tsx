@@ -11,6 +11,7 @@ type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
     summarizeActive?: boolean;
     onBack?: () => void;
+    onCta?: () => void;
   };
 
 export const Header = (props: HeaderProps) => {
@@ -19,6 +20,7 @@ export const Header = (props: HeaderProps) => {
     className,
     summarizeActive = false,
     onBack,
+    onCta,
     ...rest
   } = props;
 
