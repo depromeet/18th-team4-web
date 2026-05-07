@@ -5,7 +5,7 @@ import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VA
 import { useGetSessions } from '@/lib';
 import { type SessionStatus } from '@/lib';
 
-// TODO: MainFooter의 selectedId(userBookId)를 Zustand store로 올려서 이 값 대체 필요
+// TODO: MainFooter의 selectedId(userBookId) 대체 필요
 const TEMP_USER_BOOK_ID = 1;
 
 const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]> = {
@@ -15,7 +15,11 @@ const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[ke
   FAILED: CHAT_CARD_STATUS.ERROR,
 };
 
-const formatDate = (isoDate: string) => isoDate.slice(2).replace(/-/g, '.');
+const formatDate = (isoDate: string) => {
+  const datePart = isoDate.split('T')[0] ?? '';
+  if (datePart.length < 10) return '';
+  return datePart.slice(2).replace(/-/g, '.');
+};
 
 export const RecordsBody = () => {
   const containerRef = useRef<HTMLOListElement>(null);

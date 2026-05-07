@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '@/constants';
-import { publicHttp } from '@/lib/api/http';
+import { publicHttp } from '@/lib';
 import { type SessionListRequest, type SessionListResponse } from './ai-chat.type';
 
 export const getSessions = async (params: SessionListRequest) => {
