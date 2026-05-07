@@ -1,5 +1,12 @@
 export const QUERY_KEY = {
   /*
+   * AI 채팅 세션
+   */
+  aiChat: {
+    sessions: (userBookId: number) => ['aiChat', 'sessions', userBookId] as const,
+  },
+
+  /*
    * EXAMPLE
    * 배달 권역
    */
