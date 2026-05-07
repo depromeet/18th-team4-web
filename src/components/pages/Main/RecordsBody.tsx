@@ -1,13 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import {
-  CHAT_CARD_COLOR_SEQUENCE,
-  CHAT_CARD_STATUS,
-  ChatCard,
-  Header,
-  HEADER_VARIANT,
-} from '@/components';
+import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, Header, HEADER_VARIANT } from '@/components';
 import { type SessionStatus, useGetSessions } from '@/lib';
 
 // TODO: MainFooter의 selectedId(userBookId) 대체 필요
