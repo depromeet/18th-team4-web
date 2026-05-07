@@ -379,10 +379,6 @@
   animation: symbol-pop 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9d9d4bc (feat: 등록시 애니메이션 추가)
 @utility animate-float {
   animation: float 3s ease-in-out infinite;
 }

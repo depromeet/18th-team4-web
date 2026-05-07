@@ -12,20 +12,10 @@ import {
 } from '@/components';
 import { type SessionStatus, useGetSessions } from '@/lib';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 const SESSION_STATUS_TO_CARD: Record<
   SessionStatus,
   (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]
 > = {
-=======
-// TODO: MainFooter의 selectedId(userBookId) 대체 필요
-const TEMP_USER_BOOK_ID = 1;
-
-=======
->>>>>>> 20cbbc0 (feat: 실제 bookid로 변경)
-const SESSION_STATUS_TO_CARD: Record<SessionStatus, (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]> = {
->>>>>>> 2d2fae9 (fix: formatDate가 datetime에서 깨지는 문제 해결)
   ACTIVE: CHAT_CARD_STATUS.DEFAULT,
   SUMMARIZING: CHAT_CARD_STATUS.LOADING,
   CLOSED: CHAT_CARD_STATUS.DEFAULT,
@@ -46,11 +36,7 @@ export const RecordsBody = (props: Props) => {
   const { userBookId } = props;
   const containerRef = useRef<HTMLOListElement>(null);
   const { data } = useGetSessions(userBookId);
-<<<<<<< HEAD
   const sessions = useMemo(() => data?.sessions ?? [], [data?.sessions]);
-=======
-  const sessions = data?.sessions ?? [];
->>>>>>> 20cbbc0 (feat: 실제 bookid로 변경)
 
   useEffect(() => {
     const el = containerRef.current;
