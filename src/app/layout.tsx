@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { type ReactNode } from 'react';
 import { Background } from '@/assets';
 import { PageTransition, QueryProvider } from '@/providers';
+import { ToastContainer } from '@/components';
 
 const suit = localFont({
   src: '../../public/fonts/SUIT-Variable.woff2',
@@ -38,11 +39,14 @@ const RootLayout = (props: Props): React.ReactElement => {
             sizes="375px"
             className="pointer-events-none object-cover"
           />
+
           <div className="relative">
             <QueryProvider>
               <PageTransition>{children}</PageTransition>
             </QueryProvider>
           </div>
+        
+          <ToastContainer />
         </main>
       </body>
     </html>

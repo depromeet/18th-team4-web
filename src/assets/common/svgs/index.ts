@@ -8,6 +8,8 @@ export { default as Dot } from './ic-dot.svg?react';
 export { default as LoadingIcon } from './ic-loading.svg?react';
 export { default as Menu } from './ic-menu.svg?react';
 export { default as Plus } from './ic-plus.svg?react';
+export { default as ReadumMarkLg } from './ic-readum-mark-lg.svg?react';
+export { default as ReadumMarkSm } from './ic-readum-mark-sm.svg?react';
 export { default as Reload } from './ic-reload.svg?react';
 export { default as Search } from './ic-search.svg?react';
 export { default as Send } from './ic-send.svg?react';
