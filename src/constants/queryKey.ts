@@ -23,6 +23,7 @@ export const QUERY_KEY = {
    * AI 채팅
    */
   aiChat: {
+    messages: (sessionId: string) => ['aiChat', 'messages', sessionId],
     summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
   },
 } as const;
