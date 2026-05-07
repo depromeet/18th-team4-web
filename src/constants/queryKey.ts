@@ -18,4 +18,11 @@ export const QUERY_KEY = {
     list: ['delivery', 'list'],
     updateDefault: ['delivery', 'updateDefault'],
   },
+
+  /*
+   * AI 채팅
+   */
+  aiChat: {
+    summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
+  },
 } as const;
