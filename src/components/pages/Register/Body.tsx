@@ -111,9 +111,9 @@ export const RegisterBody = () => {
               ) : (
                 <>
                   <ul className="flex flex-col list-none">
-                    {books.map((book) => (
+                    {books.map((book, index) => (
                       <ListItem
-                        key={book.isbn13}
+                        key={book.isbn13 || index}
                         imageSrc={book.coverUrl}
                         imageAlt={`${book.title} 표지`}
                         title={book.title}
