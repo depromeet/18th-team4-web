@@ -25,5 +25,6 @@ export const QUERY_KEY = {
   aiChat: {
     messages: (sessionId: string) => ['aiChat', 'messages', sessionId],
     summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
+    summary: (sessionId: string) => ['aiChat', 'summary', sessionId] as const,
   },
 } as const;
