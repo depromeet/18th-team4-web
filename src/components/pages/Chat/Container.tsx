@@ -79,6 +79,10 @@ const Container = () => {
           setStreamingContent(accumulated);
           return new Promise<void>((resolve) => setTimeout(resolve, 30));
         },
+        onRetry: () => {
+          accumulated = '';
+          setStreamingContent('');
+        },
         onDone: (data) => {
           streamFinished = true;
           setIsStreaming(false);
