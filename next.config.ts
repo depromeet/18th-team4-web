@@ -50,8 +50,6 @@ const nextConfig: NextConfig = {
 
     return config;
   },
-
-  output: 'standalone',
 };
 
 export default nextConfig;
