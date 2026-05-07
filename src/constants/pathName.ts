@@ -12,7 +12,5 @@ export const PATH_NAME = {
 
   summary: {
     detail: (summaryId: string) => `/summary/${summaryId}`,
-    loading: () => '/summary/loading',
-    error: () => '/summary/error',
   },
 } as const;
