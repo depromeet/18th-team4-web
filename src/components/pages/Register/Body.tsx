@@ -101,7 +101,7 @@ export const RegisterBody = () => {
         </section>
 
         {hasQuery && (
-          <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem]">
+          <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem] pb-[1.6rem]">
             <div className="flex min-h-0 flex-1 flex-col px-4 overflow-y-auto overscroll-y-contain">
               {/* 디바운스 대기 중 또는 로딩 */}
               {!isSettled || isLoading ? (
