@@ -1,5 +1,12 @@
 export const QUERY_KEY = {
   /*
+   * 내 책장
+   */
+  userBooks: {
+    list: () => ['userBooks', 'list'] as const,
+  },
+
+  /*
    * AI 채팅 세션
    */
   aiChat: {
