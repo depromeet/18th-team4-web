@@ -7,11 +7,13 @@ import { Button, BUTTON_VARIANT } from '@/components';
 
 type Props = {
   isOpen: boolean;
+  isConfirming?: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-export const Modal = ({ isOpen, onCancel, onConfirm }: Props) => {
+export const Modal = (props: Props) => {
+  const { isOpen, isConfirming = false, onCancel, onConfirm } = props;
   if (!isOpen) return null;
 
   return createPortal(
@@ -41,6 +43,7 @@ export const Modal = ({ isOpen, onCancel, onConfirm }: Props) => {
             size="lg"
             className="rounded-[1.6rem]"
             onClick={onCancel}
+            disabled={isConfirming}
           >
             취소
           </Button>
@@ -50,6 +53,7 @@ export const Modal = ({ isOpen, onCancel, onConfirm }: Props) => {
             size="lg"
             className="rounded-[1.6rem]"
             onClick={onConfirm}
+            disabled={isConfirming}
           >
             확인
           </Button>
