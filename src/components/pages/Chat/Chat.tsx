@@ -8,10 +8,11 @@ type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
   message: string;
   isStreaming?: boolean;
+  showIcon?: boolean;
 };
 
 export const Chat = (props: Props) => {
-  const { user = CHAT_USER.ME, message, isStreaming = false } = props;
+  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false } = props;
 
   return (
     <div className={cn(containerVariants({ user }))}>
@@ -19,7 +20,7 @@ export const Chat = (props: Props) => {
         {message}
         {isStreaming && <span className="animate-pulse">▋</span>}
       </p>
-      {user === CHAT_USER.AI ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
+      {showIcon ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
     </div>
   );
 };

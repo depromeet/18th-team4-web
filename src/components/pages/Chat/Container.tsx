@@ -45,6 +45,10 @@ const Container = () => {
   const [streamingContent, setStreamingContent] = useState('');
 
   const allChats = [...historyChats, ...newChats];
+  const lastAIIndex = allChats.reduce(
+    (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
+    -1,
+  );
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -120,10 +124,17 @@ const Container = () => {
 
         <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
-            {allChats.map((chat) => (
-              <Chat key={chat.id} user={chat.user} message={chat.message} />
+            {allChats.map((chat, index) => (
+              <Chat
+                key={chat.id}
+                user={chat.user}
+                message={chat.message}
+                showIcon={!isStreaming && index === lastAIIndex}
+              />
             ))}
-            {isStreaming && <Chat user={CHAT_USER.AI} message={streamingContent} isStreaming />}
+            {isStreaming && (
+              <Chat user={CHAT_USER.AI} message={streamingContent} isStreaming showIcon />
+            )}
             <div ref={bottomRef} />
           </div>
         </main>
