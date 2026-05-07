@@ -19,6 +19,7 @@ export type StreamCallbacks = {
   onToken: (delta: string) => void | Promise<void>;
   onDone: (data: DoneEvent) => void;
   onError: (data: ErrorEvent) => void;
+  onRetry?: () => void;
 };
 
 export const streamChatMessage = async (
@@ -41,6 +42,7 @@ export const streamChatMessage = async (
   // pre-stream rate limit → Retry-After 헤더 확인 후 재시도
   if (response.status === 429 && retryCount < SSE_RETRY_MAX) {
     const retryAfter = Number(response.headers.get('Retry-After') ?? 5);
+    callbacks.onRetry?.();
     await sleep(retryAfter * 1000);
     return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
   }
@@ -110,6 +112,7 @@ export const streamChatMessage = async (
           if (parsed.data.code === 'AI_RATE_LIMIT_BURST' && retryCount < SSE_RETRY_MAX) {
             const retryAfter = parsed.data.rateLimit?.retryAfterSeconds ?? 5;
             reader.cancel();
+            callbacks.onRetry?.();
             await sleep(retryAfter * 1000);
             return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
           }
