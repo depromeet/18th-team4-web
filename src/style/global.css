@@ -351,6 +351,34 @@
   }
 }
 
+@keyframes symbol-pop {
+  0% {
+    transform: scale(0) rotate(-120deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.25) rotate(12deg);
+    opacity: 1;
+  }
+  68% {
+    transform: scale(0.9) rotate(-6deg) translateY(-10px);
+  }
+  82% {
+    transform: scale(1.06) rotate(3deg) translateY(0);
+  }
+  91% {
+    transform: scale(0.97) rotate(-1deg) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg) translateY(0);
+    opacity: 1;
+  }
+}
+
+@utility animate-symbol-pop {
+  animation: symbol-pop 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
 @utility animate-float {
   animation: float 3s ease-in-out infinite;
 }

@@ -11,5 +11,6 @@ export { ReadumMarkIcon } from './ReadumMarkIcon';
 export { ReadumMarkLoadingIcon } from './ReadumMarkLoadingIcon';
 export { ReloadIcon } from './ReloadIcon';
 export { SearchIcon } from './SearchIcon';
+export { SelectIcon } from './SelectIcon';
 export { SendIcon } from './SendIcon';
 export { WarningIcon } from './WarningIcon';

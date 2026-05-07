@@ -1,6 +1,6 @@
 import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
-import { CheckIcon } from '@/components';
+import { SelectIcon } from '@/components';
 import { cn } from '@/lib';
 import { listItemVariants } from './listItemVariants';
 
@@ -46,14 +46,7 @@ export const ListItem = (props: Props) => {
           </p>
         </div>
 
-        {selected && (
-          <span
-            aria-hidden
-            className="relative flex size-[2.8rem] shrink-0 items-center justify-center rounded-full bg-linear-to-b from-[rgba(255,255,255,0.47)] to-[rgba(255,255,255,0.19)] drop-shadow-[0_0_1.6rem_rgba(0,0,0,0.12)]"
-          >
-            <CheckIcon className="size-8 fill-icon-primary" />
-          </span>
-        )}
+        {selected && <SelectIcon aria-hidden className="size-[2.8rem] shrink-0 self-center" />}
       </button>
     </li>
   );
