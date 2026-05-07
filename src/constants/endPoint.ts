@@ -44,8 +44,8 @@ export const ENDPOINTS = {
    * AI 채팅 - AI와 책 한 권에 대해 대화하는 채팅 세션 및 메시지 관리
    */
   AI_CHAT: {
-    // AI 채팅 세션 생성
-    createSession: () => '/ai-chat/sessions',
+    // AI 채팅 세션 목록 조회 
+    getSessions: () => '/ai-chat/sessions',
 
     // 세션의 메시지 이력 조회 (페이지네이션)
     getMessages: (sessionId: string) => `/ai-chat/sessions/${sessionId}/messages`,
