@@ -379,6 +379,7 @@
   animation: symbol-pop 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+
 @utility animate-float {
   animation: float 3s ease-in-out infinite;
 }
