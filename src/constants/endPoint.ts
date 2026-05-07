@@ -3,6 +3,9 @@ export const ENDPOINTS = {
    * 내 책장 - 사용자가 등록한 도서(책장) 관리
    */
   USER_BOOKS: {
+    // 내 책장 도서 목록 조회
+    list: () => '/user-books',
+
     // 내 책장 도서 추가
     add: () => '/user-books',
   },
@@ -46,6 +49,9 @@ export const ENDPOINTS = {
   AI_CHAT: {
     // AI 채팅 세션 생성
     createSession: () => '/ai-chat/sessions',
+
+    // AI 채팅 세션 목록 조회
+    getSessions: () => '/ai-chat/sessions',
 
     // 세션의 메시지 이력 조회 (페이지네이션)
     getMessages: (sessionId: string) => `/ai-chat/sessions/${sessionId}/messages`,
