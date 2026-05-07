@@ -1,33 +1,32 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Logo } from '@/assets';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
-import { cn } from '@/lib';
+import { PATH_NAME } from '@/constants';
+import { cn, useCreateSession, type UserBookItem } from '@/lib';
 
-// Mock 데이터 API 연동 후 삭제 예정 Start
-type BookOption = {
-  id: string;
-  title: string;
-  year: number;
-  publisher: string;
+type Props = {
+  books: UserBookItem[];
 };
-const BOOK_OPTIONS: BookOption[] = [
-  { id: '1', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
-  { id: '2', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
-  { id: '3', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
-  { id: '4', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
-  { id: '5', title: '해리포터와 마법사의 돌 1', year: 2024, publisher: '문학수첩' },
-];
-const COVER_SRC = typeof Logo === 'string' ? Logo : Logo.src;
-// Mock 데이터 API 연동 후 삭제 예정 End
 
-export const MainFooter = () => {
+export const MainFooter = (props: Props) => {
+  const { books } = props;
+  const router = useRouter();
+  const { mutate: createSession } = useCreateSession();
   const peekRef = useRef<HTMLDivElement | null>(null);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string>(BOOK_OPTIONS[0]?.id ?? '');
+  const [selectedId, setSelectedId] = useState<number>(books[0]?.id ?? 0);
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
+
+  const selectedBook = books.find((b) => b.id === selectedId);
+
+  const handleSend = () => {
+    createSession(selectedId, {
+      onSuccess: () => router.push(PATH_NAME.chat()),
+    });
+  };
 
   // 버튼 레이아웃 높이 계산
   useEffect(() => {
@@ -120,7 +119,7 @@ export const MainFooter = () => {
             )}
             onClick={clickSection}
           >
-            <p className="headline2-extrabold text-text-default">해리 포터와 마법사의 돌 1</p>
+            <p className="headline2-extrabold text-text-default">{selectedBook?.title}</p>
             <ChevronIcon
               className={cn(
                 'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
@@ -140,7 +139,7 @@ export const MainFooter = () => {
             }}
             role="presentation"
           >
-            <TextfieldChat />
+            <TextfieldChat onSend={handleSend} />
           </div>
         </div>
 
@@ -158,13 +157,13 @@ export const MainFooter = () => {
               isSheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
-            {BOOK_OPTIONS.map((book) => (
+            {books.map((book) => (
               <ListItem
                 key={book.id}
-                imageSrc={COVER_SRC}
+                imageSrc={book.coverUrl}
                 imageAlt={`${book.title} 표지`}
                 title={book.title}
-                year={book.year}
+                year={book.publishedYear}
                 publisher={book.publisher}
                 selected={selectedId === book.id}
                 onClick={() => {

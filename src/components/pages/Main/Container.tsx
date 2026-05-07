@@ -1,6 +1,6 @@
 import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { type Session } from '@/lib';
+import { getUserBooks, type Session } from '@/lib';
 import { MainBody } from './Body';
 import { MainFooter } from './Footer';
 import { OnboardingSkipButton } from './OnboardingSkipButton';
@@ -10,7 +10,7 @@ type Props = {
   session: Session | null;
 };
 
-export const MainContainer = ({ session }: Props) => {
+export const MainContainer = async ({ session }: Props) => {
   // 1. 세션 데이터 없음 — API 호출 실패 또는 첫 렌더 race condition 폴백
   if (session === null) {
     return null;
@@ -59,11 +59,15 @@ export const MainContainer = ({ session }: Props) => {
   }
 
   // 4. 온보딩 완료 + 책 등록 완료 — 풀버전 (records 있는 것으로 처리)
+  const userBooksData = await getUserBooks().catch(() => null);
+  const books = userBooksData?.books ?? [];
+  const userBookId = session.lastSelectedUserBookId ?? books[0]?.id;
+
   return (
     <div className="flex h-dvh flex-col">
-      <RecordsBody />
+      {userBookId !== undefined && <RecordsBody userBookId={userBookId} />}
       <div className="mt-[10.2rem]" />
-      <MainFooter />
+      <MainFooter books={books} />
     </div>
   );
 };

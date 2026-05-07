@@ -1,6 +1,8 @@
 export const PATH_NAME = {
   main: () => '/',
 
+  chat: () => '/chat',
+
   register: {
     list: () => '/register',
     complete: () => '/register/complete',
