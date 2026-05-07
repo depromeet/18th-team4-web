@@ -10,7 +10,7 @@ import {
 } from '@/components';
 import { type SessionStatus, useGetSessions } from '@/lib';
 
-// TODO: MainFooter의 selectedId(userBookId)를 Zustand store로 올려서 이 값 대체 필요
+// TODO: MainFooter의 selectedId(userBookId) 대체 필요
 const TEMP_USER_BOOK_ID = 1;
 
 const SESSION_STATUS_TO_CARD: Record<
