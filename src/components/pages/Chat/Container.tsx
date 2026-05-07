@@ -23,6 +23,7 @@ const Container = () => {
 
   const { isOpen, open, close } = useModal();
 
+  const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
@@ -30,16 +31,38 @@ const Container = () => {
   const { data: eligibilityData } = useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
 
-  const { data: messagesData } = useGetMessages(sessionId);
+  const {
+    data: messagesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMessages(sessionId);
 
-  const historyChats: ChatMessage[] = (messagesData?.pages ?? [])
-    .flatMap((page) => page.messages)
+  const historyChats: ChatMessage[] = [...(messagesData?.pages ?? [])]
     .reverse()
+    .flatMap((page) => [...page.messages].reverse())
     .map((msg) => ({
       id: msg.id,
       user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
     }));
+
+  useEffect(() => {
+    const el = topRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          void fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
@@ -143,6 +166,7 @@ const Container = () => {
 
         <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
+            <div ref={topRef} />
             {allChats.map((chat, index) => (
               <Chat
                 key={chat.id}
