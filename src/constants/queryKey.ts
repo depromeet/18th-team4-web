@@ -1,9 +1,11 @@
 export const QUERY_KEY = {
   /*
-   * AI 채팅 세션
+   * AI 채팅
    */
   aiChat: {
     sessions: (userBookId: number) => ['aiChat', 'sessions', userBookId] as const,
+    messages: (sessionId: string) => ['aiChat', 'messages', sessionId],
+    summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
   },
 
   /*
@@ -24,13 +26,5 @@ export const QUERY_KEY = {
     default: ['delivery', 'default'],
     list: ['delivery', 'list'],
     updateDefault: ['delivery', 'updateDefault'],
-  },
-
-  /*
-   * AI 채팅
-   */
-  aiChat: {
-    messages: (sessionId: string) => ['aiChat', 'messages', sessionId],
-    summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId],
   },
 } as const;
