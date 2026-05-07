@@ -70,6 +70,7 @@ const Container = () => {
     setIsStreaming(true);
     setStreamingContent('');
     let accumulated = '';
+    let streamFinished = false;
 
     try {
       await streamChatMessage(sessionId, trimmedMessage, {
@@ -79,6 +80,7 @@ const Container = () => {
           return new Promise<void>((resolve) => setTimeout(resolve, 30));
         },
         onDone: (data) => {
+          streamFinished = true;
           setIsStreaming(false);
           setStreamingContent('');
           setNewChats((prev) => [
@@ -91,6 +93,7 @@ const Container = () => {
           ]);
         },
         onError: (data) => {
+          streamFinished = true;
           setIsStreaming(false);
           setStreamingContent('');
           const errorMessage = ERROR_MESSAGES[data.code] ?? '오류가 발생했어요. 다시 시도해주세요.';
@@ -105,8 +108,20 @@ const Container = () => {
         },
       });
     } catch {
+      streamFinished = true;
       setIsStreaming(false);
       setStreamingContent('');
+    } finally {
+      if (!streamFinished) {
+        setIsStreaming(false);
+        setStreamingContent('');
+        if (accumulated) {
+          setNewChats((prev) => [
+            ...prev,
+            { id: crypto.randomUUID(), user: CHAT_USER.AI, message: accumulated },
+          ]);
+        }
+      }
     }
   };
 
