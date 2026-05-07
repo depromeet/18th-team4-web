@@ -72,6 +72,7 @@ const Container = () => {
         onToken: (delta) => {
           accumulated += delta;
           setStreamingContent(accumulated);
+          return new Promise<void>((resolve) => setTimeout(resolve, 30));
         },
         onDone: (data) => {
           setIsStreaming(false);
