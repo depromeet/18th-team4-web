@@ -24,7 +24,7 @@ export const MainFooter = (props: Props) => {
 
   const handleSend = () => {
     createSession(selectedId, {
-      onSuccess: () => router.push(PATH_NAME.chat.list()),
+      onSuccess: (data) => router.push(PATH_NAME.chat.detail(String(data.sessionId))),
     });
   };
 
