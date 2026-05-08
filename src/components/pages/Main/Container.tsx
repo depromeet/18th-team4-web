@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { GradientSky } from '@/assets';
 import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { getUserBooks, type Session } from '@/lib';
+import { getUserBooksServer, type Session } from '@/lib';
 import { MainBody } from './Body';
 import { MainFooter } from './Footer';
 import { OnboardingSkipButton } from './OnboardingSkipButton';
@@ -82,7 +82,7 @@ export const MainContainer = async ({ session }: Props) => {
   }
 
   // 4. 온보딩 완료 + 책 등록 완료 — 풀버전 (records 있는 것으로 처리)
-  const userBooksData = await getUserBooks().catch(() => null);
+  const userBooksData = await getUserBooksServer().catch(() => null);
   const books = userBooksData?.books ?? [];
   const userBookId = session.lastSelectedUserBookId || books[0]?.userBookId;
 
