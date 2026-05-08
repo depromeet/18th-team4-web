@@ -70,7 +70,7 @@ export const Modal = (props: Props) => {
       <div
         role="presentation"
         className={cn(
-          'fixed inset-0 z-modal cursor-default bg-dim',
+          'fixed inset-0 z-modal cursor-pointer bg-dim',
           (isConfirming || isExiting) && 'pointer-events-none',
           isConfirming && 'cursor-wait',
         )}

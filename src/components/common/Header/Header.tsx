@@ -59,7 +59,7 @@ export const Header = (props: HeaderProps) => {
         <button
           aria-label="뒤로가기"
           onClick={handleBack}
-          className="flex shrink-0 items-center justify-center"
+          className="flex shrink-0 cursor-pointer items-center justify-center"
         >
           <ArrowIcon className="-rotate-90 size-[2.4rem] fill-icon-primary" />
         </button>

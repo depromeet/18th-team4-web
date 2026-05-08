@@ -35,11 +35,11 @@ export const inputVariants = cva(
   },
 );
 
-export const sendButtonVariants = cva('', {
+export const sendButtonVariants = cva('cursor-pointer', {
   variants: {
     status: {
       default: 'text-text-default',
-      disabled: 'text-icon-disabled cursor-not-allowed',
+      disabled: 'cursor-not-allowed text-icon-disabled',
       error: 'text-icon-disabled',
     },
   },

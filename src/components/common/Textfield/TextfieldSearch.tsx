@@ -21,7 +21,7 @@ export const TextfieldSearch = (props: Props) => {
       <button
         type="button"
         onClick={onSearch}
-        className="flex items-center justify-center"
+        className="flex cursor-pointer items-center justify-center disabled:cursor-not-allowed"
         disabled={!hasValue}
         aria-label="검색"
       >

@@ -72,7 +72,7 @@ export const BottomSheet = (props: BottomSheetProps) => {
       <button
         aria-label="바텀시트 닫기"
         className={cn(
-          'absolute inset-0 border-0 bg-gray-900/25 backdrop-blur-sm transition-opacity duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
+          'absolute inset-0 cursor-pointer border-0 bg-gray-900/25 backdrop-blur-sm transition-opacity duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
         )}
         type="button"

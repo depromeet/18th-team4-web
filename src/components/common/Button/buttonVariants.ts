@@ -11,7 +11,7 @@ export type ButtonVariant = (typeof BUTTON_VARIANT)[keyof typeof BUTTON_VARIANT]
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'full';
 
 export const buttonVariants = cva(
-  'flex items-center justify-center',
+  'flex cursor-pointer items-center justify-center disabled:cursor-not-allowed',
 
   {
     variants: {
