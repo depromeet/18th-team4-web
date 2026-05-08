@@ -1,9 +1,10 @@
 'use client';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
+import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME, QUERY_KEY } from '@/constants';
 import { useModal } from '@/hooks';
 import {
   HttpError,
@@ -17,6 +18,52 @@ import {
 import { Chat } from './Chat';
 import { Modal } from './Modal';
 
+const chatMatchesHistory = (history: ChatMessage, pending: ChatMessage) =>
+  pending.id === history.id ||
+  (pending.user === history.user && pending.message === history.message);
+
+/**
+ * 서버 히스토리 tail과 동일한 접두를 가진 optimistic 메시지는 목록에서 제외한다.
+ * (같은 내용이지만 id가 다른 USER 메시지도 순서 기준으로 매칭)
+ */
+const stripPendingSyncedWithHistoryTail = (
+  history: ChatMessage[],
+  pending: ChatMessage[],
+): ChatMessage[] => {
+  if (pending.length === 0) return pending;
+
+  const max = Math.min(history.length, pending.length);
+  for (let k = max; k >= 1; k--) {
+    let matches = true;
+    for (let i = 0; i < k; i++) {
+      const h = history[history.length - k + i];
+      const p = pending[i];
+      if (!chatMatchesHistory(h, p)) {
+        matches = false;
+        break;
+      }
+    }
+    if (matches) return pending.slice(k);
+  }
+  return pending;
+};
+
+const mapInfinitePagesToHistoryChats = (
+  data:
+    | { pages: Array<{ messages: Array<{ id: string; role: string; content: string }> }> }
+    | undefined,
+): ChatMessage[] => {
+  if (!data?.pages?.length) return [];
+  return [...data.pages]
+    .reverse()
+    .flatMap((page) => [...page.messages].reverse())
+    .map((msg) => ({
+      id: msg.id,
+      user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
+      message: msg.content,
+    }));
+};
+
 const ERROR_MESSAGES: Record<string, string> = {
   AI_QUOTA_EXHAUSTED: '오늘 대화 한도를 초과했어요. 내일 다시 시도해주세요.',
   AI_PROVIDER_ERROR: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
@@ -28,6 +75,7 @@ const Container = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
+  const queryClient = useQueryClient();
   const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
   const { isOpen, mountKey, open, close } = useModal();
@@ -71,14 +119,23 @@ const Container = () => {
     isFetchingNextPage,
   } = useGetMessages(sessionId);
 
-  const historyChats: ChatMessage[] = [...(messagesData?.pages ?? [])]
-    .reverse()
-    .flatMap((page) => [...page.messages].reverse())
-    .map((msg) => ({
-      id: msg.id,
-      user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
-      message: msg.content,
-    }));
+  const historyChats: ChatMessage[] = useMemo(
+    () => mapInfinitePagesToHistoryChats(messagesData),
+    [messagesData],
+  );
+
+  useEffect(() => {
+    setNewChats((prev) => {
+      const next = stripPendingSyncedWithHistoryTail(historyChats, prev);
+      if (
+        next.length === prev.length &&
+        next.every((m, i) => m.id === prev[i]?.id && m.message === prev[i]?.message)
+      ) {
+        return prev;
+      }
+      return next;
+    });
+  }, [historyChats]);
 
   useEffect(() => {
     const el = topRef.current;
@@ -100,7 +157,15 @@ const Container = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
 
-  const allChats = [...historyChats, ...newChats];
+  const visiblePendingChats = useMemo(
+    () => stripPendingSyncedWithHistoryTail(historyChats, newChats),
+    [historyChats, newChats],
+  );
+
+  const allChats = useMemo(
+    () => [...historyChats, ...visiblePendingChats],
+    [historyChats, visiblePendingChats],
+  );
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,
@@ -151,6 +216,7 @@ const Container = () => {
               message: accumulated,
             },
           ]);
+          void queryClient.invalidateQueries({ queryKey: QUERY_KEY.aiChat.messages(sessionId) });
         },
         onError: (data) => {
           streamFinished = true;
