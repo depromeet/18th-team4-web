@@ -393,3 +393,22 @@
     height: 2.8rem;
   }
 }
+
+/* 스트리밍 커서: 짧은 페이드로 ON/OFF (시스템 입력 커서 느낌) */
+@keyframes text-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility animate-text-caret-blink {
+  animation: text-caret-blink 1.06s linear infinite;
+}
