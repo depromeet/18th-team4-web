@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
@@ -27,6 +27,7 @@ const Container = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
+  const searchParams = useSearchParams();
 
   const { isOpen, open, close } = useModal();
   const openToast = useToastStore((s) => s.openToast);
@@ -104,11 +105,11 @@ const Container = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [allChats.length, streamingContent]);
 
-  const handleSend = async () => {
-    const trimmedMessage = message.trim();
+  const handleSend = async (overrideText?: string) => {
+    const trimmedMessage = (overrideText != null ? overrideText : message).trim();
     if (!trimmedMessage || isStreaming) return;
 
-    setMessage('');
+    if (overrideText == null) setMessage('');
 
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -178,6 +179,17 @@ const Container = () => {
       }
     }
   };
+
+  const initialSentRef = useRef(false);
+  useEffect(() => {
+    if (initialSentRef.current) return;
+    const initial = searchParams.get('m');
+    if (!initial) return;
+    initialSentRef.current = true;
+    router.replace(PATH_NAME.chat.detail(sessionId));
+    void handleSend(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden">

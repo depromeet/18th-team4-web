@@ -1,4 +1,5 @@
 import { type Metadata } from 'next';
+import { Suspense } from 'react';
 import { ChatContainer } from '@/components';
 
 export const generateMetadata = async (): Promise<Metadata> => ({
@@ -7,7 +8,11 @@ export const generateMetadata = async (): Promise<Metadata> => ({
 });
 
 const ChatPage = () => {
-  return <ChatContainer />;
+  return (
+    <Suspense>
+      <ChatContainer />
+    </Suspense>
+  );
 };
 
 export default ChatPage;
