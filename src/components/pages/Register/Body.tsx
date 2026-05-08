@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { DialogIcon } from '@/assets';
 import {
   Button,
   Empty,
@@ -13,9 +14,28 @@ import {
 } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { useDebouncing } from '@/hooks';
-import { useAddUserBook, useBookSearch } from '@/lib';
+import {
+  BOOK_SEARCH_MIN_CHARS,
+  countBookSearchKeywordUnits,
+  useAddUserBook,
+  useBookSearch,
+} from '@/lib';
 
-const SEARCH_DEBOUNCE_MS = 500;
+const SEARCH_DEBOUNCE_UI_MS = 500;
+const SEARCH_DEBOUNCE_API_MS = 1000;
+
+const SearchMinLengthHint = () => {
+  return (
+    <section className="flex flex-col items-center justify-center gap-[1.6rem] pt-16">
+      <DialogIcon />
+
+      <div className="flex flex-col">
+        <p className="title1-bold text-text-caption">검색어는 두 글자 이상 입력해주세요</p>
+        <p className="body1-medium text-text-disable">책 제목으로 검색할 수 있어요</p>
+      </div>
+    </section>
+  );
+};
 
 export const RegisterBody = () => {
   const router = useRouter();
@@ -23,21 +43,55 @@ export const RegisterBody = () => {
   const [query, setQuery] = useState('');
   const [selectedIsbn, setSelectedIsbn] = useState<string | null>(null);
 
-  const debouncedKeyword = useDebouncing(query, SEARCH_DEBOUNCE_MS, {
+  const debouncedKeywordUi = useDebouncing(query, SEARCH_DEBOUNCE_UI_MS);
+  const debouncedKeywordApi = useDebouncing(query, SEARCH_DEBOUNCE_API_MS, {
     onSettled: () => setSelectedIsbn(null),
   });
 
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useBookSearch(debouncedKeyword);
+    useBookSearch(debouncedKeywordApi);
 
   const { mutate: addBook, isPending } = useAddUserBook();
 
-  const books = data?.pages.flatMap((page) => page.books) ?? [];
-  const isSettled = query.trim() === debouncedKeyword.trim();
-  const hasQuery = query.trim().length > 0;
+  const minKeywordUnits = BOOK_SEARCH_MIN_CHARS ?? 2;
+
+  const booksRaw = data?.pages.flatMap((page) => page.books) ?? [];
+  const trimmedQuery = query.trim();
+  const trimmedUi = debouncedKeywordUi.trim();
+  const trimmedApi = debouncedKeywordApi.trim();
+  const isUiSettled = trimmedQuery === trimmedUi;
+  const isApiSettled = trimmedQuery === trimmedApi;
+  const hasQuery = trimmedQuery.length > 0;
+  const queryUnits = countBookSearchKeywordUnits(trimmedQuery);
+
+  /** UI 디바운스(500ms) 기준 최소 글자 미달 */
+  const isBelowMinAfterUiDebounce =
+    trimmedUi.length > 0 && countBookSearchKeywordUnits(trimmedUi) < minKeywordUnits;
+
+  const debouncedHadSearchableUnits =
+    trimmedApi.length > 0 && countBookSearchKeywordUnits(trimmedApi) >= minKeywordUnits;
+
+  const books =
+    isApiSettled &&
+    debouncedHadSearchableUnits &&
+    countBookSearchKeywordUnits(trimmedQuery) >= minKeywordUnits
+      ? booksRaw
+      : [];
+
   const selectedBook = books.find((b) => b.isbn13 === selectedIsbn) ?? null;
 
-  const shouldShowButton = selectedBook !== null && isSettled;
+  const shouldShowButton =
+    queryUnits >= minKeywordUnits && isUiSettled && isApiSettled && selectedBook !== null;
+
+  const showWaitingUiDebounce = hasQuery && !isUiSettled;
+
+  const showWaitingApiOrFetch =
+    !showWaitingUiDebounce &&
+    hasQuery &&
+    !isBelowMinAfterUiDebounce &&
+    (!isApiSettled || isLoading);
+
+  const showHintAfterUi = !showWaitingUiDebounce && hasQuery && isBelowMinAfterUiDebounce;
 
   // 무한 스크롤 sentinel
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -61,7 +115,8 @@ export const RegisterBody = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const next = e.target.value;
     setQuery(next);
-    if (next.trim() === '') setSelectedIsbn(null);
+    const t = next.trim();
+    if (t === '' || countBookSearchKeywordUnits(t) < minKeywordUnits) setSelectedIsbn(null);
   };
 
   const flushSearch = () => {
@@ -103,8 +158,11 @@ export const RegisterBody = () => {
         {hasQuery && (
           <div className="flex min-h-0 flex-1 flex-col pt-[2.4rem] pb-[1.6rem]">
             <div className="flex min-h-0 flex-1 flex-col px-4 overflow-y-auto overscroll-y-contain">
-              {/* 디바운스 대기 중 또는 로딩 */}
-              {!isSettled || isLoading ? (
+              {showWaitingUiDebounce ? (
+                <Loading />
+              ) : showHintAfterUi ? (
+                <SearchMinLengthHint />
+              ) : showWaitingApiOrFetch ? (
                 <Loading />
               ) : books.length === 0 ? (
                 <Empty />
