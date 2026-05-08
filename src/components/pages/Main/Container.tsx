@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { GradientSky } from '@/assets';
+import { GradientBg } from '@/assets';
 import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { getUserBooksServer, type Session } from '@/lib';
@@ -50,16 +50,21 @@ export const MainContainer = async ({ session }: Props) => {
   // 3. 온보딩 완료, 책 미등록
   if (!session.hasRegisteredBooks) {
     return (
-      <div className="relative flex min-h-dvh flex-col bg-background-primary-white">
-        <div className="pointer-events-none absolute inset-x-0 top-1/2 bottom-0 z-0" aria-hidden>
-          <Image
-            src={GradientSky}
-            alt="GradientSky"
-            fill
-            className="origin-top scale-[1.8] object-cover object-top"
-            sizes="100vw"
-          />
+      <div className="relative flex h-dvh overflow-hidden flex-col bg-background-primary-white">
+        <div
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{
+            top: 'calc(100% - 9rem)',
+            height: 'calc(110dvh - 18rem)',
+            width: 'calc(110dvh - 18rem)',
+            maskImage: 'radial-gradient(circle, black 50%, transparent 70%)',
+            WebkitMaskImage: 'radial-gradient(circle, black 50%, transparent 70%)',
+          }}
+          aria-hidden
+        >
+          <Image src={GradientBg} alt="" fill className="object-cover" sizes="100dvw" />
         </div>
+
         <MainBody />
         <div className="relative z-10 flex flex-col gap-[1.6rem] px-[2.4rem] pb-[2.4rem]">
           <LinkButton

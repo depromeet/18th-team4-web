@@ -1,3 +1,4 @@
+export { default as GradientBg } from './gradient-bg.webp';
 export { default as GraidentBlue } from './gradient-blue.webp';
 export { default as GraidentGreen } from './gradient-green.webp';
 export { default as GraidentMagenta } from './gradient-magenta.webp';
