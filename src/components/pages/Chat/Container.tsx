@@ -30,7 +30,7 @@ const Container = () => {
   const sessionId = params.sessionId;
   const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
-  const { isOpen, open, close } = useModal();
+  const { isOpen, mountKey, open, close } = useModal();
   const openToast = useToastStore((s) => s.openToast);
   const { mutateAsync: createSummaryDraft, isPending: isCreatingSummary } = useCreateSummaryDraft();
 
@@ -235,6 +235,7 @@ const Container = () => {
       </div>
 
       <Modal
+        key={mountKey}
         isOpen={isOpen}
         isConfirming={isCreatingSummary}
         onCancel={close}
