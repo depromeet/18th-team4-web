@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, BUTTON_VARIANT, ColorSymbolIcon, ReadumMarkLoadingIcon } from '@/components';
+import { Button, BUTTON_VARIANT, ColorSymbolIcon } from '@/components';
 import { cn } from '@/lib';
 
 type Props = {
@@ -70,7 +70,7 @@ export const Modal = (props: Props) => {
       <div
         role="presentation"
         className={cn(
-          'fixed inset-0 z-modal cursor-default bg-dim',
+          'fixed inset-0 z-modal cursor-pointer bg-dim',
           (isConfirming || isExiting) && 'pointer-events-none',
           isConfirming && 'cursor-wait',
         )}
@@ -98,7 +98,6 @@ export const Modal = (props: Props) => {
               aria-hidden
               className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-[1.2rem] rounded-[20px] bg-text-white/85 px-[2.4rem] backdrop-blur-[2px]"
             >
-              <ReadumMarkLoadingIcon className="h-auto w-[4.8rem] animate-pulse" />
               <p className="body2-bold text-center text-text-caption">요약을 준비하고 있어요</p>
             </div>
           )}

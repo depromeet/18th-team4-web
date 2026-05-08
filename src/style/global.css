@@ -83,10 +83,12 @@
     rgba(207, 220, 220, 0) 100%
   );
 
+  /* 채팅 입력 푸터: 피그마 밀키 화이트 글래스 (회색 베이스 X), 대각 은은한 하이라이트 */
   --background-image-gradient-footer: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.064) 0%,
-    rgba(255, 255, 255, 0) 100%
+    -45deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.22) 45%,
+    rgba(255, 255, 255, 0.14) 100%
   );
   --background-image-gradient-chat: radial-gradient(
     111.94% 35.07% at 50.13% 88.57%,

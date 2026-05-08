@@ -76,7 +76,7 @@ export const MainContainer = async ({ session }: Props) => {
           </LinkButton>
           <button
             type="button"
-            className="body1-bold text-center tracking-[-0.048rem] text-text-caption"
+            className="body1-bold cursor-pointer text-center tracking-[-0.048rem] text-text-caption"
           >
             둘러보기
           </button>

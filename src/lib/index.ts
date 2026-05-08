@@ -1,4 +1,5 @@
 export * from './api';
+export * from './lastSelectedUserBookClientStorage';
 export * from './mocks';
-export * from './utils';
 export * from './stores';
+export * from './utils';

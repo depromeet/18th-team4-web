@@ -101,7 +101,7 @@ export const ChatCard = (props: ChatCardProps) => {
             e.preventDefault();
             onRefresh?.();
           }}
-          className="relative shrink-0"
+          className="relative shrink-0 cursor-pointer"
         >
           <ReloadIcon className={cn('size-[2.4rem]', chatCardIconColor[color])} />
         </button>
