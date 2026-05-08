@@ -119,7 +119,7 @@ export const MainFooter = (props: Props) => {
             )}
             onClick={clickSection}
           >
-            <p className="headline2-extrabold text-text-default">{selectedBook?.title}</p>
+            <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
             <ChevronIcon
               className={cn(
                 'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',

@@ -72,7 +72,7 @@ export const RecordsBody = (props: Props) => {
             className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]"
           >
             {sessions.map((session, index) => (
-              <li key={session.sessionId} className="mb-[-6.4rem] last:mb-[-3.2rem]">
+              <li key={session.sessionId} className="mb-[-6.4rem]">
                 <Link href={PATH_NAME.chat.detail(String(session.sessionId))}>
                   <ChatCard
                     color={
