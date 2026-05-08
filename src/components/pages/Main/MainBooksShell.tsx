@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { usePatchLastSelectedUserBook, type UserBookItem } from '@/lib';
+import { useMemo, useState } from 'react';
+import {
+  getLastSelectedUserBookIdClient,
+  setLastSelectedUserBookIdClient,
+  usePatchLastSelectedUserBook,
+  type UserBookItem,
+} from '@/lib';
 import { MainFooter } from './Footer';
 import { RecordsBody } from './RecordsBody';
 
@@ -14,14 +19,20 @@ export const MainBooksShell = (props: Props) => {
   const { books, initialSelectedUserBookId } = props;
   const { mutate: persistLastSelectedBook } = usePatchLastSelectedUserBook();
 
-  const [selectedUserBookId, setSelectedUserBookId] = useState(initialSelectedUserBookId);
+  /** 시트에서 책 고를 때마다 증가 → useMemo가 sessionStorage를 다시 읽도록 */
+  const [selectionEpoch, setSelectionEpoch] = useState(0);
 
-  useEffect(() => {
-    setSelectedUserBookId(initialSelectedUserBookId);
-  }, [initialSelectedUserBookId]);
+  const selectedUserBookId = useMemo(() => {
+    const fromClient = getLastSelectedUserBookIdClient(books);
+    if (fromClient !== undefined) {
+      return fromClient;
+    }
+    return initialSelectedUserBookId;
+  }, [books, initialSelectedUserBookId, selectionEpoch]);
 
   const handleSelectUserBook = (userBookId: number) => {
-    setSelectedUserBookId(userBookId);
+    setLastSelectedUserBookIdClient(userBookId);
+    setSelectionEpoch((n) => n + 1);
     persistLastSelectedBook(userBookId, {
       onError: () => {
         console.warn(

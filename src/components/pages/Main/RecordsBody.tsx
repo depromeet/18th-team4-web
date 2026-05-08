@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef } from 'react';
 import { Shelve } from '@/assets';
 import {
@@ -12,7 +13,12 @@ import {
   HEADER_VARIANT,
 } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { type SessionStatus, useGetSessions } from '@/lib';
+import {
+  type SessionStatus,
+  setLastSelectedUserBookIdClient,
+  useGetSessions,
+  usePatchLastSelectedUserBook,
+} from '@/lib';
 
 const SESSION_STATUS_TO_CARD: Record<
   SessionStatus,
@@ -36,6 +42,8 @@ type Props = {
 
 export const RecordsBody = (props: Props) => {
   const { userBookId } = props;
+  const router = useRouter();
+  const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const containerRef = useRef<HTMLOListElement>(null);
   const { data } = useGetSessions(userBookId);
   const sessions = useMemo(() => data?.sessions ?? [], [data?.sessions]);
@@ -73,7 +81,19 @@ export const RecordsBody = (props: Props) => {
           >
             {sessions.map((session, index) => (
               <li key={session.sessionId} className="mb-[-6.4rem]">
-                <Link href={PATH_NAME.chat.detail(String(session.sessionId))}>
+                <Link
+                  href={PATH_NAME.chat.detail(String(session.sessionId))}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    try {
+                      await patchLastSelected(userBookId);
+                    } catch {
+                      // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
+                    }
+                    setLastSelectedUserBookIdClient(userBookId);
+                    router.push(PATH_NAME.chat.detail(String(session.sessionId)));
+                  }}
+                >
                   <ChatCard
                     color={
                       CHAT_CARD_COLOR_SEQUENCE[

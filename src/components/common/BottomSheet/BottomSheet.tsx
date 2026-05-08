@@ -14,6 +14,9 @@ type BottomSheetProps = {
 
 const noOpSubscribe = () => () => {};
 
+/** Header HOME: py 1.6×2 + 행 높이 max(로고 2.9, 버튼 4.6) = 7.8rem — 시트 상단은 헤더 아래 0.5rem */
+const BOTTOM_SHEET_MAX_OPEN = 'calc(100dvh - 7.8rem - 0.5rem)';
+
 export const BottomSheet = (props: BottomSheetProps) => {
   const { children, collapsedMaxHeight, onClose, onMaxHeightTransitionEnd, open } = props;
   const mounted = useSyncExternalStore(
@@ -62,6 +65,8 @@ export const BottomSheet = (props: BottomSheetProps) => {
     return null;
   }
 
+  const maxHeight = open ? BOTTOM_SHEET_MAX_OPEN : collapsedMaxHeight;
+
   return createPortal(
     <div
       className={cn(
@@ -83,9 +88,12 @@ export const BottomSheet = (props: BottomSheetProps) => {
         aria-modal={open ? 'true' : undefined}
         className="pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-0 min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white shadow-[0_-8px_32px_rgb(23_39_35/0.1)] outline-none transition-[max-height,border-top-left-radius,border-top-right-radius] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
         role="dialog"
+        style={{
+          maxHeight: maxHeight ?? undefined,
+        }}
         onTransitionEnd={handleAsideTransitionEnd}
       >
-        <div className="flex min-h-0 min-w-0 w-full max-w-full flex-1 flex-col overflow-hidden">
+        <div className="flex min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden">
           {children}
         </div>
       </aside>
