@@ -34,7 +34,7 @@ export const TextfieldChat = (props: Props) => {
       />
       <button
         type="button"
-        onClick={onSend}
+        onClick={() => onSend?.()}
         disabled={isDisabled}
         className={cn(sendButtonVariants({ status }))}
         aria-label="전송"
