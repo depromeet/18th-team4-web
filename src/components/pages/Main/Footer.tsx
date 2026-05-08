@@ -23,6 +23,7 @@ export const MainFooter = (props: Props) => {
   const [inputValue, setInputValue] = useState('');
 
   const selectedBook = books.find((b) => b.userBookId === selectedUserBookId);
+  const hasBooks = books.length > 0;
 
   const setPendingMessage = usePendingChatStore((s) => s.set);
 
@@ -92,12 +93,15 @@ export const MainFooter = (props: Props) => {
   }, [isSheetOpen]);
 
   const clickSection = () => {
+    if (!hasBooks) {
+      return;
+    }
     setIsSheetOpen((prev) => !prev);
   };
 
   return (
     <BottomSheet
-      open={isSheetOpen}
+      open={hasBooks && isSheetOpen}
       collapsedMaxHeight={collapsedCap}
       onClose={() => {
         setIsSheetOpen(false);
@@ -117,23 +121,35 @@ export const MainFooter = (props: Props) => {
             isSheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
           )}
         >
-          {/* 버튼 레이아웃 */}
-          <button
-            type="button"
-            className={cn(
-              'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
-              isSheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
-            )}
-            onClick={clickSection}
-          >
-            <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
-            <ChevronIcon
+          {/* 버튼 레이아웃: 책 없으면 토글 숨김 · 시트 열기 비활성 */}
+          {hasBooks ? (
+            <button
+              type="button"
               className={cn(
-                'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-                isSheetOpen ? 'rotate-0' : 'rotate-180',
+                'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
+                isSheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
               )}
-            />
-          </button>
+              onClick={clickSection}
+            >
+              <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
+              <ChevronIcon
+                className={cn(
+                  'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
+                  isSheetOpen ? 'rotate-0' : 'rotate-180',
+                )}
+              />
+            </button>
+          ) : (
+            <div
+              className={cn(
+                'flex min-h-0 min-w-0 shrink-0 cursor-default select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
+                'pt-[2.8rem]',
+              )}
+              role="presentation"
+            >
+              <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
+            </div>
+          )}
 
           {/* 인풋 레이아웃 */}
           <div
