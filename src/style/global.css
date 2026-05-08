@@ -294,6 +294,16 @@
   .loading-wave__dot:nth-child(3) {
     animation-delay: 0.3s;
   }
+
+  .chat-symbol-soft-blink {
+    animation: chat-color-symbol-soft-blink 2.2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-symbol-soft-blink {
+      animation: none;
+    }
+  }
 }
 
 .page-fade-in {
@@ -411,4 +421,15 @@
 
 @utility animate-text-caret-blink {
   animation: text-caret-blink 1.06s linear infinite;
+}
+
+/* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */
+@keyframes chat-color-symbol-soft-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.52;
+  }
 }

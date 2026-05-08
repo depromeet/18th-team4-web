@@ -25,7 +25,11 @@ export const Chat = (props: Props) => {
           />
         ) : null}
       </p>
-      {showIcon ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
+      {showIcon ? (
+        <span className="chat-symbol-soft-blink mt-[1.2rem] inline-flex shrink-0">
+          <ColorSymbolIcon />
+        </span>
+      ) : null}
     </div>
   );
 };
