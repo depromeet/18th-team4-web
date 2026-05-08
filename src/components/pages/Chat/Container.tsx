@@ -226,7 +226,7 @@ const Container = () => {
           </div>
         </main>
 
-        <footer className="bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-border-white/30 border-b-0 px-[2.4rem] py-8 backdrop-blur-lg">
+        <footer className="bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-border-white/30 border-b-0 px-[2.4rem] py-8 backdrop-blur-[2px]">
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
             placeholder="이야기를 나눠보세요"
