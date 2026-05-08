@@ -57,7 +57,8 @@ const Container = () => {
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
 
-  const { data: eligibilityData } = useCheckSummaryEligibility(sessionId);
+  const { data: eligibilityData, refetch: refetchEligibility } =
+    useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
 
   const {
@@ -178,6 +179,7 @@ const Container = () => {
           ]);
         }
       }
+      void refetchEligibility();
     }
   };
 
