@@ -97,7 +97,10 @@ export const ChatCard = (props: ChatCardProps) => {
         <button
           type="button"
           aria-label="새로고침"
-          onClick={onRefresh}
+          onClick={(e) => {
+            e.preventDefault();
+            onRefresh?.();
+          }}
           className="relative shrink-0"
         >
           <ReloadIcon className={cn('size-[2.4rem]', chatCardIconColor[color])} />
