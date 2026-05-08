@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { cn, useCreateSession, type UserBookItem } from '@/lib';
+import { cn, useCreateSession, usePendingChatStore, type UserBookItem } from '@/lib';
 
 type Props = {
   books: UserBookItem[];
@@ -19,10 +19,16 @@ export const MainFooter = (props: Props) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number>(books[0]?.userBookId ?? 0);
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
+  const [inputValue, setInputValue] = useState('');
 
   const selectedBook = books.find((b) => b.userBookId === selectedId);
 
+  const setPendingMessage = usePendingChatStore((s) => s.set);
+
   const handleSend = () => {
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
+    setPendingMessage(trimmed);
     createSession(selectedId, {
       onSuccess: (data) => router.push(PATH_NAME.chat.detail(String(data.sessionId))),
     });
@@ -139,7 +145,11 @@ export const MainFooter = (props: Props) => {
             }}
             role="presentation"
           >
-            <TextfieldChat onSend={handleSend} />
+            <TextfieldChat
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onSend={handleSend}
+            />
           </div>
         </div>
 

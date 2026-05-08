@@ -11,6 +11,7 @@ import {
   useCheckSummaryEligibility,
   useCreateSummaryDraft,
   useGetMessages,
+  usePendingChatStore,
   useToastStore,
 } from '@/lib';
 import { Chat } from './Chat';
@@ -27,6 +28,7 @@ const Container = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
+  const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
   const { isOpen, open, close } = useModal();
   const openToast = useToastStore((s) => s.openToast);
@@ -55,7 +57,8 @@ const Container = () => {
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
 
-  const { data: eligibilityData } = useCheckSummaryEligibility(sessionId);
+  const { data: eligibilityData, refetch: refetchEligibility } =
+    useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
 
   const {
@@ -104,11 +107,11 @@ const Container = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [allChats.length, streamingContent]);
 
-  const handleSend = async () => {
-    const trimmedMessage = message.trim();
+  const handleSend = async (overrideText?: string) => {
+    const trimmedMessage = (overrideText != null ? overrideText : message).trim();
     if (!trimmedMessage || isStreaming) return;
 
-    setMessage('');
+    if (overrideText == null) setMessage('');
 
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -176,8 +179,19 @@ const Container = () => {
           ]);
         }
       }
+      if (!canSummarize) void refetchEligibility();
     }
   };
+
+  const initialSentRef = useRef(false);
+  useEffect(() => {
+    if (initialSentRef.current) return;
+    const initial = consumePendingMessage();
+    if (!initial) return;
+    initialSentRef.current = true;
+    void handleSend(initial);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
