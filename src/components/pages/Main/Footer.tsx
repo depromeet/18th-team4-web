@@ -8,20 +8,21 @@ import { cn, useCreateSession, usePendingChatStore, type UserBookItem } from '@/
 
 type Props = {
   books: UserBookItem[];
+  selectedUserBookId: number;
+  onSelectUserBook: (userBookId: number) => void;
 };
 
 export const MainFooter = (props: Props) => {
-  const { books = [] } = props;
+  const { books = [], selectedUserBookId, onSelectUserBook } = props;
   const router = useRouter();
   const { mutate: createSession } = useCreateSession();
   const peekRef = useRef<HTMLDivElement | null>(null);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<number>(books[0]?.userBookId ?? 0);
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
   const [inputValue, setInputValue] = useState('');
 
-  const selectedBook = books.find((b) => b.userBookId === selectedId);
+  const selectedBook = books.find((b) => b.userBookId === selectedUserBookId);
 
   const setPendingMessage = usePendingChatStore((s) => s.set);
 
@@ -29,7 +30,7 @@ export const MainFooter = (props: Props) => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
     setPendingMessage(trimmed);
-    createSession(selectedId, {
+    createSession(selectedUserBookId, {
       onSuccess: (data) => router.push(PATH_NAME.chat.detail(String(data.sessionId))),
     });
   };
@@ -175,9 +176,9 @@ export const MainFooter = (props: Props) => {
                 title={book.title}
                 year={book.publishedYear}
                 publisher={book.publisher}
-                selected={selectedId === book.userBookId}
+                selected={selectedUserBookId === book.userBookId}
                 onClick={() => {
-                  setSelectedId(book.userBookId);
+                  onSelectUserBook(book.userBookId);
                   setIsSheetOpen(false);
                 }}
               />

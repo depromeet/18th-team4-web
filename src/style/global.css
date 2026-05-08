@@ -254,6 +254,52 @@
   animation: toast-in 0.2s ease-out both;
 }
 
+/* 요약 마무리 모달: 화면 중앙 근처로 오며 시작은 아래에서 슬라이드 인 */
+@keyframes modal-sheet-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + min(40vh, 28rem)));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@utility animate-modal-sheet-enter {
+  animation: modal-sheet-enter 0.48s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* 취소·배경 시 아래로 내려가며 닫힘 — 확인 버튼은 이 클래스를 쓰지 않음 */
+@keyframes modal-sheet-exit {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + min(40vh, 28rem)));
+  }
+}
+
+@utility animate-modal-sheet-exit {
+  animation: modal-sheet-exit 0.38s cubic-bezier(0.4, 0, 0.58, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-modal-sheet-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .animate-modal-sheet-exit {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+}
+
 @layer base {
   html {
     font-size: 62.5%; /* 1rem = 10px */
@@ -293,6 +339,16 @@
 
   .loading-wave__dot:nth-child(3) {
     animation-delay: 0.3s;
+  }
+
+  .chat-symbol-soft-blink {
+    animation: chat-color-symbol-soft-blink 2.2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-symbol-soft-blink {
+      animation: none;
+    }
   }
 }
 
@@ -391,5 +447,35 @@
   40%,
   60% {
     height: 2.8rem;
+  }
+}
+
+/* 스트리밍 커서: 짧은 페이드로 ON/OFF (시스템 입력 커서 느낌) */
+@keyframes text-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility animate-text-caret-blink {
+  animation: text-caret-blink 1.06s linear infinite;
+}
+
+/* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */
+@keyframes chat-color-symbol-soft-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.52;
   }
 }

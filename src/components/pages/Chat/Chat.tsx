@@ -1,4 +1,4 @@
-import { VariantProps } from 'class-variance-authority';
+import { type VariantProps } from 'class-variance-authority';
 import { ColorSymbolIcon } from '@/components';
 import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
@@ -18,9 +18,18 @@ export const Chat = (props: Props) => {
     <div className={cn(containerVariants({ user }))}>
       <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">
         {message}
-        {isStreaming && <span className="animate-pulse">▋</span>}
+        {isStreaming ? (
+          <span
+            aria-hidden
+            className="animate-text-caret-blink ml-px inline-block h-[0.95em] w-px bg-current align-baseline motion-reduce:animate-none motion-reduce:opacity-85"
+          />
+        ) : null}
       </p>
-      {showIcon ? <ColorSymbolIcon className="mt-[1.2rem]" /> : null}
+      {showIcon ? (
+        <span className="chat-symbol-soft-blink mt-[1.2rem] inline-flex shrink-0">
+          <ColorSymbolIcon />
+        </span>
+      ) : null}
     </div>
   );
 };

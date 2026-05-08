@@ -4,9 +4,8 @@ import { LinkButton } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { getUserBooksServer, type Session } from '@/lib';
 import { MainBody } from './Body';
-import { MainFooter } from './Footer';
+import { MainBooksShell } from './MainBooksShell';
 import { OnboardingSkipButton } from './OnboardingSkipButton';
-import { RecordsBody } from './RecordsBody';
 
 type Props = {
   session: Session | null;
@@ -89,13 +88,22 @@ export const MainContainer = async ({ session }: Props) => {
   // 4. 온보딩 완료 + 책 등록 완료 — 풀버전 (records 있는 것으로 처리)
   const userBooksData = await getUserBooksServer().catch(() => null);
   const books = userBooksData?.books ?? [];
-  const userBookId = session.lastSelectedUserBookId || books[0]?.userBookId;
 
-  return (
-    <div className="flex h-dvh flex-col">
-      {!!userBookId && <RecordsBody userBookId={userBookId} />}
-      <div className="mt-[10.2rem]" />
-      <MainFooter books={books} />
-    </div>
-  );
+  const fromSessionId = session.lastSelectedUserBookId;
+  const firstBookId = books[0]?.userBookId;
+  const hasSessionBook =
+    typeof fromSessionId === 'number' &&
+    Number.isFinite(fromSessionId) &&
+    books.some((b) => b.userBookId === fromSessionId);
+  const initialSelectedUserBookId = hasSessionBook ? fromSessionId : firstBookId;
+
+  if (initialSelectedUserBookId === undefined) {
+    return (
+      <div className="flex h-dvh flex-col items-center justify-center gap-[2.4rem] px-[2.4rem]">
+        <p className="body1-medium text-center text-text-caption">책 목록을 불러오지 못했어요</p>
+      </div>
+    );
+  }
+
+  return <MainBooksShell books={books} initialSelectedUserBookId={initialSelectedUserBookId} />;
 };
