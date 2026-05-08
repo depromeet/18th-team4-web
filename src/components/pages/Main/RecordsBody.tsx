@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useMemo, useRef } from 'react';
 import { Shelve } from '@/assets';
 import {
@@ -10,6 +11,7 @@ import {
   Header,
   HEADER_VARIANT,
 } from '@/components';
+import { PATH_NAME } from '@/constants';
 import { type SessionStatus, useGetSessions } from '@/lib';
 
 const SESSION_STATUS_TO_CARD: Record<
@@ -71,16 +73,18 @@ export const RecordsBody = (props: Props) => {
           >
             {sessions.map((session, index) => (
               <li key={session.sessionId} className="mb-[-6.4rem]">
-                <ChatCard
-                  color={
-                    CHAT_CARD_COLOR_SEQUENCE[
-                      (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
-                    ]
-                  }
-                  status={SESSION_STATUS_TO_CARD[session.status]}
-                  date={formatDate(session.lastChattedDate)}
-                  summary={session.title}
-                />
+                <Link href={PATH_NAME.chat.detail(String(session.sessionId))}>
+                  <ChatCard
+                    color={
+                      CHAT_CARD_COLOR_SEQUENCE[
+                        (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+                      ]
+                    }
+                    status={SESSION_STATUS_TO_CARD[session.status]}
+                    date={formatDate(session.lastChattedDate)}
+                    summary={session.title}
+                  />
+                </Link>
               </li>
             ))}
           </ol>
