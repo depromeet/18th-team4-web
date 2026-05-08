@@ -179,7 +179,7 @@ const Container = () => {
           ]);
         }
       }
-      void refetchEligibility();
+      if (!canSummarize) void refetchEligibility();
     }
   };
 
