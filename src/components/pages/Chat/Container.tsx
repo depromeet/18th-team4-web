@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
@@ -11,6 +11,7 @@ import {
   useCheckSummaryEligibility,
   useCreateSummaryDraft,
   useGetMessages,
+  usePendingChatStore,
   useToastStore,
 } from '@/lib';
 import { Chat } from './Chat';
@@ -27,7 +28,7 @@ const Container = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
-  const searchParams = useSearchParams();
+  const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
   const { isOpen, open, close } = useModal();
   const openToast = useToastStore((s) => s.openToast);
@@ -183,10 +184,9 @@ const Container = () => {
   const initialSentRef = useRef(false);
   useEffect(() => {
     if (initialSentRef.current) return;
-    const initial = searchParams.get('m');
+    const initial = consumePendingMessage();
     if (!initial) return;
     initialSentRef.current = true;
-    router.replace(PATH_NAME.chat.detail(sessionId));
     void handleSend(initial);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
