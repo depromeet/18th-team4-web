@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
+import { Header, HEADER_VARIANT, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
 import { useModal } from '@/hooks';
 import {
@@ -33,14 +33,17 @@ const Container = () => {
   const { isOpen, mountKey, open, close } = useModal();
   const openToast = useToastStore((s) => s.openToast);
   const { mutateAsync: createSummaryDraft, isPending: isCreatingSummary } = useCreateSummaryDraft();
+  const [isSummaryLeaving, setIsSummaryLeaving] = useState(false);
 
   const handleConfirmSummary = async () => {
-    if (isCreatingSummary) return;
+    if (isCreatingSummary || isSummaryLeaving) return;
+    setIsSummaryLeaving(true);
     try {
       await createSummaryDraft(sessionId);
       close();
       router.push(PATH_NAME.summary.detail(sessionId));
     } catch (error) {
+      setIsSummaryLeaving(false);
       if (error instanceof HttpError && error.status === 422) {
         openToast({
           type: 'error',
@@ -195,7 +198,7 @@ const Container = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="bg-gradient-chat pointer-events-none absolute inset-0" />
+      <div className="bg-gradient-chat pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
 
       <div className="relative z-10 flex h-screen flex-col">
         <Header
@@ -234,10 +237,23 @@ const Container = () => {
         </footer>
       </div>
 
+      {isSummaryLeaving && !isOpen ? (
+        <div
+          aria-busy="true"
+          aria-live="polite"
+          className="fixed inset-0 z-101 flex flex-col items-center justify-center gap-[1.6rem] bg-dim backdrop-blur-sm"
+        >
+          <ReadumMarkLoadingIcon className="h-auto w-[7.3rem] animate-pulse text-text-white" />
+          <p className="body2-bold px-[2.4rem] text-center text-text-white">
+            요약 페이지로 이동 중이에요
+          </p>
+        </div>
+      ) : null}
+
       <Modal
         key={mountKey}
         isOpen={isOpen}
-        isConfirming={isCreatingSummary}
+        isConfirming={isCreatingSummary || isSummaryLeaving}
         onCancel={close}
         onConfirm={handleConfirmSummary}
       />
