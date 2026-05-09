@@ -99,6 +99,50 @@
     rgba(255, 255, 255, 0) 100%
   );
 
+  /* CHAT_CARD_COLOR 7종에 1:1 대응하는 라디얼 글로우 그라디언트 */
+  --background-image-chat-card-gradient-teal: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(213, 239, 236, 0.8) 0%,
+    rgba(213, 239, 236, 0.4) 50%,
+    rgba(213, 239, 236, 0) 100%
+  );
+  --background-image-chat-card-gradient-magenta: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(255, 232, 244, 0.8) 0%,
+    rgba(255, 232, 244, 0.4) 50%,
+    rgba(255, 232, 244, 0) 100%
+  );
+  --background-image-chat-card-gradient-yellow: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(246, 242, 200, 0.8) 0%,
+    rgba(246, 242, 200, 0.4) 50%,
+    rgba(246, 242, 200, 0) 100%
+  );
+  --background-image-chat-card-gradient-sky: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(196, 230, 245, 0.8) 0%,
+    rgba(196, 230, 245, 0.4) 50%,
+    rgba(196, 230, 245, 0) 100%
+  );
+  --background-image-chat-card-gradient-green: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(228, 248, 214, 0.8) 0%,
+    rgba(228, 248, 214, 0.4) 50%,
+    rgba(228, 248, 214, 0) 100%
+  );
+  --background-image-chat-card-gradient-purple: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(224, 225, 252, 0.8) 0%,
+    rgba(224, 225, 252, 0.4) 50%,
+    rgba(224, 225, 252, 0) 100%
+  );
+  --background-image-chat-card-gradient-blue: radial-gradient(
+    65% 50% at 50% 50%,
+    rgba(205, 229, 255, 0.8) 0%,
+    rgba(205, 229, 255, 0.4) 50%,
+    rgba(205, 229, 255, 0) 100%
+  );
+
   --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
 
   --text-headline1: 2.4rem;
