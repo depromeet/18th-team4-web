@@ -5,6 +5,7 @@ export { CheckIcon } from './CheckIcon';
 export { ChevronIcon } from './ChevronIcon';
 export { ColorSymbolIcon } from './ColorSymbolIcon';
 export { DotIcon } from './DotIcon';
+export { MainSymbolIcon } from './MainSymbolIcon';
 export { MenuIcon } from './MenuIcon';
 export { PlusIcon } from './PlusIcon';
 export { ReadumMarkIcon } from './ReadumMarkIcon';

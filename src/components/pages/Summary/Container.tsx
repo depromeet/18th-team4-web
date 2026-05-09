@@ -2,12 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { CHAT_CARD_COLOR } from '@/components';
-import { PATH_NAME } from '@/constants';
-import { type SummaryData, useSummary, useToastStore } from '@/lib';
-import { SummaryCard, type SummarySection } from './SummaryCard';
+import { CHAT_CARD_COLOR, type ChatCardColor, chatCardGradientColor } from '@/components';
+import { CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
+import { cn, type SummaryData, useGetMessages, useSummary, useToastStore } from '@/lib';
+import { SummaryChatHistory } from './SummaryChatHistory';
 import { SummaryHeader } from './SummaryHeader';
 import { SummaryLoading } from './SummaryLoading';
+import { SummaryResult, type SummarySection } from './SummaryResult';
 
 const toSections = (data: SummaryData): SummarySection[] => {
   const sections: SummarySection[] = [{ heading: data.title, body: data.body }];
@@ -20,14 +21,31 @@ const toSections = (data: SummaryData): SummarySection[] => {
 type Props = {
   sessionId: string;
   initialSummary: SummaryData | null;
+  color?: ChatCardColor;
 };
 
 export const SummaryContainer = (props: Props) => {
-  const { sessionId, initialSummary } = props;
+  const { sessionId, initialSummary, color = CHAT_CARD_COLOR.GREEN } = props;
   const router = useRouter();
   const openToast = useToastStore((s) => s.openToast);
 
   const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
+
+  const {
+    data: messagesData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetMessages(sessionId, { refetchOnMount: 'always' });
+
+  const archivedChats: ChatMessage[] = [...(messagesData?.pages ?? [])]
+    .reverse()
+    .flatMap((page) => [...page.messages].reverse())
+    .map((msg) => ({
+      id: msg.id,
+      user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
+      message: msg.content,
+    }));
 
   const handledRef = useRef(false);
 
@@ -56,13 +74,25 @@ export const SummaryContainer = (props: Props) => {
   const sections = toSections(data);
 
   return (
-    <>
+    <div className="flex flex-col min-h-dvh bg-background-primary-base">
       <SummaryHeader />
-      <section className="flex flex-col">
-        <div className="px-[2.4rem]">
-          <SummaryCard sections={sections} color={CHAT_CARD_COLOR.GREEN} />
-        </div>
-      </section>
-    </>
+
+      <div className="relative isolate">
+        <div
+          className={cn(
+            'pointer-events-none absolute inset-x-0 -bottom-100 h-200 -z-10',
+            chatCardGradientColor[color],
+          )}
+        />
+        <SummaryResult sections={sections} />
+      </div>
+
+      <SummaryChatHistory
+        messages={archivedChats}
+        hasOlder={!!hasNextPage}
+        isFetchingOlder={isFetchingNextPage}
+        onLoadOlder={() => void fetchNextPage()}
+      />
+    </div>
   );
 };

@@ -79,34 +79,42 @@ export const RecordsBody = (props: Props) => {
             ref={containerRef}
             className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]"
           >
-            {sessions.map((session, index) => (
-              <li key={session.sessionId} className="mb-[-6.4rem]">
-                <Link
-                  href={PATH_NAME.chat.detail(String(session.sessionId))}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    try {
-                      await patchLastSelected(userBookId);
-                    } catch {
-                      // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
-                    }
-                    setLastSelectedUserBookIdClient(userBookId);
-                    router.push(PATH_NAME.chat.detail(String(session.sessionId)));
-                  }}
-                >
-                  <ChatCard
-                    color={
-                      CHAT_CARD_COLOR_SEQUENCE[
-                        (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
-                      ]
-                    }
-                    status={SESSION_STATUS_TO_CARD[session.status]}
-                    date={formatDate(session.lastChattedDate)}
-                    summary={session.title}
-                  />
-                </Link>
-              </li>
-            ))}
+            {sessions.map((session, index) => {
+              const sessionIdStr = String(session.sessionId);
+              const color =
+                CHAT_CARD_COLOR_SEQUENCE[
+                  (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+                ];
+              const path =
+                session.status === 'CLOSED' || session.status === 'SUMMARIZING'
+                  ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
+                  : PATH_NAME.chat.detail(sessionIdStr);
+
+              return (
+                <li key={session.sessionId} className="mb-[-6.4rem]">
+                  <Link
+                    href={path}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      try {
+                        await patchLastSelected(userBookId);
+                      } catch {
+                        // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
+                      }
+                      setLastSelectedUserBookIdClient(userBookId);
+                      router.push(path);
+                    }}
+                  >
+                    <ChatCard
+                      color={color}
+                      status={SESSION_STATUS_TO_CARD[session.status]}
+                      date={formatDate(session.lastChattedDate)}
+                      summary={session.title}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
           </ol>
         </>
       )}

@@ -1,8 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Header, HEADER_VARIANT } from '@/components';
-import { MainSymbolIcon } from '@/components/common/Icon/MainSymbolIcon';
+import { Header, HEADER_VARIANT, MainSymbolIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 
 export const RegisterComplete = () => {

@@ -12,10 +12,10 @@ type Props = VariantProps<typeof containerVariants> & {
 };
 
 export const Chat = (props: Props) => {
-  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false } = props;
+  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone } = props;
 
   return (
-    <div className={cn(containerVariants({ user }))}>
+    <div className={cn(containerVariants({ user, tone }))}>
       <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">
         {message}
         {isStreaming ? (

@@ -6,7 +6,12 @@ import { getMessages } from './messages.client';
 
 const MESSAGES_PAGE_SIZE = 20;
 
-export const useGetMessages = (sessionId: string) => {
+type UseGetMessagesOptions = {
+  refetchOnMount?: boolean | 'always';
+  staleTime?: number;
+};
+
+export const useGetMessages = (sessionId: string, options: UseGetMessagesOptions = {}) => {
   return useInfiniteQuery({
     queryKey: QUERY_KEY.aiChat.messages(sessionId),
     queryFn: ({ pageParam }) =>
@@ -14,5 +19,6 @@ export const useGetMessages = (sessionId: string) => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     enabled: !!sessionId,
+    ...options,
   });
 };
