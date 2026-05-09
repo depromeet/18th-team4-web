@@ -45,7 +45,7 @@ export const RecordsBody = (props: Props) => {
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const containerRef = useRef<HTMLOListElement>(null);
-  const { data } = useGetSessions(userBookId);
+  const { data, isPending } = useGetSessions(userBookId);
   const sessions = useMemo(() => data?.sessions ?? [], [data?.sessions]);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export const RecordsBody = (props: Props) => {
     if (el) el.scrollTop = el.scrollHeight;
   }, [sessions]);
 
-  const isEmpty = sessions.length === 0;
+  const isEmpty = !isPending && sessions.length === 0;
 
   return (
     <main className="relative flex flex-1 flex-col overflow-y-hidden bg-background-primary-base">
