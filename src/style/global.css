@@ -300,15 +300,15 @@
   animation: toast-in 0.2s ease-out both;
 }
 
-/* 요약 마무리 모달: 화면 중앙 근처로 오며 시작은 아래에서 슬라이드 인 */
+/* 요약 마무리 모달: 아래에서 슬라이드 인 — 센터링은 inset-0 m-auto가 담당 */
 @keyframes modal-sheet-enter {
   from {
     opacity: 0;
-    transform: translate(-50%, calc(-50% + min(40vh, 28rem)));
+    transform: translateY(min(40vh, 28rem));
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translateY(0);
   }
 }
 
@@ -320,11 +320,11 @@
 @keyframes modal-sheet-exit {
   from {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translate(-50%, calc(-50% + min(40vh, 28rem)));
+    transform: translateY(min(40vh, 28rem));
   }
 }
 
@@ -336,13 +336,13 @@
   .animate-modal-sheet-enter {
     animation: none !important;
     opacity: 1 !important;
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
   }
 
   .animate-modal-sheet-exit {
     animation: none !important;
     opacity: 0 !important;
-    transform: translate(-50%, -50%) !important;
+    transform: none !important;
   }
 }
 
