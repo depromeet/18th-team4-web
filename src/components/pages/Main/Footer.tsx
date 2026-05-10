@@ -32,6 +32,9 @@ export const MainFooter = (props: Props) => {
 
   const selectedBook = books.find((b) => b.userBookId === selectedUserBookId);
   const hasBooks = books.length > 0;
+  /** 한 권뿐이면 목록 선택·시트 오픈 불필요 — 내부 플래그와 무관하게 실제 노출 상태 */
+  const hasMultipleBooks = books.length > 1;
+  const sheetOpen = hasMultipleBooks && isSheetOpen;
 
   const setPendingMessage = usePendingChatStore((s) => s.set);
 
@@ -61,7 +64,7 @@ export const MainFooter = (props: Props) => {
     }
 
     const sync = () => {
-      if (isSheetOpen) {
+      if (sheetOpen) {
         return;
       }
       const h = el.offsetHeight;
@@ -107,10 +110,10 @@ export const MainFooter = (props: Props) => {
       cancelAnimationFrame(rafInner);
       ro.disconnect();
     };
-  }, [isSheetOpen]);
+  }, [sheetOpen]);
 
   const clickSection = () => {
-    if (!hasBooks) {
+    if (!hasBooks || !hasMultipleBooks) {
       return;
     }
     setIsSheetOpen((prev) => !prev);
@@ -118,7 +121,7 @@ export const MainFooter = (props: Props) => {
 
   return (
     <BottomSheet
-      open={hasBooks && isSheetOpen}
+      open={sheetOpen}
       collapsedMaxHeight={collapsedCap}
       onClose={() => {
         setIsSheetOpen(false);
@@ -128,31 +131,33 @@ export const MainFooter = (props: Props) => {
         className={cn(
           'grid min-h-0 min-w-0 max-h-full max-w-full flex-1 gap-y-0 overflow-hidden',
           'transition-[grid-template-rows] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-          isSheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
+          sheetOpen ? 'grid-rows-[auto_1fr]' : 'grid-rows-[auto_0fr]',
         )}
       >
         <div
           ref={peekRef}
           className={cn(
             'grid min-h-min min-w-0 grid-cols-1 gap-y-0 overflow-hidden',
-            isSheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
+            sheetOpen ? 'grid-rows-[auto_0fr]' : 'grid-rows-[auto_auto]',
           )}
         >
-          {/* 버튼 레이아웃: 책 없으면 토글 숨김 · 시트 열기 비활성 */}
-          {hasBooks ? (
+          {/* 버튼 레이아웃: 책 2권 이상만 토글·시트 — 1권·0권은 정적 제목만 */}
+          {hasBooks && hasMultipleBooks ? (
             <button
               type="button"
               className={cn(
                 'flex min-h-0 min-w-0 shrink-0 cursor-pointer select-none items-center gap-[0.2rem] bg-white px-[2.4rem]',
-                isSheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
+                sheetOpen ? 'pt-[3.2rem] pb-[2.4rem]' : 'pt-[2.8rem]',
               )}
               onClick={clickSection}
             >
-              <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
+              <p className="headline2-extrabold truncate text-text-default">
+                {selectedBook?.title}
+              </p>
               <ChevronIcon
                 className={cn(
                   'size-8 fill-[#595C5C] transition-transform duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',
-                  isSheetOpen ? 'rotate-0' : 'rotate-180',
+                  sheetOpen ? 'rotate-0' : 'rotate-180',
                 )}
               />
             </button>
@@ -164,7 +169,9 @@ export const MainFooter = (props: Props) => {
               )}
               role="presentation"
             >
-              <p className="headline2-extrabold truncate text-text-default">{selectedBook?.title}</p>
+              <p className="headline2-extrabold truncate text-text-default">
+                {selectedBook?.title}
+              </p>
             </div>
           )}
 
@@ -172,7 +179,7 @@ export const MainFooter = (props: Props) => {
           <div
             className={cn(
               'min-h-0 w-full overflow-hidden px-[2.4rem] pt-[1.8rem] pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]',
-              isSheetOpen && 'hidden',
+              sheetOpen && 'hidden',
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -191,14 +198,14 @@ export const MainFooter = (props: Props) => {
         <div
           className={cn(
             'relative z-10 min-h-0 min-w-0 overflow-hidden',
-            isSheetOpen && 'bg-primary-white',
-            !isSheetOpen && 'pointer-events-none',
+            sheetOpen && 'bg-primary-white',
+            !sheetOpen && 'pointer-events-none',
           )}
         >
           <ul
             className={cn(
               'h-full min-h-0 min-w-0 max-w-full list-none overflow-x-hidden overflow-y-auto overscroll-contain bg-primary-white',
-              isSheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
+              sheetOpen ? 'pb-[max(2.4rem,env(safe-area-inset-bottom,0px))]' : 'pb-0',
             )}
           >
             {books.map((book) => (
