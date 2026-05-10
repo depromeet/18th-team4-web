@@ -12,6 +12,7 @@ export const containerVariants = cva(
         default: '',
         disabled: '',
         error: 'border border-negative',
+        loading: '',
       },
     },
     defaultVariants: {
@@ -29,6 +30,7 @@ export const inputVariants = cva(
         default: 'text-text-default',
         disabled: 'placeholder:text-text-disable',
         error: 'text-negative placeholder:text-negative',
+        loading: 'placeholder:text-text-disable',
       },
     },
     defaultVariants: { status: 'default' },
@@ -41,6 +43,8 @@ export const sendButtonVariants = cva('cursor-pointer', {
       default: 'text-text-default',
       disabled: 'cursor-not-allowed text-icon-disabled',
       error: 'text-icon-disabled',
+      loading:
+        'flex size-[3.6rem] shrink-0 cursor-not-allowed items-center justify-center rounded-full bg-icon-disabled/40',
     },
   },
   defaultVariants: { status: 'default' },

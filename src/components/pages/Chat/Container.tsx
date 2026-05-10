@@ -2,7 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME, QUERY_KEY } from '@/constants';
 import { useModal } from '@/hooks';
@@ -119,10 +119,7 @@ const Container = () => {
     isFetchingNextPage,
   } = useGetMessages(sessionId);
 
-  const historyChats: ChatMessage[] = useMemo(
-    () => mapInfinitePagesToHistoryChats(messagesData),
-    [messagesData],
-  );
+  const historyChats: ChatMessage[] = mapInfinitePagesToHistoryChats(messagesData);
 
   useEffect(() => {
     setNewChats((prev) => {
@@ -157,15 +154,9 @@ const Container = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
 
-  const visiblePendingChats = useMemo(
-    () => stripPendingSyncedWithHistoryTail(historyChats, newChats),
-    [historyChats, newChats],
-  );
+  const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
-  const allChats = useMemo(
-    () => [...historyChats, ...visiblePendingChats],
-    [historyChats, visiblePendingChats],
-  );
+  const allChats = [...historyChats, ...visiblePendingChats];
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,

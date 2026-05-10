@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BottomSheet, ChevronIcon, ListItem, TextfieldChat } from '@/components';
-import { PATH_NAME } from '@/constants';
+import { CHAT_STATUS, PATH_NAME } from '@/constants';
 import {
   cn,
   setLastSelectedUserBookIdClient,
@@ -29,6 +29,7 @@ export const MainFooter = (props: Props) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [collapsedCap, setCollapsedCap] = useState<string | undefined>(undefined);
   const [inputValue, setInputValue] = useState('');
+  const [isNavigatingToChat, setIsNavigatingToChat] = useState(false);
 
   const selectedBook = books.find((b) => b.userBookId === selectedUserBookId);
   const hasBooks = books.length > 0;
@@ -40,7 +41,8 @@ export const MainFooter = (props: Props) => {
 
   const handleSend = async () => {
     const trimmed = inputValue.trim();
-    if (!trimmed) return;
+    if (!trimmed || isNavigatingToChat) return;
+    setIsNavigatingToChat(true);
     setPendingMessage(trimmed);
     try {
       const data = await createSessionAsync(selectedUserBookId);
@@ -52,6 +54,7 @@ export const MainFooter = (props: Props) => {
       setLastSelectedUserBookIdClient(selectedUserBookId);
       router.push(PATH_NAME.chat.detail(String(data.sessionId)));
     } catch {
+      setIsNavigatingToChat(false);
       // 세션 생성 실패 시 상위(쿼리/토스트 등)에서 처리
     }
   };
@@ -187,6 +190,7 @@ export const MainFooter = (props: Props) => {
             role="presentation"
           >
             <TextfieldChat
+              status={isNavigatingToChat ? CHAT_STATUS.LOADING : CHAT_STATUS.DEFAULT}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onSend={handleSend}

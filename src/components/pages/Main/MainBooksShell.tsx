@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   getLastSelectedUserBookIdClient,
   setLastSelectedUserBookIdClient,
@@ -19,16 +19,11 @@ export const MainBooksShell = (props: Props) => {
   const { books, initialSelectedUserBookId } = props;
   const { mutate: persistLastSelectedBook } = usePatchLastSelectedUserBook();
 
-  /** 시트에서 책 고를 때마다 증가 → useMemo가 sessionStorage를 다시 읽도록 */
-  const [selectionEpoch, setSelectionEpoch] = useState(0);
+  /** 시트에서 책 고를 때마다 증가해 리렌더 → sessionStorage 선택값 반영 */
+  const [, setSelectionEpoch] = useState(0);
 
-  const selectedUserBookId = useMemo(() => {
-    const fromClient = getLastSelectedUserBookIdClient(books);
-    if (fromClient !== undefined) {
-      return fromClient;
-    }
-    return initialSelectedUserBookId;
-  }, [books, initialSelectedUserBookId, selectionEpoch]);
+  const fromClient = getLastSelectedUserBookIdClient(books);
+  const selectedUserBookId = fromClient !== undefined ? fromClient : initialSelectedUserBookId;
 
   const handleSelectUserBook = (userBookId: number) => {
     setLastSelectedUserBookIdClient(userBookId);
