@@ -1,0 +1,9 @@
+import{n as e,o as t}from"./chunk-BEldbCjX.js";import{H as n,_ as r}from"./iframe-PF7vemZJ.js";import{l as i,m as a,p as o,t as s}from"./components-D_1FcHMt.js";var c,l,u,d,f,p,m,h,g,_;e((()=>{c=r(),l=t(n()),s(),a(),{fn:u}=__STORYBOOK_MODULE_TEST__,d=[{title:`해리포터와 마법사의 돌 1`,selected:!0},{title:`해리포터와 마법사의 돌 2`,selected:!1},{title:`해리포터와 비밀의 방`,selected:!1},{title:`해리포터와 아즈카반의 죄수`,selected:!1}],f=()=>(0,c.jsx)(`ul`,{className:`flex flex-col px-4 pb-[2.4rem]`,children:d.map(({title:e,selected:t})=>(0,c.jsx)(i,{imageSrc:`https://placehold.co/50x73`,imageAlt:`${e} 표지`,title:e,year:2024,publisher:`문학수첩`,selected:t},e))}),p={title:`Common/BottomSheet`,component:o,parameters:{layout:`fullscreen`},tags:[`autodocs`],args:{open:!1,children:null,onClose:u(),onMaxHeightTransitionEnd:u()}},m={render:e=>(0,c.jsx)(`div`,{className:`relative h-screen`,children:(0,c.jsx)(o,{...e,open:!0,children:(0,c.jsx)(f,{})})})},h=e=>{let[t,n]=(0,l.useState)(!1);return(0,c.jsxs)(`div`,{className:`flex h-screen items-center justify-center`,children:[(0,c.jsx)(`button`,{type:`button`,className:`rounded-2xl bg-gray-900 px-[1.6rem] py-[0.8rem] text-white`,onClick:()=>n(!0),children:`바텀시트 열기`}),(0,c.jsx)(o,{...e,open:t,onClose:()=>n(!1),children:(0,c.jsx)(f,{})})]})},g={render:e=>(0,c.jsx)(h,{...e})},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{
+  render: args => <div className="relative h-screen">
+      <BottomSheet {...args} open>
+        <BookList />
+      </BottomSheet>
+    </div>
+}`,...m.parameters?.docs?.source}}},g.parameters={...g.parameters,docs:{...g.parameters?.docs,source:{originalSource:`{
+  render: args => <InteractiveStory {...args} />
+}`,...g.parameters?.docs?.source}}},_=[`Open`,`Interactive`]}))();export{g as Interactive,m as Open,_ as __namedExportsOrder,p as default};
