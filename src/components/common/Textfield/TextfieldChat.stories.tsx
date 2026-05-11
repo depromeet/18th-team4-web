@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { fn } from 'storybook/test';
 import { TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
@@ -44,7 +44,7 @@ export const Default: Story = {
   },
 };
 
-const WritingStory = (args: React.ComponentProps<typeof TextfieldChat>) => {
+const WritingStory = (args: ComponentProps<typeof TextfieldChat>) => {
   const [value, setValue] = useState('');
   return (
     <TextfieldChat

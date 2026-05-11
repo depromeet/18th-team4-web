@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { fn } from 'storybook/test';
 import { ListItem } from '@/components';
 import { BottomSheet } from './BottomSheet';
@@ -55,7 +55,7 @@ export const Open: Story = {
   ),
 };
 
-const InteractiveStory = (args: React.ComponentProps<typeof BottomSheet>) => {
+const InteractiveStory = (args: ComponentProps<typeof BottomSheet>) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="flex h-screen items-center justify-center">

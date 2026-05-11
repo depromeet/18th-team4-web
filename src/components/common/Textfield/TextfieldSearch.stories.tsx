@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'react';
+import { type ComponentProps, useState } from 'react';
 import { fn } from 'storybook/test';
 import { TextfieldSearch } from '@/components';
 
@@ -25,7 +25,7 @@ export const Default: Story = {
   name: '기본 (빈 상태)',
 };
 
-const WritingStory = (args: React.ComponentProps<typeof TextfieldSearch>) => {
+const WritingStory = (args: ComponentProps<typeof TextfieldSearch>) => {
   const [value, setValue] = useState('');
   return <TextfieldSearch {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
 };
