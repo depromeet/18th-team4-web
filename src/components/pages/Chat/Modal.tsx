@@ -46,7 +46,7 @@ export const Modal = (props: Props) => {
   }, [isConfirming, isExiting, onCancel]);
 
   const handleExitAnimationEnd = useCallback(
-    (e: React.AnimationEvent<HTMLDialogElement>) => {
+    (e: React.AnimationEvent<HTMLDivElement>) => {
       if (e.target !== e.currentTarget) return;
       const { animationName } = e;
       if (typeof animationName !== 'string' || !animationName.includes('modal-sheet-exit')) {
@@ -76,14 +76,13 @@ export const Modal = (props: Props) => {
         )}
         onClick={dismissWithSlide}
       />
-      <dialog
-        open
+      <div
+        role="dialog"
         aria-modal="true"
         aria-labelledby="summary-modal-title"
         aria-describedby="summary-modal-description"
         className={cn(
-          'fixed top-1/2 left-1/2 z-modal m-0 flex max-h-[90dvh] min-w-0 w-[min(33rem,calc(100vw-4.8rem))] flex-col overflow-hidden rounded-[20px] border-none bg-text-white shadow-none',
-          'motion-reduce:animate-none motion-reduce:opacity-100 motion-reduce:[transform:translate(-50%,-50%)]',
+          'fixed inset-0 z-modal m-auto flex h-fit max-h-[90dvh] w-[min(33rem,calc(100vw-4.8rem))] flex-col overflow-hidden rounded-[20px] bg-text-white',
           isExiting ? 'animate-modal-sheet-exit' : 'animate-modal-sheet-enter',
         )}
         aria-busy={isConfirming ? true : undefined}
@@ -134,7 +133,7 @@ export const Modal = (props: Props) => {
             </Button>
           </footer>
         </div>
-      </dialog>
+      </div>
     </>,
     document.body,
   );

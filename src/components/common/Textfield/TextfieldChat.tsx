@@ -14,17 +14,23 @@ export const TextfieldChat = (props: Props) => {
   const { status = CHAT_STATUS.DEFAULT, bgVariant = CHAT_BG_VARIANT.GRAY, onSend, ...rest } = props;
 
   const placeholder = CHAT_PLACEHOLDER[status ?? CHAT_STATUS.DEFAULT];
-  const isDisabled = status === CHAT_STATUS.DISABLED || status === CHAT_STATUS.ERROR;
+  const isDisabled =
+    status === CHAT_STATUS.DISABLED ||
+    status === CHAT_STATUS.ERROR ||
+    status === CHAT_STATUS.LOADING;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing && !isDisabled) {
       onSend?.();
     }
     rest.onKeyDown?.(e);
   };
 
   return (
-    <div className={cn(containerVariants({ bgVariant, status }))}>
+    <div
+      className={cn(containerVariants({ bgVariant, status }))}
+      aria-busy={status === CHAT_STATUS.LOADING ? true : undefined}
+    >
       <BaseInput
         disabled={isDisabled}
         className={cn(inputVariants({ status }))}
@@ -34,12 +40,26 @@ export const TextfieldChat = (props: Props) => {
       />
       <button
         type="button"
-        onClick={() => onSend?.()}
+        onClick={() => {
+          if (!isDisabled) {
+            onSend?.();
+          }
+        }}
         disabled={isDisabled}
         className={cn(sendButtonVariants({ status }))}
-        aria-label="전송"
+        aria-label={status === CHAT_STATUS.LOADING ? '이동 중' : '전송'}
       >
-        <SendIcon className="size-[3.6rem]" />
+        {status === CHAT_STATUS.LOADING ? (
+          <span
+            aria-hidden
+            className={cn(
+              'size-8 shrink-0 rounded-full border-2 border-solid border-text-disable/40',
+              'border-t-text-default/55 motion-reduce:animate-none animate-spin',
+            )}
+          />
+        ) : (
+          <SendIcon className="size-[3.6rem]" />
+        )}
       </button>
     </div>
   );

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Shelve } from '@/assets';
 import {
   CHAT_CARD_COLOR_SEQUENCE,
@@ -46,7 +46,7 @@ export const RecordsBody = (props: Props) => {
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const containerRef = useRef<HTMLOListElement>(null);
   const { data, isPending } = useGetSessions(userBookId);
-  const sessions = useMemo(() => data?.sessions ?? [], [data?.sessions]);
+  const sessions = data?.sessions ?? [];
 
   useEffect(() => {
     const el = containerRef.current;
