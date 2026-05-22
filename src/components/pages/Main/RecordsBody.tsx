@@ -110,6 +110,7 @@ export const RecordsBody = (props: Props) => {
                       status={SESSION_STATUS_TO_CARD[session.status]}
                       date={formatDate(session.lastChattedDate)}
                       summary={session.title}
+                      bookmarked={session.status === 'CLOSED'}
                     />
                   </Link>
                 </li>
