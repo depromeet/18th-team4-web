@@ -1,0 +1,56 @@
+name: Auto Label PR
+
+on:
+  pull_request_target:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const labelMap = {
+              '[FEAT]': 'feat',
+              '[FIX]': 'fix',
+              '[QA]': 'qa',
+              '[REFACTOR]': 'refactor',
+              '[CHORE]': 'chore',
+              '[DOCS]': 'docs',
+              '[STYLE]': 'style',
+              '[PERF]': 'perf',
+              '[TEST]': 'test',
+            };
+            for (const [prefix, label] of Object.entries(labelMap)) {
+              if (title.toUpperCase().startsWith(prefix)) {
+                try {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.payload.pull_request.number,
+                    labels: [label],
+                  });
+                } catch (e) {
+                  // 라벨이 없으면 생성 후 재시도
+                  await github.rest.issues.createLabel({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    name: label,
+                    color: 'ededed',
+                  });
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: context.payload.pull_request.number,
+                    labels: [label],
+                  });
+                }
+                break;
+              }
+            }
