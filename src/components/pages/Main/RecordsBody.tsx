@@ -90,46 +90,43 @@ export const RecordsBody = (props: Props) => {
       ) : (
         <>
           <div className="flex-1" />
-          <ol
-            className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]"
-          >
-          {sessions.map((session, index) => {
-            const sessionIdStr = String(session.sessionId);
-            const color =
-              CHAT_CARD_COLOR_SEQUENCE[
-                CHAT_CARD_COLOR_SEQUENCE.length - 1 - (index % CHAT_CARD_COLOR_SEQUENCE.length)
-              ];
-            const path =
-              session.status === 'CLOSED' || session.status === 'SUMMARIZING'
-                ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
-                : PATH_NAME.chat.detail(sessionIdStr);
+          <ol className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]">
+            {sessions.map((session, index) => {
+              const sessionIdStr = String(session.sessionId);
+              const color =
+                CHAT_CARD_COLOR_SEQUENCE[
+                  CHAT_CARD_COLOR_SEQUENCE.length - 1 - (index % CHAT_CARD_COLOR_SEQUENCE.length)
+                ];
+              const path =
+                session.status === 'CLOSED' || session.status === 'SUMMARIZING'
+                  ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
+                  : PATH_NAME.chat.detail(sessionIdStr);
 
-            return (
-              <li key={session.sessionId} className="mb-[-6.4rem]">
-                <Link
-                  href={path}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    try {
-                      await patchLastSelected(userBookId);
-                    } catch {
-                    }
-                    setLastSelectedUserBookIdClient(userBookId);
-                    router.push(path);
-                  }}
-                >
-                  <ChatCard
-                    color={color}
-                    status={SESSION_STATUS_TO_CARD[session.status]}
-                    date={formatDate(session.lastChattedDate)}
-                    summary={session.title}
-                    bookmarked={session.status === 'CLOSED'}
-                  />
-                </Link>
-              </li>
-            );
-          })}
-          <div ref={bottomSentinelRef} />
+              return (
+                <li key={session.sessionId} className="mb-[-6.4rem]">
+                  <Link
+                    href={path}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      try {
+                        await patchLastSelected(userBookId);
+                      } catch {}
+                      setLastSelectedUserBookIdClient(userBookId);
+                      router.push(path);
+                    }}
+                  >
+                    <ChatCard
+                      color={color}
+                      status={SESSION_STATUS_TO_CARD[session.status]}
+                      date={formatDate(session.lastChattedDate)}
+                      summary={session.title}
+                      bookmarked={session.status === 'CLOSED'}
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+            <div ref={bottomSentinelRef} />
           </ol>
         </>
       )}
