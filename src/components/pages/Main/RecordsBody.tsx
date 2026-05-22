@@ -49,10 +49,8 @@ export const RecordsBody = (props: Props) => {
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetSessions(userBookId);
 
-  // 최신순(newest-first) 그대로 표시 — 위가 최신, 아래가 오래된 순
   const sessions = (data?.pages ?? []).flatMap((page) => page.sessions);
 
-  // 아래로 스크롤 시 오래된 세션 추가 로드
   useEffect(() => {
     const sentinel = bottomSentinelRef.current;
     if (!sentinel) return;
@@ -115,7 +113,6 @@ export const RecordsBody = (props: Props) => {
                     try {
                       await patchLastSelected(userBookId);
                     } catch {
-                      // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
                     }
                     setLastSelectedUserBookIdClient(userBookId);
                     router.push(path);
