@@ -45,13 +45,31 @@ export const RecordsBody = (props: Props) => {
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const containerRef = useRef<HTMLOListElement>(null);
-  const { data, isPending } = useGetSessions(userBookId);
-  const sessions = data?.sessions ?? [];
+  const bottomSentinelRef = useRef<HTMLDivElement>(null);
 
+  const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGetSessions(userBookId);
+
+  // 최신순(newest-first) 그대로 표시 — 위가 최신, 아래가 오래된 순
+  const sessions = (data?.pages ?? []).flatMap((page) => page.sessions);
+
+  // 아래로 스크롤 시 오래된 세션 추가 로드
   useEffect(() => {
-    const el = containerRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [sessions]);
+    const sentinel = bottomSentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          void fetchNextPage();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const isEmpty = !isPending && sessions.length === 0;
 
@@ -79,43 +97,44 @@ export const RecordsBody = (props: Props) => {
             ref={containerRef}
             className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]"
           >
-            {sessions.map((session, index) => {
-              const sessionIdStr = String(session.sessionId);
-              const color =
-                CHAT_CARD_COLOR_SEQUENCE[
-                  (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
-                ];
-              const path =
-                session.status === 'CLOSED' || session.status === 'SUMMARIZING'
-                  ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
-                  : PATH_NAME.chat.detail(sessionIdStr);
+          {sessions.map((session, index) => {
+            const sessionIdStr = String(session.sessionId);
+            const color =
+              CHAT_CARD_COLOR_SEQUENCE[
+                (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+              ];
+            const path =
+              session.status === 'CLOSED' || session.status === 'SUMMARIZING'
+                ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
+                : PATH_NAME.chat.detail(sessionIdStr);
 
-              return (
-                <li key={session.sessionId} className="mb-[-6.4rem]">
-                  <Link
-                    href={path}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      try {
-                        await patchLastSelected(userBookId);
-                      } catch {
-                        // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
-                      }
-                      setLastSelectedUserBookIdClient(userBookId);
-                      router.push(path);
-                    }}
-                  >
-                    <ChatCard
-                      color={color}
-                      status={SESSION_STATUS_TO_CARD[session.status]}
-                      date={formatDate(session.lastChattedDate)}
-                      summary={session.title}
-                      bookmarked={session.status === 'CLOSED'}
-                    />
-                  </Link>
-                </li>
-              );
-            })}
+            return (
+              <li key={session.sessionId} className="mb-[-6.4rem]">
+                <Link
+                  href={path}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    try {
+                      await patchLastSelected(userBookId);
+                    } catch {
+                      // 서버 반영 실패해도 이동·클라이언트 선택값은 유지
+                    }
+                    setLastSelectedUserBookIdClient(userBookId);
+                    router.push(path);
+                  }}
+                >
+                  <ChatCard
+                    color={color}
+                    status={SESSION_STATUS_TO_CARD[session.status]}
+                    date={formatDate(session.lastChattedDate)}
+                    summary={session.title}
+                    bookmarked={session.status === 'CLOSED'}
+                  />
+                </Link>
+              </li>
+            );
+          })}
+          <div ref={bottomSentinelRef} />
           </ol>
         </>
       )}
