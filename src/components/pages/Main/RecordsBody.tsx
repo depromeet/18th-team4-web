@@ -44,7 +44,6 @@ export const RecordsBody = (props: Props) => {
   const { userBookId } = props;
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
-  const containerRef = useRef<HTMLOListElement>(null);
   const bottomSentinelRef = useRef<HTMLDivElement>(null);
 
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -94,7 +93,6 @@ export const RecordsBody = (props: Props) => {
         <>
           <div className="flex-1" />
           <ol
-            ref={containerRef}
             className="relative flex list-none flex-col overflow-y-auto py-[6.4rem]"
           >
           {sessions.map((session, index) => {
