@@ -44,7 +44,7 @@ export const RecordsBody = (props: Props) => {
   const { userBookId } = props;
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
-  const bottomSentinelRef = useRef<HTMLDivElement>(null);
+  const bottomSentinelRef = useRef<HTMLLIElement>(null);
 
   const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetSessions(userBookId);
@@ -126,7 +126,7 @@ export const RecordsBody = (props: Props) => {
                 </li>
               );
             })}
-            <div ref={bottomSentinelRef} />
+            <li ref={bottomSentinelRef} aria-hidden />
           </ol>
         </>
       )}
