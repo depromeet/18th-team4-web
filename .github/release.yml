@@ -1,0 +1,21 @@
+changelog:
+  categories:
+    - title: 🚀 새 기능
+      labels:
+        - feat
+    - title: 🐛 버그 수정 및 QA
+      labels:
+        - fix
+        - qa
+    - title: ♻️ 리팩토링
+      labels:
+        - refactor
+    - title: ⚡ 성능 개선
+      labels:
+        - perf
+    - title: 🔧 기타
+      labels:
+        - chore
+        - docs
+        - style
+        - test
