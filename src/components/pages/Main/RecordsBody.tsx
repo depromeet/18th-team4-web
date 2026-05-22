@@ -101,7 +101,7 @@ export const RecordsBody = (props: Props) => {
             const sessionIdStr = String(session.sessionId);
             const color =
               CHAT_CARD_COLOR_SEQUENCE[
-                (sessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+                CHAT_CARD_COLOR_SEQUENCE.length - 1 - (index % CHAT_CARD_COLOR_SEQUENCE.length)
               ];
             const path =
               session.status === 'CLOSED' || session.status === 'SUMMARIZING'
