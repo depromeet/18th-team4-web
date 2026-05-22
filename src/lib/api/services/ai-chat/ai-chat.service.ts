@@ -10,6 +10,7 @@ export const useGetSessions = (userBookId: number) => {
   return useQuery({
     queryKey: QUERY_KEY.aiChat.sessions(userBookId),
     queryFn: () => getSessions({ userBookId, page: 1, size: SESSION_PAGE_SIZE }),
+    staleTime: 0,
   });
 };
 
