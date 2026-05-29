@@ -1,44 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { emptyIcon } from '@/assets';
-import {
-  CHAT_CARD_COLOR_SEQUENCE,
-  CHAT_CARD_STATUS,
-  ChatCard,
-  DocumentIcon,
-  Header,
-  HEADER_VARIANT,
-} from '@/components';
+import { Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
-  type SessionStatus,
   setLastSelectedUserBookIdClient,
   useCreateSession,
   useGetSessions,
   usePatchLastSelectedUserBook,
 } from '@/lib';
 import { CalendarView } from './CalendarView';
+import { EmptyState } from './EmptyState';
+import { SessionList } from './SessionList';
 import { StartChatFab } from './StartChatFab';
-
-const SESSION_STATUS_TO_CARD: Record<
-  SessionStatus,
-  (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]
-> = {
-  ACTIVE: CHAT_CARD_STATUS.DEFAULT,
-  SUMMARIZING: CHAT_CARD_STATUS.LOADING,
-  CLOSED: CHAT_CARD_STATUS.DEFAULT,
-  FAILED: CHAT_CARD_STATUS.ERROR,
-};
-
-const formatDate = (isoDate: string) => {
-  const datePart = isoDate.split('T')[0] ?? '';
-  if (datePart.length < 10) return '';
-  return datePart.slice(2).replace(/-/g, '.');
-};
 
 type Props = {
   userBookId: number;
@@ -100,6 +75,14 @@ export const RecordsBody = (props: Props) => {
     } catch {}
   };
 
+  const handleNavigate = async (path: string) => {
+    try {
+      await patchLastSelected(userBookId);
+    } catch {}
+    setLastSelectedUserBookIdClient(userBookId);
+    router.push(path);
+  };
+
   return (
     <main className="relative flex flex-1 flex-col overflow-hidden bg-white">
       <Header variant={HEADER_VARIANT.HOME} />
@@ -110,87 +93,17 @@ export const RecordsBody = (props: Props) => {
           onDaySelect={setSelectedDate}
         />
         {isEmpty ? (
-          <div className="flex flex-col items-center mt-[10rem]">
-            <div className="relative h-[22.5rem] w-[26.7rem] shrink-0 overflow-hidden">
-              <Image
-                src={emptyIcon}
-                alt="대화 없음"
-                width={301}
-                height={301}
-                className="absolute left-1/2 top-[-1.694rem] -translate-x-1/2 w-[30.088rem]"
-              />
-              <div className="absolute bottom-0 left-0 right-0 h-[11.6rem] bg-linear-to-b from-transparent to-white" />
-            </div>
-            <p className="title1-bold bg-linear-to-r from-text-default to-green-primary bg-clip-text text-center tracking-[-0.054rem] text-transparent">
-              첫 대화를 시작해볼까요?
-            </p>
-          </div>
+          <EmptyState message="첫 대화를 시작해볼까요?" />
         ) : isDateEmpty ? (
-          <div className="flex flex-col items-center mt-[10rem]">
-            <div className="relative h-[22.5rem] w-[26.7rem] shrink-0 overflow-hidden">
-              <Image
-                src={emptyIcon}
-                alt="대화 없음"
-                width={301}
-                height={301}
-                className="absolute left-1/2 top-[-1.694rem] -translate-x-1/2 w-[30.088rem]"
-              />
-              <div className="absolute bottom-0 left-0 right-0 h-[11.6rem] bg-linear-to-b from-transparent to-white" />
-            </div>
-            <p className="title1-bold bg-linear-to-r from-text-default to-green-primary bg-clip-text text-center tracking-[-0.054rem] text-transparent">
-              이 날은 대화 기록이 없어요
-            </p>
-          </div>
+          <EmptyState message="이 날은 대화 기록이 없어요" />
         ) : (
-          <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
-            <div className="flex items-center gap-[0.4rem] px-[2.4rem]">
-              <DocumentIcon className="shrink-0 text-text-caption" />
-              <p className="body2-semibold tracking-[-0.042rem]">
-                <span className="text-text-description">오전 6시에</span>
-                <span className="text-text-caption"> AI가 독후감을 작성해요</span>
-              </p>
-            </div>
-            <ol className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-[8rem]">
-              {filteredSessions.map((session) => {
-                const sessionIdStr = String(session.sessionId);
-                const originalIndex = sessions.indexOf(session);
-                const color =
-                  CHAT_CARD_COLOR_SEQUENCE[
-                    (sessions.length - 1 - originalIndex) % CHAT_CARD_COLOR_SEQUENCE.length
-                  ];
-                const path =
-                  session.status === 'CLOSED' || session.status === 'SUMMARIZING'
-                    ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
-                    : PATH_NAME.chat.detail(sessionIdStr);
-
-                return (
-                  <li key={session.sessionId}>
-                    <Link
-                      href={path}
-                      className="cursor-pointer"
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        try {
-                          await patchLastSelected(userBookId);
-                        } catch {}
-                        setLastSelectedUserBookIdClient(userBookId);
-                        router.push(path);
-                      }}
-                    >
-                      <ChatCard
-                        color={color}
-                        status={SESSION_STATUS_TO_CARD[session.status]}
-                        date={formatDate(session.lastChattedDate)}
-                        summary={session.title}
-                        bookmarked={session.status === 'CLOSED'}
-                      />
-                    </Link>
-                  </li>
-                );
-              })}
-              <li ref={bottomSentinelRef} aria-hidden />
-            </ol>
-          </div>
+          <SessionList
+            sessions={sessions}
+            filteredSessions={filteredSessions}
+            sentinelRef={bottomSentinelRef}
+            userBookId={userBookId}
+            onNavigate={handleNavigate}
+          />
         )}
       </div>
       <StartChatFab onClick={() => void handleStartChat()} />
