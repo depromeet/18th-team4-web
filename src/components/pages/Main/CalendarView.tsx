@@ -127,7 +127,7 @@ export const CalendarView = (props: Props) => {
               setBaseDate(new Date());
               onDaySelect?.(todayStr);
             }}
-            className="rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-[1.2rem] font-semibold leading-none tracking-[-0.024em] text-text-description"
+            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-[1.2rem] font-semibold leading-none tracking-[-0.024em] text-text-description"
           >
             오늘
           </button>

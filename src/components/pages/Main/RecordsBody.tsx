@@ -167,6 +167,7 @@ export const RecordsBody = (props: Props) => {
                   <li key={session.sessionId}>
                     <Link
                       href={path}
+                      className="cursor-pointer"
                       onClick={async (e) => {
                         e.preventDefault();
                         try {

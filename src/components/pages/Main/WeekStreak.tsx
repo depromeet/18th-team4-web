@@ -34,7 +34,7 @@ export const WeekStreak = (props: Props) => {
             onClick={() => onDayClick?.(day.dateStr)}
             className={cn(
               'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
-              'disabled:cursor-default',
+              'cursor-pointer disabled:cursor-default',
               isSelected && 'bg-gray-alpha-50',
             )}
           >
