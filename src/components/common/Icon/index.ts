@@ -1,4 +1,5 @@
 export { ArrowIcon } from './ArrowIcon';
+export { DocumentIcon } from './DocumentIcon';
 export { BookmarkCheckIcon } from './BookmarkCheckIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { CheckIcon } from './CheckIcon';
@@ -14,4 +15,5 @@ export { ReloadIcon } from './ReloadIcon';
 export { SearchIcon } from './SearchIcon';
 export { SelectIcon } from './SelectIcon';
 export { SendIcon } from './SendIcon';
+export { UserIcon } from './UserIcon';
 export { WarningIcon } from './WarningIcon';
