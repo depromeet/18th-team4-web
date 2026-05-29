@@ -4,7 +4,7 @@ import { cn } from '@/lib';
 
 const DAY_LABELS = ['월', '화', '수', '목', '금', '토', '일'] as const;
 
-type DayState = 'default' | 'active' | 'future';
+type DayState = 'default' | 'active' | 'future' | 'disabled';
 
 type DayCell = {
   date: number;
@@ -42,7 +42,7 @@ const buildWeeks = (
     cells.push({
       date: prevMonthDays - firstDayIndex + 1 + i,
       isCurrentMonth: false,
-      state: 'future',
+      state: 'disabled',
       isToday: false,
     });
   }
@@ -59,7 +59,7 @@ const buildWeeks = (
 
   const remaining = (7 - (cells.length % 7)) % 7;
   for (let d = 1; d <= remaining; d++) {
-    cells.push({ date: d, isCurrentMonth: false, state: 'future', isToday: false });
+    cells.push({ date: d, isCurrentMonth: false, state: 'disabled', isToday: false });
   }
 
   const weeks: DayCell[][] = [];
@@ -104,7 +104,7 @@ export const MonthCalendar = (props: Props) => {
                     'relative flex size-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full',
                     cell.state === 'default' && !isSelected && 'bg-gray-alpha-10',
                     cell.state === 'active' && 'bg-green-darkest',
-                    cell.state === 'future' && !isSunday && 'bg-white',
+                    (cell.state === 'future' || cell.state === 'disabled') && !isSunday && 'bg-white',
                   )}
                 >
                   <span
@@ -113,7 +113,7 @@ export const MonthCalendar = (props: Props) => {
                       cell.state === 'default' && 'text-text-description',
                       cell.state === 'active' &&
                         'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',
-                      cell.state === 'future' && 'text-gray-100',
+                      (cell.state === 'future' || cell.state === 'disabled') && 'text-gray-100',
                     )}
                   >
                     {cell.date}
