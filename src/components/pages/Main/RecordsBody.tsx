@@ -194,7 +194,7 @@ export const RecordsBody = (props: Props) => {
         )}
       </div>
       <div className="absolute bottom-[2.4rem] left-1/2 z-10 -translate-x-1/2 drop-shadow-[0px_4px_16px_rgba(0,0,0,0.2)]">
-        <div aria-hidden className="absolute inset-0 rounded-full bg-[#e1e1e1]/50 blur-[1.5rem]" />
+        <div aria-hidden className="absolute inset-0 rounded-full bg-[#e1e1e1]/50 blur-xl" />
         <button
           type="button"
           onClick={() => void handleStartChat()}

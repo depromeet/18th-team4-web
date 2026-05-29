@@ -102,7 +102,7 @@ export const CalendarView = (props: Props) => {
             type="button"
             onClick={() => setView('week')}
             className={cn(
-              'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-[1.2rem] font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
+              'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-caption1 font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
               view === 'week' ? 'text-white' : 'text-text-caption',
             )}
           >
@@ -112,7 +112,7 @@ export const CalendarView = (props: Props) => {
             type="button"
             onClick={() => setView('month')}
             className={cn(
-              'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-[1.2rem] font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
+              'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-caption1 font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
               view === 'month' ? 'text-white' : 'text-text-caption',
             )}
           >
@@ -127,7 +127,7 @@ export const CalendarView = (props: Props) => {
               setBaseDate(new Date());
               onDaySelect?.(todayStr);
             }}
-            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-[1.2rem] font-semibold leading-none tracking-[-0.024em] text-text-description"
+            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
           >
             오늘
           </button>
