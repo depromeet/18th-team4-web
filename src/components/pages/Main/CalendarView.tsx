@@ -10,7 +10,7 @@ type View = 'week' | 'month';
 type WeekDay = Parameters<typeof WeekStreak>[0]['days'][number];
 
 type Props = {
-  streakDates?: string[]; // ISO "YYYY-MM-DD"
+  streakDates?: string[]; 
   className?: string;
   selectedDate?: string;
   onDaySelect?: (dateStr: string) => void;
