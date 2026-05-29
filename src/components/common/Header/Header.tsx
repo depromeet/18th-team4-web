@@ -48,7 +48,7 @@ export const Header = (props: HeaderProps) => {
             aria-label="프로필"
             className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
           >
-            <UserIcon className="size-[2.4rem] fill-icon-tertiary" />
+            <UserIcon className="size-[2.4rem] text-icon-tertiary" />
           </button>
         </>
       )}
