@@ -78,7 +78,6 @@ export const MonthCalendar = (props: Props) => {
       {weeks.map((week, weekIndex) => (
         <div key={weekIndex} className="flex w-full items-center px-[1.4rem]">
           {week.map((cell, dayIndex) => {
-            const isSunday = dayIndex === 6;
             const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(cell.date).padStart(2, '0')}`;
             const isSelected = cell.isCurrentMonth && dateStr === selectedDate;
             const isClickable = cell.isCurrentMonth && cell.state !== 'future';
@@ -104,7 +103,7 @@ export const MonthCalendar = (props: Props) => {
                     'relative flex size-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full',
                     cell.state === 'default' && !isSelected && 'bg-gray-alpha-10',
                     cell.state === 'active' && 'bg-green-darkest',
-                    (cell.state === 'future' || cell.state === 'disabled') && !isSunday && 'bg-white',
+                    (cell.state === 'future' || cell.state === 'disabled') && 'bg-white',
                   )}
                 >
                   <span
