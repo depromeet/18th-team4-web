@@ -1,9 +1,7 @@
 import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon, Tooltip } from '@/components';
-import { PATH_NAME } from '@/constants';
+import { ArrowIcon, Tooltip, UserIcon } from '@/components';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
@@ -45,13 +43,13 @@ export const Header = (props: HeaderProps) => {
           <div className="relative h-[2.9rem] w-[12.3rem] shrink-0 overflow-hidden">
             <Image src={Logo} alt="logo" className="absolute" />
           </div>
-          <Link
-            href={PATH_NAME.register.list()}
-            aria-label="책 등록하기"
-            className="relative flex shrink-0 size-[4.6rem] cursor-pointer items-center justify-center rounded-[3.6rem] bg-linear-to-b from-[rgba(255,255,255,0.47)] to-[rgba(255,255,255,0.19)] p-[1.1rem] shadow-[0_0_3.2rem_rgba(0,0,0,0.16)]"
+          <button
+            type="button"
+            aria-label="프로필"
+            className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
           >
-            <PlusIcon className="size-[2.4rem]" />
-          </Link>
+            <UserIcon className="size-[2.4rem] fill-icon-tertiary" />
+          </button>
         </>
       )}
 
