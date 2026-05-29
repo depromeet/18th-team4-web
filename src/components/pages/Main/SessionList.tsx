@@ -28,7 +28,6 @@ type Props = {
   sessions: SessionItem[];
   filteredSessions: SessionItem[];
   sentinelRef: React.RefObject<HTMLLIElement | null>;
-  userBookId: number;
   onNavigate: (path: string) => Promise<void>;
 };
 
