@@ -9,6 +9,7 @@ import {
   useCreateSession,
   useGetSessions,
   usePatchLastSelectedUserBook,
+  useToastStore,
 } from '@/lib';
 import { CalendarView } from './CalendarView';
 import { EmptyState } from './EmptyState';
@@ -62,6 +63,8 @@ export const RecordsBody = (props: Props) => {
   const isEmpty = !isPending && sessions.length === 0;
   const isDateEmpty = !isPending && sessions.length > 0 && filteredSessions.length === 0;
 
+  const openToast = useToastStore((s) => s.openToast);
+
   const handleStartChat = async () => {
     try {
       const sessionData = await createSessionAsync(userBookId);
@@ -72,7 +75,9 @@ export const RecordsBody = (props: Props) => {
       }
       setLastSelectedUserBookIdClient(userBookId);
       router.push(PATH_NAME.chat.detail(String(sessionData.sessionId)));
-    } catch {}
+    } catch {
+      openToast({ type: 'error', message: '대화를 시작할 수 없어요. 잠시 후 다시 시도해주세요.' });
+    }
   };
 
   const handleNavigate = async (path: string) => {
@@ -92,7 +97,11 @@ export const RecordsBody = (props: Props) => {
           selectedDate={selectedDate}
           onDaySelect={setSelectedDate}
         />
-        {isEmpty ? (
+        {isPending ? (
+          <div className="flex flex-1 items-center justify-center py-[4rem]">
+            <div className="size-[2.4rem] animate-spin rounded-full border-2 border-gray-200 border-t-text-caption" />
+          </div>
+        ) : isEmpty ? (
           <EmptyState message="첫 대화를 시작해볼까요?" />
         ) : isDateEmpty ? (
           <EmptyState message="이 날은 대화 기록이 없어요" />
@@ -101,7 +110,6 @@ export const RecordsBody = (props: Props) => {
             sessions={sessions}
             filteredSessions={filteredSessions}
             sentinelRef={bottomSentinelRef}
-            userBookId={userBookId}
             onNavigate={handleNavigate}
           />
         )}
