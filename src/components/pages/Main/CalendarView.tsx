@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronIcon } from '@/components';
-import { cn } from '@/lib';
+import { cn, toLocalDateString } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
 import { WeekStreak } from './WeekStreak';
 
@@ -17,9 +17,6 @@ type Props = {
 };
 
 const WEEK_LABELS = ['월', '화', '수', '목', '금', '토', '일'] as const;
-
-const toDateString = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 const addDays = (d: Date, n: number) => {
   const r = new Date(d);
@@ -39,7 +36,7 @@ export const CalendarView = (props: Props) => {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const todayStr = toDateString(today);
+  const todayStr = toLocalDateString(today);
   const streakSet = new Set(streakDates);
 
   const goBack = () => {
@@ -64,7 +61,7 @@ export const CalendarView = (props: Props) => {
   const weekDays: WeekDay[] = WEEK_LABELS.map((label, i) => {
     const d = addDays(monday, i);
     d.setHours(0, 0, 0, 0);
-    const dateStr = toDateString(d);
+    const dateStr = toLocalDateString(d);
     const isToday = dateStr === todayStr;
     const isFuture = d > today;
     const isActive = streakSet.has(dateStr);

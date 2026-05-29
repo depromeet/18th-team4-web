@@ -6,6 +6,7 @@ import { Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
   setLastSelectedUserBookIdClient,
+  toLocalDateString,
   useCreateSession,
   useGetSessions,
   usePatchLastSelectedUserBook,
@@ -49,10 +50,7 @@ export const RecordsBody = (props: Props) => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  });
+  const [selectedDate, setSelectedDate] = useState<string>(() => toLocalDateString(new Date()));
 
   const streakDates = sessions
     .map((s) => s.lastChattedDate.split('T')[0])
@@ -98,7 +96,7 @@ export const RecordsBody = (props: Props) => {
           onDaySelect={setSelectedDate}
         />
         {isPending ? (
-          <div className="flex flex-1 items-center justify-center py-[4rem]">
+          <div className="flex flex-1 items-center justify-center py-16">
             <div className="size-[2.4rem] animate-spin rounded-full border-2 border-gray-200 border-t-text-caption" />
           </div>
         ) : isEmpty ? (
