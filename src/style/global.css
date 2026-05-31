@@ -233,6 +233,13 @@
   font-weight: 700;
 }
 
+@utility body1-extrabold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
+  font-weight: 800;
+}
+
 @utility body2-medium {
   font-family: var(--font-sans);
   font-size: var(--text-body2);
