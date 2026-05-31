@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT } from '@/components';
+import { Header, HEADER_VARIANT, Loading } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
   setLastSelectedUserBookIdClient,
@@ -96,8 +96,8 @@ export const RecordsBody = (props: Props) => {
           onDaySelect={setSelectedDate}
         />
         {isPending ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <div className="size-[2.4rem] animate-spin rounded-full border-2 border-gray-200 border-t-text-caption" />
+          <div className="flex flex-1">
+            <Loading />
           </div>
         ) : isEmpty ? (
           <EmptyState message="첫 대화를 시작해볼까요?" />
