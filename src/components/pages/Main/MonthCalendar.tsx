@@ -114,7 +114,7 @@ export const MonthCalendar = (props: Props) => {
                 >
                   <span
                     className={cn(
-                      'body2-bold text-center tracking-[-0.03em]',
+                      'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8px_currentColor]',
                       cell.state === 'default' && 'text-text-description',
                       cell.state === 'active' &&
                         'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',
