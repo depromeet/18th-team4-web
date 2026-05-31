@@ -79,9 +79,6 @@ export const CalendarView = (props: Props) => {
     })
     .map((s) => Number(s.split('-')[2]));
 
-  const todayForMonth =
-    today.getFullYear() === year && today.getMonth() + 1 === month ? today.getDate() : undefined;
-
   return (
     <div className={cn('flex flex-col', className)}>
       <div className="flex items-center justify-between px-[2rem] pb-[0.8rem]">
@@ -155,7 +152,7 @@ export const CalendarView = (props: Props) => {
             year={year}
             month={month}
             streakDates={streakDaysForMonth}
-            today={todayForMonth}
+            todayDate={today}
             selectedDate={selectedDate}
             onDayClick={onDaySelect}
           />

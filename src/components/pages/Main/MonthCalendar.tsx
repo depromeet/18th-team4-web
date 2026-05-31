@@ -17,7 +17,7 @@ type Props = {
   year: number;
   month: number;
   streakDates?: number[];
-  today?: number;
+  todayDate?: Date;
   className?: string;
   selectedDate?: string;
   onDayClick?: (dateStr: string) => void;
@@ -27,7 +27,7 @@ const buildWeeks = (
   year: number,
   month: number,
   streakDates: number[],
-  today?: number,
+  todayDate?: Date,
 ): DayCell[][] => {
   const firstOfMonth = new Date(year, month - 1, 1);
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -48,12 +48,18 @@ const buildWeeks = (
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
-    const isFuture = today !== undefined && d > today;
+    const cellDate = new Date(year, month - 1, d);
+    const isFuture = todayDate !== undefined && cellDate > todayDate;
+    const isToday =
+      todayDate !== undefined &&
+      todayDate.getFullYear() === year &&
+      todayDate.getMonth() + 1 === month &&
+      todayDate.getDate() === d;
     cells.push({
       date: d,
       isCurrentMonth: true,
       state: isFuture ? 'future' : streakSet.has(d) ? 'active' : 'default',
-      isToday: today === d,
+      isToday,
     });
   }
 
@@ -70,8 +76,8 @@ const buildWeeks = (
 };
 
 export const MonthCalendar = (props: Props) => {
-  const { year, month, streakDates = [], today, className, selectedDate, onDayClick } = props;
-  const weeks = buildWeeks(year, month, streakDates, today);
+  const { year, month, streakDates = [], todayDate, className, selectedDate, onDayClick } = props;
+  const weeks = buildWeeks(year, month, streakDates, todayDate);
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
