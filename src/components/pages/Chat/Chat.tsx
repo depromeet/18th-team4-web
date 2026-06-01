@@ -1,5 +1,6 @@
 import { type VariantProps } from 'class-variance-authority';
-import { ColorSymbolIcon } from '@/components';
+import Image from 'next/image';
+import { Chatbot } from '@/assets';
 import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
 import { containerVariants } from './chatVariants';
@@ -18,7 +19,8 @@ export const Chat = (props: Props) => {
 
   const bubble = (
     <div className={cn(containerVariants({ user, tone }))}>
-      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">
+      {showIcon ? <Image src={Chatbot} alt="chatbot" width={32} height={32} /> : null}
+      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default pt-[0.6rem]">
         {message}
         {isStreaming ? (
           <span
@@ -27,18 +29,13 @@ export const Chat = (props: Props) => {
           />
         ) : null}
       </p>
-      {showIcon ? (
-        <span className="chat-symbol-soft-blink mt-[1.2rem] inline-flex shrink-0">
-          <ColorSymbolIcon />
-        </span>
-      ) : null}
     </div>
   );
 
   if (isMe) {
     return (
       <div className="flex items-end gap-[0.6rem] self-end">
-        {time && <span className="caption2-medium shrink-0 text-text-caption">{time}</span>}
+        {time && <span className="caption1-medium shrink-0 text-text-caption">{time}</span>}
         {bubble}
       </div>
     );

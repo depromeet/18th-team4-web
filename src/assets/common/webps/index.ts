@@ -1,3 +1,4 @@
+export { default as Chatbot } from './chatbot.webp';
 export { default as Shelve } from './empty-shelve.webp';
 export * from './gradient';
 export { default as HomeLogo } from './home-logo.webp';
