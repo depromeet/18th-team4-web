@@ -2,7 +2,8 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon, Tooltip } from '@/components';
+import { ArrowIcon, PlusIcon } from '@/components';
+import ChatToast from '@/components/pages/Chat/ChatToast';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
@@ -67,20 +68,7 @@ export const Header = (props: HeaderProps) => {
         </button>
       )}
 
-      {variant === HEADER_VARIANT.CHAT && (
-        <div className="relative">
-          {summarizeActive && (
-            <div className="absolute right-0 top-[calc(100%+1.3rem)] z-50">
-              <Tooltip
-                role="tooltip"
-                content="이제 대화를 요약할 수 있어요"
-                arrowSide="top"
-                arrowAlignment="right"
-              />
-            </div>
-          )}
-        </div>
-      )}
+      {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
 
       {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
         <div className="absolute bottom-0 left-0 h-[0.3rem] w-full bg-gray-alpha-10">
