@@ -1,12 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Header, HEADER_VARIANT, Loading } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
   setLastSelectedUserBookIdClient,
-  toLocalDateString,
+  useCalendarStore,
   useCreateSession,
   useGetSessions,
   usePatchLastSelectedUserBook,
@@ -50,7 +50,8 @@ export const RecordsBody = (props: Props) => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const [selectedDate, setSelectedDate] = useState<string>(() => toLocalDateString(new Date()));
+  const selectedDate = useCalendarStore((s) => s.selectedDate);
+  const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
 
   const streakDates = sessions
     .map((s) => s.lastChattedDate.split('T')[0])

@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { ChevronIcon } from '@/components';
-import { cn, toLocalDateString } from '@/lib';
+import { cn, toLocalDateString, useCalendarStore } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
 import { WeekStreak } from './WeekStreak';
 
@@ -31,8 +30,11 @@ const getMondayOfWeek = (d: Date) => {
 
 export const CalendarView = (props: Props) => {
   const { streakDates = [], className, selectedDate, onDaySelect } = props;
-  const [view, setView] = useState<View>('week');
-  const [baseDate, setBaseDate] = useState(() => new Date());
+  const view = useCalendarStore((s) => s.view);
+  const setView = useCalendarStore((s) => s.setView);
+  const baseDateMs = useCalendarStore((s) => s.baseDateMs);
+  const setBaseDateMs = useCalendarStore((s) => s.setBaseDateMs);
+  const baseDate = new Date(baseDateMs);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -40,21 +42,23 @@ export const CalendarView = (props: Props) => {
   const streakSet = new Set(streakDates);
 
   const goBack = () => {
-    setBaseDate((prev) => {
-      if (view === 'week') return addDays(prev, -7);
-      const d = new Date(prev);
+    if (view === 'week') {
+      setBaseDateMs(addDays(baseDate, -7).getTime());
+    } else {
+      const d = new Date(baseDate);
       d.setMonth(d.getMonth() - 1);
-      return d;
-    });
+      setBaseDateMs(d.getTime());
+    }
   };
 
   const goNext = () => {
-    setBaseDate((prev) => {
-      if (view === 'week') return addDays(prev, 7);
-      const d = new Date(prev);
+    if (view === 'week') {
+      setBaseDateMs(addDays(baseDate, 7).getTime());
+    } else {
+      const d = new Date(baseDate);
       d.setMonth(d.getMonth() + 1);
-      return d;
-    });
+      setBaseDateMs(d.getTime());
+    }
   };
 
   const monday = getMondayOfWeek(baseDate);
@@ -118,7 +122,7 @@ export const CalendarView = (props: Props) => {
           <button
             type="button"
             onClick={() => {
-              setBaseDate(new Date());
+              setBaseDateMs(new Date().getTime());
               onDaySelect?.(todayStr);
             }}
             className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
