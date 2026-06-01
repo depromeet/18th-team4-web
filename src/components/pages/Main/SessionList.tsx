@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   CHAT_CARD_COLOR_SEQUENCE,
   CHAT_CARD_STATUS,
@@ -52,13 +51,10 @@ export const SessionList = (props: Props) => {
 
           return (
             <li key={session.sessionId}>
-              <Link
-                href={path}
-                className="cursor-pointer"
-                onClick={async (e) => {
-                  e.preventDefault();
-                  await onNavigate(path);
-                }}
+              <button
+                type="button"
+                className="w-full cursor-pointer text-left"
+                onClick={() => void onNavigate(path)}
               >
                 <ChatCard
                   color={color}
@@ -67,7 +63,7 @@ export const SessionList = (props: Props) => {
                   summary={session.title}
                   bookmarked={session.status === 'CLOSED'}
                 />
-              </Link>
+              </button>
             </li>
           );
         })}
