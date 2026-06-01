@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, BUTTON_VARIANT, ColorSymbolIcon } from '@/components';
+import { Button, BUTTON_VARIANT } from '@/components';
 import { MODAL_TYPE, ModalType } from '@/constants/modal';
 import { cn } from '@/lib';
 
@@ -93,7 +93,6 @@ export const Modal = (props: Props) => {
       >
         <div className="relative flex min-h-0 w-full flex-1 flex-col items-center gap-[3rem] overflow-y-auto overscroll-contain p-[2.4rem] pt-[2.8rem]">
           <header className="flex flex-col items-center gap-[0.2rem] text-center">
-            <ColorSymbolIcon />
             <h3 id="summary-modal-title" className="text-text-default headline2-bold mt-[1.4rem]">
               {title}
             </h3>
