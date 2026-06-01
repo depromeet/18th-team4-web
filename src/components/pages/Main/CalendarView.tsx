@@ -88,12 +88,10 @@ export const CalendarView = (props: Props) => {
         <div className="relative flex items-center rounded-full bg-gray-alpha-50 px-[0.5rem] py-[0.4rem] shadow-[inset_0px_0px_4px_0px_rgba(23,28,27,0.03)]">
           <div
             aria-hidden
-            className="absolute bottom-[0.4rem] top-[0.4rem] rounded-full bg-text-default drop-shadow-[0px_0px_1.5px_rgba(0,0,0,0.25)]"
-            style={{
-              width: 'calc(50% - 0.5rem)',
-              left: view === 'week' ? '0.5rem' : '50%',
-              transition: 'left 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-            }}
+            className={cn(
+              'absolute bottom-[0.4rem] left-[0.5rem] top-[0.4rem] w-[calc(50%-0.5rem)] rounded-full bg-text-default drop-shadow-[0px_0px_1.5px_rgba(0,0,0,0.25)] transition-transform duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+              view === 'month' && 'translate-x-full',
+            )}
           />
           <button
             type="button"
