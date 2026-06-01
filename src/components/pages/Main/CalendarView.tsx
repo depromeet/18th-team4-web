@@ -40,7 +40,7 @@ export const CalendarView = (props: Props) => {
   const todayStr = toLocalDateString(today);
   const streakSet = new Set(streakDates);
 
-  const goBack = () => {
+  const handlePrevClick = () => {
     if (view === 'week') {
       setBaseDateMs(addDays(baseDate, -7).getTime());
     } else {
@@ -50,7 +50,7 @@ export const CalendarView = (props: Props) => {
     }
   };
 
-  const goNext = () => {
+  const handleNextClick = () => {
     if (view === 'week') {
       setBaseDateMs(addDays(baseDate, 7).getTime());
     } else {
@@ -131,7 +131,7 @@ export const CalendarView = (props: Props) => {
           <button
             type="button"
             aria-label="이전"
-            onClick={goBack}
+            onClick={handlePrevClick}
             className="flex cursor-pointer items-center justify-center"
           >
             <ChevronIcon className="rotate-90 size-[2rem] fill-text-caption" />
@@ -139,7 +139,7 @@ export const CalendarView = (props: Props) => {
           <button
             type="button"
             aria-label="다음"
-            onClick={goNext}
+            onClick={handleNextClick}
             className="flex cursor-pointer items-center justify-center"
           >
             <ChevronIcon className="-rotate-90 size-[2rem] fill-text-caption" />
