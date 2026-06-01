@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, BUTTON_VARIANT, ColorSymbolIcon } from '@/components';
+import { MODAL_TYPE, ModalType } from '@/constants/modal';
 import { cn } from '@/lib';
 
 type Props = {
   isOpen: boolean;
-  isConfirming?: boolean;
+  modalType: ModalType;
   onCancel: () => void;
   onConfirm: () => void;
 };
@@ -16,7 +17,8 @@ const prefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const Modal = (props: Props) => {
-  const { isOpen, onCancel, onConfirm } = props;
+  const { isOpen, modalType = 'DELETE', onCancel, onConfirm } = props;
+  const { title, content } = MODAL_TYPE[modalType];
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
 
@@ -93,10 +95,10 @@ export const Modal = (props: Props) => {
           <header className="flex flex-col items-center gap-[0.2rem] text-center">
             <ColorSymbolIcon />
             <h3 id="summary-modal-title" className="text-text-default headline2-bold mt-[1.4rem]">
-              대화를 마무리할까요?
+              {title}
             </h3>
             <p id="summary-modal-description" className="body2-medium text-text-description">
-              요약을 진행하면 여기서 더 대화할 수 없어요.
+              {content}
             </p>
           </header>
 
