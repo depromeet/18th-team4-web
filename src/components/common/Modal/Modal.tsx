@@ -16,7 +16,7 @@ const prefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const Modal = (props: Props) => {
-  const { isOpen, isConfirming = false, onCancel, onConfirm } = props;
+  const { isOpen, onCancel, onConfirm } = props;
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
 
@@ -36,14 +36,14 @@ export const Modal = (props: Props) => {
   }, [isExiting, finishExit]);
 
   const dismissWithSlide = useCallback(() => {
-    if (isExiting || isConfirming) return;
+    if (isExiting) return;
     if (prefersReducedMotion()) {
       onCancel();
       return;
     }
     exitFinishedRef.current = false;
     setIsExiting(true);
-  }, [isConfirming, isExiting, onCancel]);
+  }, [isExiting, onCancel]);
 
   const handleExitAnimationEnd = useCallback(
     (e: React.AnimationEvent<HTMLDivElement>) => {
@@ -58,7 +58,7 @@ export const Modal = (props: Props) => {
   );
 
   const handleConfirm = () => {
-    if (isExiting || isConfirming) return;
+    if (isExiting) return;
     onConfirm();
   };
 
@@ -71,8 +71,7 @@ export const Modal = (props: Props) => {
         role="presentation"
         className={cn(
           'fixed inset-0 z-modal cursor-pointer bg-dim',
-          (isConfirming || isExiting) && 'pointer-events-none',
-          isConfirming && 'cursor-wait',
+          isExiting && 'pointer-events-none',
         )}
         onClick={dismissWithSlide}
       />
@@ -85,22 +84,12 @@ export const Modal = (props: Props) => {
           'fixed inset-0 z-modal m-auto flex h-fit max-h-[90dvh] w-[min(33rem,calc(100vw-4.8rem))] flex-col overflow-hidden rounded-[20px] bg-text-white',
           isExiting ? 'animate-modal-sheet-exit' : 'animate-modal-sheet-enter',
         )}
-        aria-busy={isConfirming ? true : undefined}
         onAnimationEnd={handleExitAnimationEnd}
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
         <div className="relative flex min-h-0 w-full flex-1 flex-col items-center gap-[3rem] overflow-y-auto overscroll-contain p-[2.4rem] pt-[2.8rem]">
-          {isConfirming && (
-            <div
-              aria-hidden
-              className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-[1.2rem] rounded-[20px] bg-text-white/85 px-[2.4rem] backdrop-blur-[2px]"
-            >
-              <p className="body2-bold text-center text-text-caption">요약을 준비하고 있어요</p>
-            </div>
-          )}
-
           <header className="flex flex-col items-center gap-[0.2rem] text-center">
             <ColorSymbolIcon />
             <h3 id="summary-modal-title" className="text-text-default headline2-bold mt-[1.4rem]">
@@ -117,7 +106,7 @@ export const Modal = (props: Props) => {
               size="lg"
               className="rounded-[1.6rem]"
               onClick={dismissWithSlide}
-              disabled={isConfirming || isExiting}
+              disabled={isExiting}
             >
               취소
             </Button>
@@ -127,9 +116,9 @@ export const Modal = (props: Props) => {
               size="lg"
               className="rounded-[1.6rem]"
               onClick={handleConfirm}
-              disabled={isConfirming || isExiting}
+              disabled={isExiting}
             >
-              {isConfirming ? '준비 중...' : '확인'}
+              삭제하기
             </Button>
           </footer>
         </div>

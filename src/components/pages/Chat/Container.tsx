@@ -15,8 +15,8 @@ import {
   usePendingChatStore,
   useToastStore,
 } from '@/lib';
+import { Modal } from '../../common/Modal/Modal';
 import { Chat } from './Chat';
-import { Modal } from './Modal';
 
 const chatMatchesHistory = (history: ChatMessage, pending: ChatMessage) =>
   pending.id === history.id ||

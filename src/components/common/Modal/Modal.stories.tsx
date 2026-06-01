@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
-import { Modal } from './Modal';
+import { Modal } from '../../common/Modal/Modal';
 
 const meta = {
   title: 'Components/Chat/Modal',
