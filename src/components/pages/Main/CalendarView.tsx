@@ -127,7 +127,7 @@ export const CalendarView = (props: Props) => {
           <button
             type="button"
             onClick={handleTodayClick}
-            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
+            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[1.1rem] py-[1rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
           >
             오늘
           </button>
