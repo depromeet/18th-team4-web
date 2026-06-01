@@ -16,7 +16,7 @@ export const EmptyState = (props: Props) => {
           alt="No conversations"
           width={301}
           height={301}
-          className="absolute left-1/2 top-[-1.694rem] -translate-x-1/2 w-[30.088rem]"
+          className="absolute left-1/2 top-[-1.69rem] -translate-x-1/2 w-[30.09rem]"
         />
         <div className="absolute bottom-0 left-0 right-0 h-[11.6rem] bg-linear-to-b from-transparent to-white" />
       </div>
