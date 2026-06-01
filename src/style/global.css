@@ -17,6 +17,7 @@
 
   --color-gray-white: #ffffff;
   --color-gray-10: #e7eaea;
+  --color-gray-20: #dfe6e6;
   --color-gray-50: #dadddd;
   --color-gray-100: #ced1d1;
   --color-gray-200: #a9adad;
@@ -151,6 +152,7 @@
   --text-body1: 1.6rem;
   --text-body2: 1.4rem;
   --text-caption1: 1.2rem;
+  --text-caption2: 1rem;
 
   --leading-headline1: 1.35;
   --leading-headline2: 1.4;
@@ -158,6 +160,7 @@
   --leading-body1: 1.5;
   --leading-body2: 1.5;
   --leading-caption1: 1.4;
+  --leading-caption2: 1.4rem;
 }
 
 @source inline("text-sub-teal text-sub-magenta text-sub-yellow text-sub-sky text-sub-green text-sub-purple text-sub-blue");
@@ -266,6 +269,13 @@
   font-size: var(--text-caption1);
   line-height: var(--leading-caption1);
   font-weight: 700;
+}
+
+@utility caption2-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption2);
+  line-height: var(--leading-caption2);
+  font-weight: 500;
 }
 
 @utility z-modal {
