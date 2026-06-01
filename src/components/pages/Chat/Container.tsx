@@ -48,9 +48,20 @@ const stripPendingSyncedWithHistoryTail = (
   return pending;
 };
 
+const formatTime = (isoString: string): string =>
+  new Date(isoString).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+
 const mapInfinitePagesToHistoryChats = (
   data:
-    | { pages: Array<{ messages: Array<{ id: string; role: string; content: string }> }> }
+    | {
+        pages: Array<{
+          messages: Array<{ id: string; role: string; content: string; createdAt: string }>;
+        }>;
+      }
     | undefined,
 ): ChatMessage[] => {
   if (!data?.pages?.length) return [];
@@ -61,6 +72,7 @@ const mapInfinitePagesToHistoryChats = (
       id: msg.id,
       user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
+      createdAt: msg.createdAt,
     }));
 };
 
@@ -176,6 +188,7 @@ const Container = () => {
       id: crypto.randomUUID(),
       user: CHAT_USER.ME,
       message: trimmedMessage,
+      createdAt: new Date().toISOString(),
     };
     setNewChats((prev) => [...prev, userMessage]);
 
@@ -272,6 +285,11 @@ const Container = () => {
               <Chat
                 key={chat.id}
                 user={chat.user}
+                time={
+                  chat.user === CHAT_USER.ME && chat.createdAt
+                    ? formatTime(chat.createdAt)
+                    : undefined
+                }
                 message={chat.message}
                 showIcon={!isStreaming && index === lastAIIndex}
               />

@@ -7,14 +7,16 @@ import { containerVariants } from './chatVariants';
 type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
   message: string;
+  time?: string;
   isStreaming?: boolean;
   showIcon?: boolean;
 };
 
 export const Chat = (props: Props) => {
-  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone } = props;
+  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone, time } = props;
+  const isMe = user === CHAT_USER.ME;
 
-  return (
+  const bubble = (
     <div className={cn(containerVariants({ user, tone }))}>
       <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">
         {message}
@@ -32,4 +34,15 @@ export const Chat = (props: Props) => {
       ) : null}
     </div>
   );
+
+  if (isMe) {
+    return (
+      <div className="flex items-end gap-[0.6rem] self-end">
+        {time && <span className="caption shrink-0 text-text-assistive">{time}</span>}
+        {bubble}
+      </div>
+    );
+  }
+
+  return bubble;
 };
