@@ -44,7 +44,13 @@ export const MainContainer = async ({ session }: Props) => {
           }}
           aria-hidden
         >
-          <Image src={GradientBg} alt="" fill className="object-cover" sizes="100dvw" />
+          <Image
+            src={GradientBg}
+            alt="Decorative gradient background"
+            fill
+            className="object-cover"
+            sizes="100dvw"
+          />
         </div>
 
         <MainBody />
