@@ -6,7 +6,7 @@ import {
   DocumentIcon,
 } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { type SessionItem, type SessionStatus } from '@/lib';
+import { formatDate, type SessionItem, type SessionStatus } from '@/lib';
 
 const SESSION_STATUS_TO_CARD: Record<
   SessionStatus,
@@ -16,12 +16,6 @@ const SESSION_STATUS_TO_CARD: Record<
   SUMMARIZING: CHAT_CARD_STATUS.LOADING,
   CLOSED: CHAT_CARD_STATUS.DEFAULT,
   FAILED: CHAT_CARD_STATUS.ERROR,
-};
-
-const formatDate = (isoDate: string) => {
-  const datePart = isoDate.split('T')[0] ?? '';
-  if (datePart.length < 10) return '';
-  return datePart.slice(2).replace(/-/g, '.');
 };
 
 type Props = {
