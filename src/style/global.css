@@ -515,6 +515,11 @@
   animation: text-caret-blink 1.06s linear infinite;
 }
 
+@utility progress-gradient {
+  background: -webkit-linear-gradient(left, #858a8a 0%, #47efe4 143.7%);
+  background: linear-gradient(90deg, #858a8a 0%, #47efe4 143.7%);
+}
+
 /* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */
 @keyframes chat-color-symbol-soft-blink {
   0%,

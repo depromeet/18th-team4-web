@@ -275,7 +275,7 @@ const Container = () => {
           variant={HEADER_VARIANT.CHAT}
           summarizeActive={canSummarize}
           onBack={() => router.back()}
-          onCta={open}
+          progress={30}
         />
 
         <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">

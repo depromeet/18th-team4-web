@@ -12,6 +12,7 @@ type HeaderProps = React.ComponentProps<'header'> &
     summarizeActive?: boolean;
     onBack?: () => void;
     onCta?: () => void;
+    progress?: number;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
@@ -23,6 +24,7 @@ export const Header = (props: HeaderProps) => {
     summarizeActive = false,
     onBack,
     onCta,
+    progress,
     ...rest
   } = props;
 
@@ -67,17 +69,6 @@ export const Header = (props: HeaderProps) => {
 
       {variant === HEADER_VARIANT.CHAT && (
         <div className="relative">
-          <button
-            aria-label="요약하기"
-            disabled={!summarizeActive}
-            onClick={onCta}
-            className={cn('body1-bold tracking-[-0.048rem]', {
-              'cursor-pointer text-icon-primary': summarizeActive,
-              'cursor-default text-icon-disabled': !summarizeActive,
-            })}
-          >
-            요약하기
-          </button>
           {summarizeActive && (
             <div className="absolute right-0 top-[calc(100%+1.3rem)] z-50">
               <Tooltip
@@ -88,6 +79,15 @@ export const Header = (props: HeaderProps) => {
               />
             </div>
           )}
+        </div>
+      )}
+
+      {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
+        <div className="absolute bottom-0 left-0 h-[0.3rem] w-full bg-gray-alpha-100">
+          <div
+            className="progress-gradient h-full rounded-r-full transition-[width] duration-300 ease-out"
+            style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+          />
         </div>
       )}
     </header>
