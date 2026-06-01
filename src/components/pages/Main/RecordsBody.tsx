@@ -6,6 +6,7 @@ import { Header, HEADER_VARIANT, Loading } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
   setLastSelectedUserBookIdClient,
+  toLocalDateString,
   useCalendarStore,
   useCreateSession,
   useGetSessions,
@@ -59,8 +60,8 @@ export const RecordsBody = (props: Props) => {
 
   const filteredSessions = sessions.filter((s) => s.lastChattedDate.startsWith(selectedDate));
 
-  const isEmpty = !isPending && sessions.length === 0;
-  const isDateEmpty = !isPending && sessions.length > 0 && filteredSessions.length === 0;
+  const isToday = selectedDate === toLocalDateString(new Date());
+  const isEmpty = !isPending && filteredSessions.length === 0;
 
   const openToast = useToastStore((s) => s.openToast);
 
@@ -101,9 +102,9 @@ export const RecordsBody = (props: Props) => {
             <Loading />
           </div>
         ) : isEmpty ? (
-          <EmptyState message="첫 대화를 시작해볼까요?" />
-        ) : isDateEmpty ? (
-          <EmptyState message="이 날은 대화 기록이 없어요" />
+          <EmptyState
+            message={isToday ? '첫 대화를 시작해볼까요?' : '이 날은 대화 기록이 없어요'}
+          />
         ) : (
           <SessionList
             sessions={sessions}
