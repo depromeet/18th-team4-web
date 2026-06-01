@@ -60,6 +60,14 @@ export const CalendarView = (props: Props) => {
     }
   };
 
+  const handleWeekClick = () => setView('week');
+  const handleMonthClick = () => setView('month');
+
+  const handleTodayClick = () => {
+    setBaseDateMs(new Date().getTime());
+    onDaySelect?.(todayStr);
+  };
+
   const monday = getMondayOfWeek(baseDate);
   const weekDays: WeekDay[] = WEEK_LABELS.map((label, i) => {
     const d = addDays(monday, i);
@@ -95,7 +103,7 @@ export const CalendarView = (props: Props) => {
           />
           <button
             type="button"
-            onClick={() => setView('week')}
+            onClick={handleWeekClick}
             className={cn(
               'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-caption1 font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
               view === 'week' ? 'text-white' : 'text-text-caption',
@@ -105,7 +113,7 @@ export const CalendarView = (props: Props) => {
           </button>
           <button
             type="button"
-            onClick={() => setView('month')}
+            onClick={handleMonthClick}
             className={cn(
               'relative z-10 flex-1 cursor-pointer rounded-full px-[1rem] py-[0.6rem] text-center text-caption1 font-semibold leading-none tracking-[-0.024em] transition-colors duration-200',
               view === 'month' ? 'text-white' : 'text-text-caption',
@@ -118,10 +126,7 @@ export const CalendarView = (props: Props) => {
         <div className="flex items-center gap-[0.8rem]">
           <button
             type="button"
-            onClick={() => {
-              setBaseDateMs(new Date().getTime());
-              onDaySelect?.(todayStr);
-            }}
+            onClick={handleTodayClick}
             className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[0.8rem] py-[0.4rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
           >
             오늘
