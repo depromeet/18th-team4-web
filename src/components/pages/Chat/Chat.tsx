@@ -4,6 +4,7 @@ import { Chatbot } from '@/assets';
 import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
 import { containerVariants } from './chatVariants';
+import { TypingDots } from './TypingDots';
 
 type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
@@ -20,14 +21,9 @@ export const Chat = (props: Props) => {
   const bubble = (
     <div className={cn(containerVariants({ user, tone }))}>
       {showIcon ? <Image src={Chatbot} alt="chatbot" width={32} height={32} /> : null}
+      {isStreaming && !message ? <TypingDots /> : null}
       <p className="body2-semibold whitespace-pre-wrap break-words text-text-default pt-[0.6rem]">
         {message}
-        {isStreaming ? (
-          <span
-            aria-hidden
-            className="animate-text-caret-blink ml-px inline-block h-[0.95em] w-px bg-current align-baseline motion-reduce:animate-none motion-reduce:opacity-85"
-          />
-        ) : null}
       </p>
     </div>
   );

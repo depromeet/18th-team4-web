@@ -59,6 +59,7 @@
   --color-icon-tertiary: #595c5c;
   --color-icon-secondary: #2f3131;
   --color-icon-primary: #171c1b;
+  --color-icon-dot: #c0c6c6;
 
   --color-background-primary-base: #f1f2f6;
   --color-background-primary-white: #ffffff;
@@ -336,6 +337,23 @@
     opacity: 0;
     transform: translateY(min(40vh, 28rem));
   }
+}
+
+@keyframes typing-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-typing-dot {
+  animation: typing-dot 1.8s ease-in-out infinite;
 }
 
 @utility animate-modal-sheet-exit {
