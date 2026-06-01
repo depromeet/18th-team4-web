@@ -16,7 +16,7 @@ export const toLocalDateString = (d: Date) =>
  * @returns 'YY.MM.DD' 형식의 문자열. 잘못된 형식인 경우 빈 문자열을 반환합니다.
  *
  * @example
- * formatShortDate('2026-06-02T10:00:00Z'); // '26.06.02'
+ * formatDate('2026-06-02T10:00:00Z'); // '26.06.02'
  */
 export const formatDate = (isoDate: string) => {
   const datePart = isoDate.split('T')[0] ?? '';
