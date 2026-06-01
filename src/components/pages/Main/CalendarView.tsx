@@ -9,8 +9,7 @@ type View = 'week' | 'month';
 type WeekDay = Parameters<typeof WeekStreak>[0]['days'][number];
 
 type Props = {
-  streakDates?: string[]; 
-  className?: string;
+  streakDates?: string[];
   selectedDate?: string;
   onDaySelect?: (dateStr: string) => void;
 };
@@ -29,7 +28,7 @@ const getMondayOfWeek = (d: Date) => {
 };
 
 export const CalendarView = (props: Props) => {
-  const { streakDates = [], className, selectedDate, onDaySelect } = props;
+  const { streakDates = [], selectedDate, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
   const setView = useCalendarStore((s) => s.setView);
   const baseDateMs = useCalendarStore((s) => s.baseDateMs);
@@ -84,7 +83,7 @@ export const CalendarView = (props: Props) => {
     .map((s) => Number(s.split('-')[2]));
 
   return (
-    <div className={cn('flex flex-col', className)}>
+    <div className="flex flex-col">
       <div className="flex items-center justify-between px-[2rem] pb-[0.8rem]">
         <div className="relative flex items-center rounded-full bg-gray-alpha-50 px-[0.5rem] py-[0.4rem] shadow-[inset_0px_0px_4px_0px_rgba(23,28,27,0.03)]">
           <div
