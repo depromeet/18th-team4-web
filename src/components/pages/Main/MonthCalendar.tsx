@@ -1,8 +1,7 @@
 'use client';
 
+import { DAY_LABELS } from '@/constants';
 import { cn } from '@/lib';
-
-const DAY_LABELS = ['월', '화', '수', '목', '금', '토', '일'] as const;
 
 type DayState = 'default' | 'active' | 'future' | 'disabled';
 

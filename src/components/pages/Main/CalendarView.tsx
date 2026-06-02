@@ -1,6 +1,7 @@
 'use client';
 
 import { ChevronIcon } from '@/components';
+import { DAY_LABELS } from '@/constants';
 import { cn, toLocalDateString, useCalendarStore } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
 import { WeekStreak } from './WeekStreak';
@@ -13,8 +14,6 @@ type Props = {
   selectedDate?: string;
   onDaySelect?: (dateStr: string) => void;
 };
-
-const WEEK_LABELS = ['월', '화', '수', '목', '금', '토', '일'] as const;
 
 const addDays = (d: Date, n: number) => {
   const r = new Date(d);
@@ -69,7 +68,7 @@ export const CalendarView = (props: Props) => {
   };
 
   const monday = getMondayOfWeek(baseDate);
-  const weekDays: WeekDay[] = WEEK_LABELS.map((label, i) => {
+  const weekDays: WeekDay[] = DAY_LABELS.map((label, i) => {
     const d = addDays(monday, i);
     d.setHours(0, 0, 0, 0);
     const dateStr = toLocalDateString(d);
