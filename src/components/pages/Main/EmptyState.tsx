@@ -9,7 +9,7 @@ export const EmptyState = (props: Props) => {
   const { message } = props;
 
   return (
-    <div className="mt-40 flex flex-col items-center">
+    <div className="flex flex-1 flex-col items-center justify-center pb-[12rem]">
       <div className="relative h-90 w-[26.7rem] shrink-0 overflow-hidden">
         <Image
           src={emptyIcon}
