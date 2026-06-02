@@ -68,25 +68,25 @@ export const OnboardingContainer = () => {
   if (isLastStep) {
     return (
       <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
-        <div className="relative z-10 flex flex-col items-center pt-[4.9rem]">
+        <section className="relative z-10 flex flex-col items-center pt-[4.9rem]">
           <StepProgress stepIds={stepIds} activeId={step.id} />
 
-          <div className="mt-[5.2rem] flex flex-col items-center">
+          <figure className="mt-[5.2rem] flex flex-col items-center">
             <Image src={Logo} alt="Readum" priority className="h-[3.8rem] w-[21rem] object-contain" />
-            <p className="title1-bold mt-[1.8rem] text-center tracking-[-0.054rem] text-[#323539]">
+            <figcaption className="title1-bold mt-[1.8rem] text-center tracking-[-0.054rem] text-[#323539]">
               사유하는 독서가인
               <br />
               당신을 위해
-            </p>
-          </div>
+            </figcaption>
+          </figure>
           <div className="relative mt-[1.9rem] h-[16.8rem] w-[22.1rem]">
             {step.image && (
               <Image src={step.image} alt="Readum book" fill priority className="object-contain" />
             )}
           </div>
-        </div>
+        </section>
 
-        <div className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2rem] pt-[4rem]">
+        <footer className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2rem] pt-[4rem]">
           <button
             type="button"
             className="body1-bold flex h-[6rem] w-full cursor-pointer items-center justify-center gap-[1rem] rounded-2xl bg-[#FFE812] text-text-default"
@@ -103,20 +103,20 @@ export const OnboardingContainer = () => {
           >
             로그인 없이 시작하기
           </Button>
-        </div>
+        </footer>
       </main>
     );
   }
 
   return (
     <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
-      <div className="relative z-10 flex flex-col items-center pt-[4.9rem]">
+      <section className="relative z-10 flex flex-col items-center pt-[4.9rem]">
         <StepProgress stepIds={stepIds} activeId={step.id} />
 
         <h1 className="headline1-extrabold mt-[5.2rem] px-[2.4rem] text-center tracking-[-0.072rem] text-text-default">
           {step.title}
         </h1>
-      </div>
+      </section>
 
       {step.image && (
         <Image
@@ -128,11 +128,11 @@ export const OnboardingContainer = () => {
         />
       )}
 
-      <div className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
+      <footer className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
         <Button variant={BUTTON_VARIANT.BLACK} size="lg" className="w-full" onClick={handleNextClick}>
           다음
         </Button>
-      </div>
+      </footer>
     </main>
   );
 };
