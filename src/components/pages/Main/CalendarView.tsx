@@ -51,6 +51,12 @@ export const CalendarView = (props: Props) => {
   const handleWeekClick = () => setView('week');
   const handleMonthClick = () => setView('month');
 
+  const handleDaySelect = (dateStr: string) => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    if (y && m && d) setBaseDateMs(new Date(y, m - 1, d).getTime());
+    onDaySelect?.(dateStr);
+  };
+
   const handleTodayClick = () => {
     setBaseDateMs(new Date().getTime());
     onDaySelect?.(todayStr);
@@ -133,7 +139,8 @@ export const CalendarView = (props: Props) => {
           streakDates={streakDaysForMonth}
           todayDate={today}
           selectedDate={selectedDate}
-          onDayClick={onDaySelect}
+          activeDate={toLocalDateString(baseDate)}
+          onDayClick={handleDaySelect}
           view={view}
         />
       </div>

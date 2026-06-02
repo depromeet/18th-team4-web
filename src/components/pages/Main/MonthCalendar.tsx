@@ -20,6 +20,7 @@ type Props = {
   todayDate?: Date;
   className?: string;
   selectedDate?: string;
+  activeDate?: string;
   onDayClick?: (dateStr: string) => void;
   view?: 'week' | 'month';
 };
@@ -96,15 +97,17 @@ export const MonthCalendar = (props: Props) => {
     todayDate,
     className,
     selectedDate,
+    activeDate,
     onDayClick,
     view = 'month',
   } = props;
   const weeks = buildWeeks(year, month, streakDates, todayDate);
 
+  const activeRowDate = activeDate ?? selectedDate;
   const activeRowIndex = Math.max(
     0,
     weeks.findIndex((week) =>
-      week.some((cell) => cell.isCurrentMonth && cell.dateStr === selectedDate),
+      week.some((cell) => cell.isCurrentMonth && cell.dateStr === activeRowDate),
     ),
   );
   const isWeek = view === 'week';
