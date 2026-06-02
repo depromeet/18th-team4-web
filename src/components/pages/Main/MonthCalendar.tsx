@@ -1,12 +1,13 @@
 'use client';
 
 import { DAY_LABELS } from '@/constants';
-import { cn } from '@/lib';
+import { cn, toLocalDateString } from '@/lib';
 
 type DayState = 'default' | 'active' | 'future' | 'disabled';
 
 type DayCell = {
   date: number;
+  dateStr: string;
   isCurrentMonth: boolean;
   state: DayState;
   isToday: boolean;
@@ -38,8 +39,11 @@ const buildWeeks = (
   const streakSet = new Set(streakDates);
 
   for (let i = 0; i < firstDayIndex; i++) {
+    const date = prevMonthDays - firstDayIndex + 1 + i;
+    const cellDate = new Date(year, month - 2, date);
     cells.push({
-      date: prevMonthDays - firstDayIndex + 1 + i,
+      date,
+      dateStr: toLocalDateString(cellDate),
       isCurrentMonth: false,
       state: 'disabled',
       isToday: false,
@@ -56,6 +60,7 @@ const buildWeeks = (
       todayDate.getDate() === d;
     cells.push({
       date: d,
+      dateStr: toLocalDateString(cellDate),
       isCurrentMonth: true,
       state: isFuture ? 'future' : streakSet.has(d) ? 'active' : 'default',
       isToday,
@@ -64,7 +69,14 @@ const buildWeeks = (
 
   const remaining = (7 - (cells.length % 7)) % 7;
   for (let d = 1; d <= remaining; d++) {
-    cells.push({ date: d, isCurrentMonth: false, state: 'disabled', isToday: false });
+    const cellDate = new Date(year, month, d);
+    cells.push({
+      date: d,
+      dateStr: toLocalDateString(cellDate),
+      isCurrentMonth: false,
+      state: 'disabled',
+      isToday: false,
+    });
   }
 
   const weeks: DayCell[][] = [];
@@ -80,19 +92,18 @@ export const MonthCalendar = (props: Props) => {
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
-      {weeks.map((week, weekIndex) => (
-        <div key={weekIndex} className="flex w-full items-center px-[1.4rem]">
+      {weeks.map((week) => (
+        <div key={week[0]?.dateStr} className="flex w-full items-center px-[1.4rem]">
           {week.map((cell, dayIndex) => {
-            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(cell.date).padStart(2, '0')}`;
-            const isSelected = cell.isCurrentMonth && dateStr === selectedDate;
+            const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
             const isClickable = cell.isCurrentMonth && cell.state !== 'future';
 
             return (
               <button
-                key={dayIndex}
+                key={cell.dateStr}
                 type="button"
                 disabled={!isClickable}
-                onClick={() => isClickable && onDayClick?.(dateStr)}
+                onClick={() => isClickable && onDayClick?.(cell.dateStr)}
                 className={cn(
                   'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
                   'cursor-pointer disabled:cursor-default',
