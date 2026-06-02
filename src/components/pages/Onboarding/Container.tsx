@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { type ReactNode, useState, useTransition } from 'react';
 import { completeOnboardingAction } from '@/app/actions/users';
 import { HomeLogo, Kakao, Logo, Onboarding1, Onboarding2 } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
@@ -10,7 +10,7 @@ import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 
 type Step = {
-  title: React.ReactNode;
+  title: ReactNode;
   image: StaticImageData | null;
 };
 
@@ -101,7 +101,8 @@ export const OnboardingContainer = () => {
       {!isLastStep && step.image && (
         <Image
           src={step.image}
-          alt="Onboarding character"
+          alt=""
+          aria-hidden
           priority
           className="pointer-events-none absolute inset-x-0 bottom-[-7.8rem] h-auto w-full"
         />
