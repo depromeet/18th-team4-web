@@ -7,15 +7,17 @@ import { completeOnboardingAction } from '@/app/actions/users';
 import { HomeLogo, Kakao, Logo, Onboarding1, Onboarding2 } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { cn } from '@/lib';
+import { StepProgress } from './StepProgress';
 
 type Step = {
+  id: string;
   title: ReactNode;
   image: StaticImageData | null;
 };
 
 const STEPS: Step[] = [
   {
+    id: 'intro',
     title: (
       <>
         읽은 것을 내 것으로,
@@ -26,6 +28,7 @@ const STEPS: Step[] = [
     image: Onboarding1,
   },
   {
+    id: 'organize',
     title: (
       <>
         대화만 나눠도
@@ -36,6 +39,7 @@ const STEPS: Step[] = [
     image: Onboarding2,
   },
   {
+    id: 'login',
     title: null,
     image: HomeLogo,
   },
@@ -48,6 +52,8 @@ export const OnboardingContainer = () => {
 
   const step = STEPS[stepIndex];
   if (!step) return null;
+
+  const stepIds = STEPS.map((s) => s.id);
   const isLastStep = stepIndex === STEPS.length - 1;
 
   const handleNextClick = () => setStepIndex((i) => i + 1);
@@ -59,56 +65,27 @@ export const OnboardingContainer = () => {
     });
   };
 
-  return (
-    <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
-      <div className="relative z-10 flex flex-col items-center pt-[4.9rem]">
-        <div className="flex items-center gap-[0.5rem]">
-          {STEPS.map((_, i) => (
-            <span
-              key={i}
-              aria-hidden
-              className={cn(
-                'block h-[0.6rem] rounded-full transition-all',
-                i === stepIndex ? 'w-[2.6rem] bg-icon-primary' : 'w-[0.6rem] bg-icon-disabled',
-              )}
-            />
-          ))}
+  if (isLastStep) {
+    return (
+      <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
+        <div className="relative z-10 flex flex-col items-center pt-[4.9rem]">
+          <StepProgress stepIds={stepIds} activeId={step.id} />
+
+          <div className="mt-[5.2rem] flex flex-col items-center">
+            <Image src={Logo} alt="Readum" priority className="h-[3.8rem] w-[21rem] object-contain" />
+            <p className="title1-bold mt-[1.8rem] text-center tracking-[-0.054rem] text-[#323539]">
+              사유하는 독서가인
+              <br />
+              당신을 위해
+            </p>
+          </div>
+          <div className="relative mt-[1.9rem] h-[16.8rem] w-[22.1rem]">
+            {step.image && (
+              <Image src={step.image} alt="Readum book" fill priority className="object-contain" />
+            )}
+          </div>
         </div>
 
-        {isLastStep ? (
-          <>
-            <div className="mt-[5.2rem] flex flex-col items-center">
-              <Image src={Logo} alt="Readum" priority className="h-[3.8rem] w-[21rem] object-contain" />
-              <p className="title1-bold mt-[1.8rem] text-center tracking-[-0.054rem] text-[#323539]">
-                사유하는 독서가인
-                <br />
-                당신을 위해
-              </p>
-            </div>
-            <div className="relative mt-[1.9rem] h-[16.8rem] w-[22.1rem]">
-              {step.image && (
-                <Image src={step.image} alt="Readum book" fill priority className="object-contain" />
-              )}
-            </div>
-          </>
-        ) : (
-          <h1 className="headline1-extrabold mt-[5.2rem] px-[2.4rem] text-center tracking-[-0.072rem] text-text-default">
-            {step.title}
-          </h1>
-        )}
-      </div>
-
-      {!isLastStep && step.image && (
-        <Image
-          src={step.image}
-          alt=""
-          aria-hidden
-          priority
-          className="pointer-events-none absolute inset-x-0 bottom-[-7.8rem] h-auto w-full"
-        />
-      )}
-
-      {isLastStep ? (
         <div className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2rem] pt-[4rem]">
           <button
             type="button"
@@ -127,18 +104,35 @@ export const OnboardingContainer = () => {
             로그인 없이 시작하기
           </Button>
         </div>
-      ) : (
-        <div className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
-          <Button
-            variant={BUTTON_VARIANT.BLACK}
-            size="lg"
-            className="w-full"
-            onClick={handleNextClick}
-          >
-            다음
-          </Button>
-        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
+      <div className="relative z-10 flex flex-col items-center pt-[4.9rem]">
+        <StepProgress stepIds={stepIds} activeId={step.id} />
+
+        <h1 className="headline1-extrabold mt-[5.2rem] px-[2.4rem] text-center tracking-[-0.072rem] text-text-default">
+          {step.title}
+        </h1>
+      </div>
+
+      {step.image && (
+        <Image
+          src={step.image}
+          alt=""
+          aria-hidden
+          priority
+          className="pointer-events-none absolute inset-x-0 bottom-[-7.8rem] h-auto w-full"
+        />
       )}
+
+      <div className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
+        <Button variant={BUTTON_VARIANT.BLACK} size="lg" className="w-full" onClick={handleNextClick}>
+          다음
+        </Button>
+      </div>
     </main>
   );
 };
