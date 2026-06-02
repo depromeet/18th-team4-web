@@ -1,60 +1,24 @@
 'use client';
 
-import Image, { type StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { type ReactNode, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { completeOnboardingAction } from '@/app/actions';
-import { HomeLogo, Kakao, Logo, Onboarding1, Onboarding2 } from '@/assets';
+import { Kakao, Logo } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
-import { PATH_NAME } from '@/constants';
+import { ONBOARDING_STEPS, PATH_NAME } from '@/constants';
 import { StepProgress } from './StepProgress';
-
-type Step = {
-  id: string;
-  title: ReactNode;
-  image: StaticImageData | null;
-};
-
-const STEPS: Step[] = [
-  {
-    id: 'intro',
-    title: (
-      <>
-        읽은 것을 내 것으로,
-        <br />
-        나만의 AI 독서 친구
-      </>
-    ),
-    image: Onboarding1,
-  },
-  {
-    id: 'organize',
-    title: (
-      <>
-        대화만 나눠도
-        <br />
-        깔끔하게 정리되는 생각
-      </>
-    ),
-    image: Onboarding2,
-  },
-  {
-    id: 'login',
-    title: null,
-    image: HomeLogo,
-  },
-];
 
 export const OnboardingContainer = () => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [stepIndex, setStepIndex] = useState(0);
 
-  const step = STEPS[stepIndex];
+  const step = ONBOARDING_STEPS[stepIndex];
   if (!step) return null;
 
-  const stepIds = STEPS.map((s) => s.id);
-  const isLastStep = stepIndex === STEPS.length - 1;
+  const stepIds = ONBOARDING_STEPS.map((s) => s.id);
+  const isLastStep = stepIndex === ONBOARDING_STEPS.length - 1;
 
   const handleNextClick = () => setStepIndex((i) => i + 1);
 
