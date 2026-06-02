@@ -34,12 +34,15 @@ export const CalendarView = (props: Props) => {
   today.setHours(0, 0, 0, 0);
   const todayStr = toLocalDateString(today);
 
-  // 스트립 범위: 첫 기록(streak)이 있는 주 ~ 이번 달 마지막 주. 과거는 데이터만큼만, 미래는 막음.
   const earliestStr = streakDates.length ? streakDates.reduce((a, b) => (a < b ? a : b)) : todayStr;
   const [ey, em, ed] = earliestStr.split('-').map(Number);
   const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : today;
   const rangeStart = startOfWeek(earliestDate.getTime() < today.getTime() ? earliestDate : today);
-  const rangeEndWeek = startOfWeek(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+  // 스트립 끝: baseDate(또는 오늘) 기준 한 달 버퍼까지 — 미래로 계속 넘어갈 수 있도록 확장.
+  const futureAnchor = baseDate.getTime() > today.getTime() ? baseDate : today;
+  const rangeEndWeek = startOfWeek(
+    new Date(futureAnchor.getFullYear(), futureAnchor.getMonth() + 2, 0),
+  );
   const rangeStartMs = rangeStart.getTime();
   const rangeEndMs = rangeEndWeek.getTime();
 
@@ -47,11 +50,9 @@ export const CalendarView = (props: Props) => {
   const firstWeekOfMonthMs = startOfWeek(
     new Date(baseDate.getFullYear(), baseDate.getMonth(), 1),
   ).getTime();
-  const isCurrentMonth =
-    baseDate.getFullYear() === today.getFullYear() && baseDate.getMonth() === today.getMonth();
 
   const canPrev = view === 'week' ? baseWeekMs > rangeStartMs : firstWeekOfMonthMs > rangeStartMs;
-  const canNext = view === 'week' ? baseWeekMs < rangeEndMs : !isCurrentMonth;
+  const canNext = true;
 
   const handlePrevClick = () => {
     if (!canPrev) return;
