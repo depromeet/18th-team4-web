@@ -3,7 +3,7 @@
 import Image, { type StaticImageData } from 'next/image';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useState, useTransition } from 'react';
-import { completeOnboardingAction } from '@/app/actions/users';
+import { completeOnboardingAction } from '@/app/actions';
 import { HomeLogo, Kakao, Logo, Onboarding1, Onboarding2 } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
