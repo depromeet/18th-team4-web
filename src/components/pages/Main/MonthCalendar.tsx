@@ -97,13 +97,16 @@ export const MonthCalendar = (props: Props) => {
           {week.map((cell, dayIndex) => {
             const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
             const isClickable = cell.isCurrentMonth && cell.state !== 'future';
+            const handleClick = () => {
+              if (isClickable) onDayClick?.(cell.dateStr);
+            };
 
             return (
               <button
                 key={cell.dateStr}
                 type="button"
                 disabled={!isClickable}
-                onClick={() => isClickable && onDayClick?.(cell.dateStr)}
+                onClick={handleClick}
                 className={cn(
                   'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
                   'cursor-pointer disabled:cursor-default',
