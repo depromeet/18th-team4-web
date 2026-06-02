@@ -24,7 +24,6 @@ type Props = {
   view?: 'week' | 'month';
 };
 
-const ROW_HEIGHT_REM = 6.2;
 
 const buildWeeks = (
   year: number,
@@ -111,21 +110,17 @@ export const MonthCalendar = (props: Props) => {
   const isWeek = view === 'week';
 
   return (
-    <div
-      className={cn(
-        'overflow-hidden transition-[max-height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
-        isWeek ? 'max-h-[6.2rem]' : 'max-h-[37.2rem]',
-        className,
-      )}
-    >
-      <div
-        className="flex w-full flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
-        style={{
-          transform: isWeek ? `translateY(-${activeRowIndex * ROW_HEIGHT_REM}rem)` : 'translateY(0)',
-        }}
-      >
-      {weeks.map((week) => (
-        <div key={week[0]?.dateStr} className="flex w-full items-center px-[1.4rem]">
+    <div className={cn('flex w-full flex-col', className)}>
+      {weeks.map((week, weekIndex) => (
+        <div
+          key={week[0]?.dateStr}
+          className={cn(
+            'grid transition-[grid-template-rows] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+            isWeek && weekIndex !== activeRowIndex ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]',
+          )}
+        >
+          <div className="overflow-hidden">
+            <div className="flex w-full items-center px-[1.4rem]">
           {week.map((cell, dayIndex) => {
             const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
             const isClickable = cell.isCurrentMonth && cell.state !== 'future';
@@ -178,9 +173,10 @@ export const MonthCalendar = (props: Props) => {
               </button>
             );
           })}
+            </div>
+          </div>
         </div>
       ))}
-      </div>
     </div>
   );
 };
