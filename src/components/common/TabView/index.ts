@@ -1,1 +1,1 @@
-export { type TabItem, TabView, type TabViewProps } from './TabView';
+export { type TabItem, TabView } from './TabView';

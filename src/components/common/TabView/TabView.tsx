@@ -11,7 +11,7 @@ export type TabItem = {
   content: ReactNode;
 };
 
-export type TabViewProps = {
+type Props = {
   tabs: TabItem[];
   value?: string;
   defaultValue?: string;
@@ -28,7 +28,7 @@ export type TabViewProps = {
  *
  * `onValueChange` 등 함수 prop은 클라이언트 컴포넌트에서만 전달할 수 있다.
  */
-export const TabView = (props: TabViewProps) => {
+export const TabView = (props: Props) => {
   const { tabs, value, defaultValue, onValueChange, className } = props;
 
   const baseId = useId();
