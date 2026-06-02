@@ -1,13 +1,8 @@
 'use client';
 
 import { ChevronIcon } from '@/components';
-import { DAY_LABELS } from '@/constants';
 import { cn, toLocalDateString, useCalendarStore } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
-import { WeekStreak } from './WeekStreak';
-
-type View = 'week' | 'month';
-type WeekDay = Parameters<typeof WeekStreak>[0]['days'][number];
 
 type Props = {
   streakDates?: string[];
@@ -21,11 +16,6 @@ const addDays = (d: Date, n: number) => {
   return r;
 };
 
-const getMondayOfWeek = (d: Date) => {
-  const diff = (d.getDay() + 6) % 7;
-  return addDays(d, -diff);
-};
-
 export const CalendarView = (props: Props) => {
   const { streakDates = [], selectedDate, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
@@ -37,7 +27,6 @@ export const CalendarView = (props: Props) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const todayStr = toLocalDateString(today);
-  const streakSet = new Set(streakDates);
 
   const handlePrevClick = () => {
     if (view === 'week') {
@@ -66,18 +55,6 @@ export const CalendarView = (props: Props) => {
     setBaseDateMs(new Date().getTime());
     onDaySelect?.(todayStr);
   };
-
-  const monday = getMondayOfWeek(baseDate);
-  const weekDays: WeekDay[] = DAY_LABELS.map((label, i) => {
-    const d = addDays(monday, i);
-    d.setHours(0, 0, 0, 0);
-    const dateStr = toLocalDateString(d);
-    const isToday = dateStr === todayStr;
-    const isFuture = d > today;
-    const isActive = streakSet.has(dateStr);
-    const state = isFuture ? 'future' : isActive ? 'active' : 'default';
-    return { label, date: d.getDate(), dateStr, state, isToday };
-  });
 
   const year = baseDate.getFullYear();
   const month = baseDate.getMonth() + 1;
@@ -149,19 +126,16 @@ export const CalendarView = (props: Props) => {
         </div>
       </div>
 
-      <div key={`${view}-${year}-${month}`} className="animate-calendar-in">
-        {view === 'week' ? (
-          <WeekStreak days={weekDays} selectedDate={selectedDate} onDayClick={onDaySelect} />
-        ) : (
-          <MonthCalendar
-            year={year}
-            month={month}
-            streakDates={streakDaysForMonth}
-            todayDate={today}
-            selectedDate={selectedDate}
-            onDayClick={onDaySelect}
-          />
-        )}
+      <div key={`${year}-${month}`} className="animate-calendar-in">
+        <MonthCalendar
+          year={year}
+          month={month}
+          streakDates={streakDaysForMonth}
+          todayDate={today}
+          selectedDate={selectedDate}
+          onDayClick={onDaySelect}
+          view={view}
+        />
       </div>
     </div>
   );

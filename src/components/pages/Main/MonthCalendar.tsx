@@ -21,7 +21,10 @@ type Props = {
   className?: string;
   selectedDate?: string;
   onDayClick?: (dateStr: string) => void;
+  view?: 'week' | 'month';
 };
+
+const ROW_HEIGHT_REM = 6.2;
 
 const buildWeeks = (
   year: number,
@@ -87,11 +90,40 @@ const buildWeeks = (
 };
 
 export const MonthCalendar = (props: Props) => {
-  const { year, month, streakDates = [], todayDate, className, selectedDate, onDayClick } = props;
+  const {
+    year,
+    month,
+    streakDates = [],
+    todayDate,
+    className,
+    selectedDate,
+    onDayClick,
+    view = 'month',
+  } = props;
   const weeks = buildWeeks(year, month, streakDates, todayDate);
 
+  const activeRowIndex = Math.max(
+    0,
+    weeks.findIndex((week) =>
+      week.some((cell) => cell.isCurrentMonth && cell.dateStr === selectedDate),
+    ),
+  );
+  const isWeek = view === 'week';
+
   return (
-    <div className={cn('flex w-full flex-col', className)}>
+    <div
+      className={cn(
+        'overflow-hidden transition-[max-height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        isWeek ? 'max-h-[6.2rem]' : 'max-h-[37.2rem]',
+        className,
+      )}
+    >
+      <div
+        className="flex w-full flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+        style={{
+          transform: isWeek ? `translateY(-${activeRowIndex * ROW_HEIGHT_REM}rem)` : 'translateY(0)',
+        }}
+      >
       {weeks.map((week) => (
         <div key={week[0]?.dateStr} className="flex w-full items-center px-[1.4rem]">
           {week.map((cell, dayIndex) => {
@@ -148,6 +180,7 @@ export const MonthCalendar = (props: Props) => {
           })}
         </div>
       ))}
+      </div>
     </div>
   );
 };
