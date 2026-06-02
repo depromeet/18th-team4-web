@@ -16,6 +16,12 @@ const addDays = (d: Date, n: number) => {
   return r;
 };
 
+const startOfWeek = (d: Date) => {
+  const r = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  r.setDate(r.getDate() - ((r.getDay() + 6) % 7));
+  return r;
+};
+
 export const CalendarView = (props: Props) => {
   const { streakDates = [], selectedDate, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
@@ -28,7 +34,27 @@ export const CalendarView = (props: Props) => {
   today.setHours(0, 0, 0, 0);
   const todayStr = toLocalDateString(today);
 
+  // 스트립 범위: 첫 기록(streak)이 있는 주 ~ 이번 달 마지막 주. 과거는 데이터만큼만, 미래는 막음.
+  const earliestStr = streakDates.length ? streakDates.reduce((a, b) => (a < b ? a : b)) : todayStr;
+  const [ey, em, ed] = earliestStr.split('-').map(Number);
+  const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : today;
+  const rangeStart = startOfWeek(earliestDate.getTime() < today.getTime() ? earliestDate : today);
+  const rangeEndWeek = startOfWeek(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+  const rangeStartMs = rangeStart.getTime();
+  const rangeEndMs = rangeEndWeek.getTime();
+
+  const baseWeekMs = startOfWeek(baseDate).getTime();
+  const firstWeekOfMonthMs = startOfWeek(
+    new Date(baseDate.getFullYear(), baseDate.getMonth(), 1),
+  ).getTime();
+  const isCurrentMonth =
+    baseDate.getFullYear() === today.getFullYear() && baseDate.getMonth() === today.getMonth();
+
+  const canPrev = view === 'week' ? baseWeekMs > rangeStartMs : firstWeekOfMonthMs > rangeStartMs;
+  const canNext = view === 'week' ? baseWeekMs < rangeEndMs : !isCurrentMonth;
+
   const handlePrevClick = () => {
+    if (!canPrev) return;
     if (view === 'week') {
       setBaseDateMs(addDays(baseDate, -7).getTime());
     } else {
@@ -39,6 +65,7 @@ export const CalendarView = (props: Props) => {
   };
 
   const handleNextClick = () => {
+    if (!canNext) return;
     if (view === 'week') {
       setBaseDateMs(addDays(baseDate, 7).getTime());
     } else {
@@ -58,19 +85,9 @@ export const CalendarView = (props: Props) => {
   };
 
   const handleTodayClick = () => {
-    setBaseDateMs(new Date().getTime());
+    setBaseDateMs(today.getTime());
     onDaySelect?.(todayStr);
   };
-
-  const year = baseDate.getFullYear();
-  const month = baseDate.getMonth() + 1;
-
-  const streakDaysForMonth = streakDates
-    .filter((s) => {
-      const [y, m] = s.split('-').map(Number);
-      return y === year && m === month;
-    })
-    .map((s) => Number(s.split('-')[2]));
 
   return (
     <div className="flex flex-col">
@@ -116,34 +133,34 @@ export const CalendarView = (props: Props) => {
           <button
             type="button"
             aria-label="이전"
+            disabled={!canPrev}
             onClick={handlePrevClick}
-            className="flex cursor-pointer items-center justify-center"
+            className="flex cursor-pointer items-center justify-center disabled:cursor-default disabled:opacity-30"
           >
             <ChevronIcon className="rotate-90 size-[2rem] fill-text-caption" />
           </button>
           <button
             type="button"
             aria-label="다음"
+            disabled={!canNext}
             onClick={handleNextClick}
-            className="flex cursor-pointer items-center justify-center"
+            className="flex cursor-pointer items-center justify-center disabled:cursor-default disabled:opacity-30"
           >
             <ChevronIcon className="-rotate-90 size-[2rem] fill-text-caption" />
           </button>
         </div>
       </div>
 
-      <div key={`${year}-${month}`} className="animate-calendar-in">
-        <MonthCalendar
-          year={year}
-          month={month}
-          streakDates={streakDaysForMonth}
-          todayDate={today}
-          selectedDate={selectedDate}
-          activeDate={toLocalDateString(baseDate)}
-          onDayClick={handleDaySelect}
-          view={view}
-        />
-      </div>
+      <MonthCalendar
+        baseDateMs={baseDateMs}
+        view={view}
+        rangeStartMs={rangeStartMs}
+        rangeEndMs={rangeEndMs}
+        streakDates={streakDates}
+        todayDate={today}
+        selectedDate={selectedDate}
+        onDayClick={handleDaySelect}
+      />
     </div>
   );
 };

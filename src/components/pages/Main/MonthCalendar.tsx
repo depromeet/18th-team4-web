@@ -13,173 +13,191 @@ type DayCell = {
   isToday: boolean;
 };
 
-type Props = {
-  year: number;
-  month: number;
-  streakDates?: number[];
-  todayDate?: Date;
-  className?: string;
-  selectedDate?: string;
-  activeDate?: string;
-  onDayClick?: (dateStr: string) => void;
-  view?: 'week' | 'month';
+type WeekRow = {
+  key: string;
+  days: DayCell[];
 };
 
+type Props = {
+  baseDateMs: number;
+  view: 'week' | 'month';
+  rangeStartMs: number;
+  rangeEndMs: number;
+  streakDates?: string[];
+  todayDate?: Date;
+  selectedDate?: string;
+  className?: string;
+  onDayClick?: (dateStr: string) => void;
+};
 
-const buildWeeks = (
-  year: number,
-  month: number,
-  streakDates: number[],
+const ROW_HEIGHT_REM = 6.2;
+const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+
+const addDays = (d: Date, n: number) => {
+  const r = new Date(d);
+  r.setDate(r.getDate() + n);
+  return r;
+};
+
+const startOfWeek = (d: Date) => {
+  const r = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  r.setDate(r.getDate() - ((r.getDay() + 6) % 7));
+  return r;
+};
+
+const weekDiff = (fromMs: number, toMs: number) => Math.round((toMs - fromMs) / MS_PER_WEEK);
+
+const buildStrip = (
+  rangeStartMs: number,
+  weekCount: number,
+  focusYear: number,
+  focusMonth: number,
+  streakSet: Set<string>,
   todayDate?: Date,
-): DayCell[][] => {
-  const firstOfMonth = new Date(year, month - 1, 1);
-  const daysInMonth = new Date(year, month, 0).getDate();
-  const prevMonthDays = new Date(year, month - 1, 0).getDate();
+): WeekRow[] => {
+  const rangeStart = new Date(rangeStartMs);
+  const rows: WeekRow[] = [];
 
-  const firstDayIndex = (firstOfMonth.getDay() + 6) % 7;
+  for (let w = 0; w < weekCount; w++) {
+    const weekStart = addDays(rangeStart, w * 7);
+    const days: DayCell[] = [];
 
-  const cells: DayCell[] = [];
-  const streakSet = new Set(streakDates);
+    for (let i = 0; i < 7; i++) {
+      const cellDate = addDays(weekStart, i);
+      const dateStr = toLocalDateString(cellDate);
+      const isCurrentMonth =
+        cellDate.getFullYear() === focusYear && cellDate.getMonth() === focusMonth;
+      const isFuture = todayDate !== undefined && cellDate > todayDate;
+      const isToday =
+        todayDate !== undefined &&
+        cellDate.getFullYear() === todayDate.getFullYear() &&
+        cellDate.getMonth() === todayDate.getMonth() &&
+        cellDate.getDate() === todayDate.getDate();
+      const state: DayState = !isCurrentMonth
+        ? 'disabled'
+        : isFuture
+          ? 'future'
+          : streakSet.has(dateStr)
+            ? 'active'
+            : 'default';
 
-  for (let i = 0; i < firstDayIndex; i++) {
-    const date = prevMonthDays - firstDayIndex + 1 + i;
-    const cellDate = new Date(year, month - 2, date);
-    cells.push({
-      date,
-      dateStr: toLocalDateString(cellDate),
-      isCurrentMonth: false,
-      state: 'disabled',
-      isToday: false,
-    });
+      days.push({ date: cellDate.getDate(), dateStr, isCurrentMonth, state, isToday });
+    }
+
+    rows.push({ key: toLocalDateString(weekStart), days });
   }
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const cellDate = new Date(year, month - 1, d);
-    const isFuture = todayDate !== undefined && cellDate > todayDate;
-    const isToday =
-      todayDate !== undefined &&
-      todayDate.getFullYear() === year &&
-      todayDate.getMonth() + 1 === month &&
-      todayDate.getDate() === d;
-    cells.push({
-      date: d,
-      dateStr: toLocalDateString(cellDate),
-      isCurrentMonth: true,
-      state: isFuture ? 'future' : streakSet.has(d) ? 'active' : 'default',
-      isToday,
-    });
-  }
-
-  const remaining = (7 - (cells.length % 7)) % 7;
-  for (let d = 1; d <= remaining; d++) {
-    const cellDate = new Date(year, month, d);
-    cells.push({
-      date: d,
-      dateStr: toLocalDateString(cellDate),
-      isCurrentMonth: false,
-      state: 'disabled',
-      isToday: false,
-    });
-  }
-
-  const weeks: DayCell[][] = [];
-  for (let i = 0; i < cells.length; i += 7) {
-    weeks.push(cells.slice(i, i + 7));
-  }
-  return weeks;
+  return rows;
 };
 
 export const MonthCalendar = (props: Props) => {
   const {
-    year,
-    month,
+    baseDateMs,
+    view,
+    rangeStartMs,
+    rangeEndMs,
     streakDates = [],
     todayDate,
-    className,
     selectedDate,
-    activeDate,
+    className,
     onDayClick,
-    view = 'month',
   } = props;
-  const weeks = buildWeeks(year, month, streakDates, todayDate);
 
-  const activeRowDate = activeDate ?? selectedDate;
-  const activeRowIndex = Math.max(
-    0,
-    weeks.findIndex((week) =>
-      week.some((cell) => cell.isCurrentMonth && cell.dateStr === activeRowDate),
-    ),
-  );
+  const baseDate = new Date(baseDateMs);
+  const focusYear = baseDate.getFullYear();
+  const focusMonth = baseDate.getMonth();
+
+  const weekCount = weekDiff(rangeStartMs, rangeEndMs) + 1;
+  const streakSet = new Set(streakDates);
+  const weeks = buildStrip(rangeStartMs, weekCount, focusYear, focusMonth, streakSet, todayDate);
+
   const isWeek = view === 'week';
 
-  return (
-    <div className={cn('flex w-full flex-col', className)}>
-      {weeks.map((week, weekIndex) => (
-        <div
-          key={week[0]?.dateStr}
-          className={cn(
-            'grid transition-[grid-template-rows] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
-            isWeek && weekIndex !== activeRowIndex ? 'grid-rows-[0fr]' : 'grid-rows-[1fr]',
-          )}
-        >
-          <div className="overflow-hidden">
-            <div className="flex w-full items-center px-[1.4rem]">
-          {week.map((cell, dayIndex) => {
-            const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
-            const isClickable = cell.isCurrentMonth && cell.state !== 'future';
-            const handleClick = () => {
-              if (isClickable) onDayClick?.(cell.dateStr);
-            };
+  // 스트립 안에서 각 뷰가 상단에 보여줄 주 인덱스
+  const baseWeekIndex = weekDiff(rangeStartMs, startOfWeek(baseDate).getTime());
+  const firstWeekOfMonth = startOfWeek(new Date(focusYear, focusMonth, 1));
+  const firstWeekIndex = weekDiff(rangeStartMs, firstWeekOfMonth.getTime());
 
-            return (
-              <button
-                key={cell.dateStr}
-                type="button"
-                disabled={!isClickable}
-                onClick={handleClick}
-                className={cn(
-                  'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
-                  'cursor-pointer disabled:cursor-default',
-                  isSelected && 'bg-gray-alpha-50',
-                  !cell.isCurrentMonth && 'opacity-30',
-                )}
-              >
-                <span className="shrink-0 text-center text-[1rem] font-semibold leading-[1.4] tracking-[-0.02em] text-text-caption">
-                  {DAY_LABELS[dayIndex]}
-                </span>
-                <div
+  const daysInMonth = new Date(focusYear, focusMonth + 1, 0).getDate();
+  const firstDayIndex = (new Date(focusYear, focusMonth, 1).getDay() + 6) % 7;
+  const monthWeekCount = Math.ceil((firstDayIndex + daysInMonth) / 7);
+
+  const topIndex = isWeek ? baseWeekIndex : firstWeekIndex;
+  const visibleRows = isWeek ? 1 : monthWeekCount;
+
+  return (
+    <div
+      className={cn(
+        'w-full overflow-hidden transition-[height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        className,
+      )}
+      style={{ height: `${visibleRows * ROW_HEIGHT_REM}rem` }}
+    >
+      <div
+        className="flex flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+        style={{ transform: `translateY(-${topIndex * ROW_HEIGHT_REM}rem)` }}
+      >
+        {weeks.map((week) => (
+          <div
+            key={week.key}
+            className="flex w-full shrink-0 items-center px-[1.4rem]"
+            style={{ height: `${ROW_HEIGHT_REM}rem` }}
+          >
+            {week.days.map((cell, dayIndex) => {
+              const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
+              const isClickable = cell.isCurrentMonth && cell.state !== 'future';
+              const handleClick = () => {
+                if (isClickable) onDayClick?.(cell.dateStr);
+              };
+
+              return (
+                <button
+                  key={cell.dateStr}
+                  type="button"
+                  disabled={!isClickable}
+                  onClick={handleClick}
                   className={cn(
-                    'relative flex size-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full',
-                    cell.state === 'default' && !isSelected && 'bg-gray-alpha-10',
-                    cell.state === 'active' && 'bg-green-darkest',
-                    (cell.state === 'future' || cell.state === 'disabled') && 'bg-white',
+                    'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
+                    'cursor-pointer disabled:cursor-default',
+                    isSelected && 'bg-gray-alpha-50',
+                    !cell.isCurrentMonth && 'opacity-30',
                   )}
                 >
-                  <span
+                  <span className="shrink-0 text-center text-[1rem] font-semibold leading-[1.4] tracking-[-0.02em] text-text-caption">
+                    {DAY_LABELS[dayIndex]}
+                  </span>
+                  <div
                     className={cn(
-                      'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8px_currentColor]',
-                      cell.state === 'default' && 'text-text-description',
-                      cell.state === 'active' &&
-                        'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',
-                      (cell.state === 'future' || cell.state === 'disabled') && 'text-gray-100',
+                      'relative flex size-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full',
+                      cell.state === 'default' && !isSelected && 'bg-gray-alpha-10',
+                      cell.state === 'active' && 'bg-green-darkest',
+                      (cell.state === 'future' || cell.state === 'disabled') && 'bg-white',
                     )}
                   >
-                    {cell.date}
-                  </span>
-                  {cell.state === 'active' && (
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0px_0px_3px_0px_rgba(255,255,255,0.8)]"
-                    />
-                  )}
-                </div>
-              </button>
-            );
-          })}
-            </div>
+                    <span
+                      className={cn(
+                        'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8px_currentColor]',
+                        cell.state === 'default' && 'text-text-description',
+                        cell.state === 'active' &&
+                          'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',
+                        (cell.state === 'future' || cell.state === 'disabled') && 'text-gray-100',
+                      )}
+                    >
+                      {cell.date}
+                    </span>
+                    {cell.state === 'active' && (
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 rounded-full shadow-[inset_0px_0px_3px_0px_rgba(255,255,255,0.8)]"
+                      />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
