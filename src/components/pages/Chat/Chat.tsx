@@ -20,11 +20,11 @@ export const Chat = (props: Props) => {
 
   const bubble = (
     <div className={cn(containerVariants({ user, tone }))}>
-      {showIcon ? <Image src={Chatbot} alt="chatbot" width={32} height={32} /> : null}
+      {showIcon ? (
+        <Image src={Chatbot} alt="chatbot" width={32} height={32} className="mb-[0.6rem]" />
+      ) : null}
       {isStreaming && !message ? <TypingDots /> : null}
-      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default pt-[0.6rem]">
-        {message}
-      </p>
+      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
     </div>
   );
 

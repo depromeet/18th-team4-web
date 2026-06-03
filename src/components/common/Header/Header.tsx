@@ -2,7 +2,7 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon } from '@/components';
+import { ArrowIcon, PlusIcon, Tooltip } from '@/components';
 import ChatToast from '@/components/pages/Chat/ChatToast';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
@@ -76,6 +76,9 @@ export const Header = (props: HeaderProps) => {
             className="progress-gradient h-full rounded-r-full transition-[width] duration-300 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
+          <div className="pl-[2.4rem] pt-[1.5rem]">
+            <Tooltip arrowAlignment="left" content="AI와 나눌 수 있는 대화 분량이에요" />
+          </div>
         </div>
       )}
     </header>

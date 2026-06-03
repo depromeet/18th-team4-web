@@ -16,7 +16,7 @@ export const tooltipArrowVariants = cva(
         bottom: '-bottom-[0.5rem] rotate-180',
       },
       arrowAlignment: {
-        left: 'left-[1.31rem]',
+        left: 'left-[2.1rem]',
         middle: 'left-1/2 -translate-x-1/2',
         right: 'right-[1.31rem]',
       },
