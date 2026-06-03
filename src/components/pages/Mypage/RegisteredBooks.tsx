@@ -1,6 +1,5 @@
-import { PATH_NAME } from '@/constants';
+import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { BookCard } from './BookCard';
-import { MYPAGE_LIST_TAB } from './ListContainer';
 import { MOCK_BOOKS, PREVIEW_COUNT } from './mockData';
 import { MoreButton } from './MoreButton';
 
@@ -18,7 +17,7 @@ export const RegisteredBooks = () => {
         ))}
       </ul>
 
-      {hasMore && <MoreButton href={PATH_NAME.mypage.list(MYPAGE_LIST_TAB.REGISTERED)} />}
+      {hasMore && <MoreButton href={PATH_NAME.mypage.list(MYPAGE_TAB.REGISTERED)} />}
     </div>
   );
 };

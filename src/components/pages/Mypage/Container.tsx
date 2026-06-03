@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
   ChevronIcon,
@@ -10,36 +10,23 @@ import {
   ProfileImageIcon,
   TabView,
 } from '@/components';
-import { PATH_NAME } from '@/constants';
-import { MYPAGE_LIST_TAB } from './ListContainer';
+import { MYPAGE_TAB, type MypageTab, PATH_NAME } from '@/constants';
+import { useMypageTab } from '@/hooks';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
-
-type MypageTab = (typeof MYPAGE_LIST_TAB)[keyof typeof MYPAGE_LIST_TAB];
 
 const ACCOUNT_MENUS = [
   { key: 'logout', label: '로그아웃' },
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
 
+const buildMypageHref = (tab: MypageTab) => `${PATH_NAME.mypage.main()}?tab=${tab}`;
+
 export const MypageContainer = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  // 활성 탭을 ?tab= 쿼리와 동기화한다(리로드/뒤로가기 시에도 유지).
-  const [activeTab, setActiveTab] = useState<MypageTab>(() =>
-    searchParams.get('tab') === MYPAGE_LIST_TAB.RECORDS
-      ? MYPAGE_LIST_TAB.RECORDS
-      : MYPAGE_LIST_TAB.REGISTERED,
-  );
-
-  // 페이지 재이동(리마운트) 없이 URL의 tab 쿼리만 갱신 → 슬라이드 애니메이션 유지.
-  const handleTabChange = (next: string) => {
-    setActiveTab(next as MypageTab);
-    window.history.replaceState(null, '', `${PATH_NAME.mypage.main()}?tab=${next}`);
-  };
+  const { activeTab, changeTab } = useMypageTab(buildMypageHref);
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
@@ -68,16 +55,16 @@ export const MypageContainer = () => {
 
       <TabView
         value={activeTab}
-        onValueChange={handleTabChange}
+        onValueChange={changeTab}
         tabs={[
           {
-            value: MYPAGE_LIST_TAB.REGISTERED,
+            value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
             count: 13,
             content: <RegisteredBooks />,
           },
           {
-            value: MYPAGE_LIST_TAB.RECORDS,
+            value: MYPAGE_TAB.RECORDS,
             label: '감상 기록',
             count: 24,
             content: <Records />,

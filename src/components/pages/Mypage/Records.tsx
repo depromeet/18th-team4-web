@@ -1,6 +1,5 @@
-import { CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
-import { PATH_NAME } from '@/constants';
-import { MYPAGE_LIST_TAB } from './ListContainer';
+import { ChatCard, chatCardColorByIndex } from '@/components';
+import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { MOCK_RECORDS, PREVIEW_COUNT } from './mockData';
 import { MoreButton } from './MoreButton';
 
@@ -14,7 +13,7 @@ export const Records = () => {
         {previewRecords.map((record, index) => (
           <li key={record.id}>
             <ChatCard
-              color={CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length]}
+              color={chatCardColorByIndex(index)}
               bookTitle={record.bookTitle}
               summary={record.summary}
             />
@@ -22,7 +21,7 @@ export const Records = () => {
         ))}
       </ul>
 
-      {hasMore && <MoreButton href={PATH_NAME.mypage.list(MYPAGE_LIST_TAB.RECORDS)} />}
+      {hasMore && <MoreButton href={PATH_NAME.mypage.list(MYPAGE_TAB.RECORDS)} />}
     </div>
   );
 };

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ExampleBook } from '@/assets';
-import { CHAT_CARD_COLOR_SEQUENCE, ChatCard, Header, HEADER_VARIANT } from '@/components';
+import { ChatCard, chatCardColorByIndex, Header, HEADER_VARIANT } from '@/components';
 
 type BookSummary = {
   id: number;
@@ -54,7 +54,7 @@ export const BookDetailContainer = (props: Props) => {
           </p>
           <button
             type="button"
-            className="caption1-bold text-[#474A4A] mt-[1.2rem] w-fit cursor-pointer rounded-[0.8rem] bg-gray-alpha-50 px-[1.2rem] py-[0.6rem]"
+            className="caption1-bold mt-[1.2rem] w-fit cursor-pointer rounded-[0.8rem] bg-gray-alpha-50 px-[1.2rem] py-[0.6rem] text-text-description"
           >
             책 삭제
           </button>
@@ -72,15 +72,11 @@ export const BookDetailContainer = (props: Props) => {
       </section>
 
       <ul className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] py-[2.4rem]">
-        {MOCK_SUMMARIES.map((item, index) => {
-          const color = CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length];
-
-          return (
-            <li key={item.id}>
-              <ChatCard color={color} date={item.date} summary={item.summary} />
-            </li>
-          );
-        })}
+        {MOCK_SUMMARIES.map((item, index) => (
+          <li key={item.id}>
+            <ChatCard color={chatCardColorByIndex(index)} date={item.date} summary={item.summary} />
+          </li>
+        ))}
       </ul>
     </div>
   );
