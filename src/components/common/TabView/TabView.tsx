@@ -1,8 +1,18 @@
 'use client';
 
-import { type KeyboardEvent, type ReactNode, useId, useRef, useState } from 'react';
+import {
+  type KeyboardEvent,
+  type ReactNode,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { cn } from '@/lib';
 import { tabTriggerLabelVariants, tabTriggerVariants } from './tabViewVariants';
+
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export type TabItem = {
   value: string;
@@ -26,6 +36,8 @@ type Props = {
  * controlled(`value`) / uncontrolled(`defaultValue`) 모두 지원하며,
  * 좌/우 화살표 키로 탭 간 이동이 가능하다(ARIA Tabs 패턴).
  *
+ * 탭 전환 시 하이라이트(밑줄)와 패널이 함께 슬라이드되며, 패널 높이도 부드럽게 전환된다.
+ *
  * `onValueChange` 등 함수 prop은 클라이언트 컴포넌트에서만 전달할 수 있다.
  */
 export const TabView = (props: Props) => {
@@ -33,6 +45,16 @@ export const TabView = (props: Props) => {
 
   const baseId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [trackHeight, setTrackHeight] = useState<number | undefined>(undefined);
+
+  // 첫 렌더에서는 슬라이드 없이 초기 탭(defaultValue) 위치에서 곧바로 시작하고,
+  // 마운트 이후의 탭 전환부터 슬라이드 애니메이션을 적용한다.
+  const [enableSlide, setEnableSlide] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEnableSlide(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const isControlled = value !== undefined;
   const hasValue = (target?: string) =>
@@ -40,15 +62,29 @@ export const TabView = (props: Props) => {
   const initialValue = hasValue(defaultValue) ? (defaultValue as string) : tabs[0]?.value;
   const [internalValue, setInternalValue] = useState(initialValue);
 
+  const rawValue = isControlled ? value : internalValue;
+  const safeValue = hasValue(rawValue) ? (rawValue as string) : tabs[0]?.value;
+  const selectedIndex = Math.max(
+    0,
+    tabs.findIndex((t) => t.value === safeValue),
+  );
+
+  // 선택된 패널 높이에 맞춰 트랙 높이를 동기화한다(콘텐츠 변경/리사이즈 대응).
+  useIsomorphicLayoutEffect(() => {
+    const el = panelRefs.current[selectedIndex];
+    if (!el) return;
+
+    const sync = () => setTrackHeight(el.offsetHeight);
+    sync();
+
+    const observer = new ResizeObserver(sync);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [selectedIndex, tabs]);
+
   if (tabs.length === 0) {
-    console.error('TabView: `tabs`가 비어 있습니다. 최소 1개 이상의 탭이 필요합니다.');
     return null;
   }
-
-  const rawValue = isControlled ? value : internalValue;
-  const selectedValue = hasValue(rawValue) ? (rawValue as string) : tabs[0].value;
-  const selectedIndex = tabs.findIndex((t) => t.value === selectedValue);
-  const activeTab = tabs[selectedIndex];
 
   const selectTab = (next: string) => {
     if (!isControlled) {
@@ -73,9 +109,9 @@ export const TabView = (props: Props) => {
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
-      <div role="tablist" className="flex w-full justify-center px-[2.4rem]">
+      <div role="tablist" className="relative flex w-full px-[2.4rem]">
         {tabs.map((tab, index) => {
-          const isActiveTab = tab.value === selectedValue;
+          const isActiveTab = index === selectedIndex;
 
           return (
             <button
@@ -89,11 +125,16 @@ export const TabView = (props: Props) => {
               aria-selected={isActiveTab}
               aria-controls={panelId(tab.value)}
               tabIndex={isActiveTab ? 0 : -1}
-              className={cn(tabTriggerVariants({ active: isActiveTab }))}
+              className={cn(tabTriggerVariants())}
               onClick={() => selectTab(tab.value)}
               onKeyDown={handleKeyDown}
             >
-              <span className={cn(tabTriggerLabelVariants({ active: isActiveTab }))}>
+              <span
+                className={cn(
+                  'transition-colors duration-300',
+                  tabTriggerLabelVariants({ active: isActiveTab }),
+                )}
+              >
                 {tab.label}
               </span>
               {tab.count !== undefined && (
@@ -102,10 +143,56 @@ export const TabView = (props: Props) => {
             </button>
           );
         })}
+
+        {/* 슬라이드되는 하이라이트(밑줄) */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-[2.4rem] right-[2.4rem]"
+        >
+          <span
+            className={cn(
+              'block h-[0.14rem] rounded-full bg-icon-secondary',
+              enableSlide && 'transition-transform duration-300 ease-out',
+            )}
+            style={{
+              width: `${100 / tabs.length}%`,
+              transform: `translateX(${selectedIndex * 100}%)`,
+            }}
+          />
+        </span>
       </div>
 
-      <div role="tabpanel" id={panelId(activeTab.value)} aria-labelledby={tabId(activeTab.value)}>
-        {activeTab.content}
+      <div
+        className={cn(
+          'overflow-hidden',
+          enableSlide && 'transition-[height] duration-300 ease-out',
+        )}
+        style={{ height: trackHeight }}
+      >
+        <div
+          className={cn('flex', enableSlide && 'transition-transform duration-300 ease-out')}
+          style={{ transform: `translateX(-${selectedIndex * 100}%)` }}
+        >
+          {tabs.map((tab, index) => {
+            const isActiveTab = index === selectedIndex;
+
+            return (
+              <div
+                key={tab.value}
+                ref={(el) => {
+                  panelRefs.current[index] = el;
+                }}
+                role="tabpanel"
+                id={panelId(tab.value)}
+                aria-labelledby={tabId(tab.value)}
+                aria-hidden={!isActiveTab}
+                className={cn('w-full shrink-0 self-start', !isActiveTab && 'pointer-events-none')}
+              >
+                {tab.content}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
