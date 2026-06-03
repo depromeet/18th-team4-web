@@ -7,4 +7,5 @@ export {
   type ChatCardColor,
   chatCardGradientColor,
   type ChatCardStatus,
+  chatCardTitleColor,
 } from './chatCardVariants';
