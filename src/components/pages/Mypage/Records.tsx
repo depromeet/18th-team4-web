@@ -4,13 +4,10 @@ import { MOCK_RECORDS } from '@/lib';
 import { MoreButton } from './MoreButton';
 
 export const Records = () => {
-  const previewRecords = MOCK_RECORDS.slice(0, PREVIEW_COUNT);
-  const hasMore = MOCK_RECORDS.length > PREVIEW_COUNT;
-
   return (
     <div className="flex flex-col">
       <ul className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pt-[2.4rem]">
-        {previewRecords.map((record, index) => (
+        {MOCK_RECORDS.slice(0, PREVIEW_COUNT).map((record, index) => (
           <li key={record.id}>
             <ChatCard
               color={chatCardColorByIndex(index)}
@@ -21,7 +18,9 @@ export const Records = () => {
         ))}
       </ul>
 
-      {hasMore && <MoreButton href={PATH_NAME.mypage.list(MYPAGE_TAB.RECORDS)} />}
+      {MOCK_RECORDS.length > PREVIEW_COUNT && (
+        <MoreButton href={PATH_NAME.mypage.list(MYPAGE_TAB.RECORDS)} />
+      )}
     </div>
   );
 };
