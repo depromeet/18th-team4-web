@@ -1,7 +1,9 @@
 import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Logo } from '@/assets';
 import { ArrowIcon, Tooltip, UserIcon } from '@/components';
+import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
@@ -43,13 +45,14 @@ export const Header = (props: HeaderProps) => {
           <div className="relative h-[2.9rem] w-[12.3rem] shrink-0 overflow-hidden">
             <Image src={Logo} alt="logo" className="absolute" />
           </div>
-          <button
+          <Link
             type="button"
+            href={PATH_NAME.mypage.main()}
             aria-label="프로필"
             className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
           >
             <UserIcon className="size-[2.4rem] text-icon-tertiary" />
-          </button>
+          </Link>
         </>
       )}
 
