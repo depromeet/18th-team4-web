@@ -522,6 +522,21 @@
   animation: text-caret-blink 1.06s linear infinite;
 }
 
+@keyframes calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-calendar-in {
+  animation: calendar-fade-in 0.22s ease-out both;
+}
+
 /* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */
 @keyframes chat-color-symbol-soft-blink {
   0%,
