@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ExampleBook } from '@/assets';
-import { CHAT_CARD_COLOR_SEQUENCE, Header, HEADER_VARIANT, SummaryRecordCard } from '@/components';
+import { CHAT_CARD_COLOR_SEQUENCE, ChatCard, Header, HEADER_VARIANT } from '@/components';
 
 type BookSummary = {
   id: number;
@@ -77,7 +77,7 @@ export const BookDetailContainer = (props: Props) => {
 
           return (
             <li key={item.id}>
-              <SummaryRecordCard color={color} label={item.date} summary={item.summary} />
+              <ChatCard color={color} date={item.date} summary={item.summary} />
             </li>
           );
         })}

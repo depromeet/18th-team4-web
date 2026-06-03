@@ -1,4 +1,4 @@
-import { CHAT_CARD_COLOR_SEQUENCE, SummaryRecordCard } from '@/components';
+import { CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { MYPAGE_LIST_TAB } from './ListContainer';
 import { MOCK_RECORDS, PREVIEW_COUNT } from './mockData';
@@ -13,9 +13,9 @@ export const Records = () => {
       <ul className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pt-[2.4rem]">
         {previewRecords.map((record, index) => (
           <li key={record.id}>
-            <SummaryRecordCard
+            <ChatCard
               color={CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length]}
-              label={record.bookTitle}
+              bookTitle={record.bookTitle}
               summary={record.summary}
             />
           </li>

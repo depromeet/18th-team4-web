@@ -7,7 +7,6 @@ export * from './Header';
 export * from './Icon';
 export * from './ListItem';
 export * from './Loading';
-export * from './SummaryRecordCard';
 export * from './TabView';
 export * from './Textfield';
 export * from './Toast';

@@ -2,13 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import {
-  CHAT_CARD_COLOR_SEQUENCE,
-  Header,
-  HEADER_VARIANT,
-  SummaryRecordCard,
-  TabView,
-} from '@/components';
+import { CHAT_CARD_COLOR_SEQUENCE, ChatCard, Header, HEADER_VARIANT, TabView } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { BookCard } from './BookCard';
 import { MOCK_BOOKS, MOCK_RECORDS } from './mockData';
@@ -37,7 +31,7 @@ const RecordsList = () => (
 
       return (
         <li key={record.id}>
-          <SummaryRecordCard color={color} label={record.bookTitle} summary={record.summary} />
+          <ChatCard color={color} bookTitle={record.bookTitle} summary={record.summary} />
         </li>
       );
     })}
