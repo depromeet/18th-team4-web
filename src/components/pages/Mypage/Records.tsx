@@ -1,6 +1,6 @@
 import { ChatCard, chatCardColorByIndex } from '@/components';
-import { MYPAGE_TAB, PATH_NAME } from '@/constants';
-import { MOCK_RECORDS, PREVIEW_COUNT } from './mockData';
+import { MYPAGE_TAB, PATH_NAME, PREVIEW_COUNT } from '@/constants';
+import { MOCK_RECORDS } from '@/lib';
 import { MoreButton } from './MoreButton';
 
 export const Records = () => {

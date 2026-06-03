@@ -2,8 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ExampleBook } from '@/assets';
 import { PATH_NAME } from '@/constants';
-import { cn } from '@/lib';
-import { type RegisteredBook } from './mockData';
+import { cn, type RegisteredBook } from '@/lib';
 
 type Props = {
   book: RegisteredBook;

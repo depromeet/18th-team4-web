@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { ChatCard, chatCardColorByIndex, Header, HEADER_VARIANT, TabView } from '@/components';
 import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
+import { MOCK_BOOKS, MOCK_RECORDS } from '@/lib';
 import { BookCard } from './BookCard';
-import { MOCK_BOOKS, MOCK_RECORDS } from './mockData';
 
 const BooksGrid = () => (
   <ul className="animate-list-fill grid list-none grid-cols-2 gap-x-[1.6rem] gap-y-[2.4rem] px-[2.4rem] pb-[4rem] pt-[3.6rem]">

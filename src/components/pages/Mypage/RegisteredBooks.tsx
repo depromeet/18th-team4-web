@@ -1,6 +1,6 @@
-import { MYPAGE_TAB, PATH_NAME } from '@/constants';
+import { MYPAGE_TAB, PATH_NAME, PREVIEW_COUNT } from '@/constants';
+import { MOCK_BOOKS } from '@/lib';
 import { BookCard } from './BookCard';
-import { MOCK_BOOKS, PREVIEW_COUNT } from './mockData';
 import { MoreButton } from './MoreButton';
 
 export const RegisteredBooks = () => {
