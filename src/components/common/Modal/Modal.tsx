@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Button, BUTTON_VARIANT } from '@/components';
-import { MODAL_TYPE, ModalType } from '@/constants/modal';
+import { MODAL_TYPE, ModalType } from '@/constants';
 import { cn } from '@/lib';
 
 type Props = {
