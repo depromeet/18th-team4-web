@@ -14,4 +14,6 @@ export const PATH_NAME = {
   summary: {
     detail: (summaryId: string) => `/summary/${summaryId}`,
   },
+
+  mypage: () => '/mypage',
 } as const;
