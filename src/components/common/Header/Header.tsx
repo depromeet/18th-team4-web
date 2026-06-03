@@ -2,7 +2,8 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon, Tooltip } from '@/components';
+import { ArrowIcon, PlusIcon } from '@/components';
+import { AnimateTooltip } from '@/components/common/Tooltip/AnimateTooltip';
 import ChatToast from '@/components/pages/Chat/ChatToast';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
@@ -77,7 +78,7 @@ export const Header = (props: HeaderProps) => {
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
           <div className="pl-[2.4rem] pt-[1.5rem]">
-            <Tooltip arrowAlignment="left" content="AI와 나눌 수 있는 대화 분량이에요" />
+            <AnimateTooltip arrowAlignment="left" content="AI와 나눌 수 있는 대화 분량이에요" />
           </div>
         </div>
       )}
