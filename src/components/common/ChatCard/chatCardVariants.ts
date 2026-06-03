@@ -40,7 +40,7 @@ export const chatCardGradientColor: Record<ChatCardColor, string> = {
 };
 
 export const chatCardVariants = cva(
-  'relative flex items-start gap-[0.8rem] rounded-tl-[2.4rem] rounded-tr-[2.4rem] border border-white pb-[8rem] pt-[2.4rem] px-[2.4rem]',
+  'relative flex items-start gap-[0.8rem] rounded-[1.4rem] px-[2.4rem] py-[1.8rem]',
   {
     variants: {
       color: chatCardBackgroundColor,
@@ -73,10 +73,10 @@ export const chatCardIconColor: Record<ChatCardColor, string> = {
 
 export const CHAT_CARD_COLOR_SEQUENCE: readonly ChatCardColor[] = [
   CHAT_CARD_COLOR.TEAL,
-  CHAT_CARD_COLOR.GREEN,
   CHAT_CARD_COLOR.PURPLE,
-  CHAT_CARD_COLOR.YELLOW,
+  CHAT_CARD_COLOR.GREEN,
   CHAT_CARD_COLOR.MAGENTA,
-  CHAT_CARD_COLOR.SKY,
   CHAT_CARD_COLOR.BLUE,
+  CHAT_CARD_COLOR.YELLOW,
+  CHAT_CARD_COLOR.SKY,
 ];
