@@ -12,25 +12,8 @@ type Props = {
 };
 
 export const MainContainer = async ({ session }: Props) => {
-  // 1. 세션 데이터 없음 — API 호출 실패 또는 첫 렌더 race condition 폴백
-  if (session === null) {
-    return (
-      <div className="flex min-h-dvh flex-col items-center justify-center gap-[2.4rem] px-[2.4rem]">
-        <div className="flex flex-col items-center gap-[0.8rem]">
-          <p className="headline2-extrabold text-center tracking-[-0.06rem] text-text-primary">
-            Readum에 오신 걸 환영해요
-          </p>
-          <p className="body1-medium text-center tracking-[-0.048rem] text-text-caption">
-            온보딩을 건너뛰고 바로 시작할 수 있어요
-          </p>
-        </div>
-        <OnboardingSkipButton />
-      </div>
-    );
-  }
-
-  // 2. 온보딩 미완료
-  if (!session.onboardingCompleted) {
+  // 1. 세션 없음(API 실패·race condition 폴백) 또는 온보딩 미완료
+  if (session === null || !session.onboardingCompleted) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-[2.4rem] px-[2.4rem]">
         <div className="flex flex-col items-center gap-[0.8rem]">
@@ -61,7 +44,13 @@ export const MainContainer = async ({ session }: Props) => {
           }}
           aria-hidden
         >
-          <Image src={GradientBg} alt="" fill className="object-cover" sizes="100dvw" />
+          <Image
+            src={GradientBg}
+            alt="Decorative gradient background"
+            fill
+            className="object-cover"
+            sizes="100dvw"
+          />
         </div>
 
         <MainBody />
