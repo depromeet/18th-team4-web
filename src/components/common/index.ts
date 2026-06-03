@@ -7,6 +7,7 @@ export * from './Header';
 export * from './Icon';
 export * from './ListItem';
 export * from './Loading';
+export * from './Modal';
 export * from './Textfield';
 export * from './Toast';
 export * from './Tooltip';
