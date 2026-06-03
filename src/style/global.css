@@ -435,6 +435,36 @@
   }
 }
 
+@keyframes lightbox-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-lightbox-zoom {
+  animation: lightbox-zoom-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes list-fill-up {
+  from {
+    opacity: 0;
+    transform: translateY(2.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-list-fill {
+  animation: list-fill-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .btn-appear {
   max-height: 16rem;
   opacity: 1;
