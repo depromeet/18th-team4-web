@@ -8,6 +8,7 @@ export { default as ColorSymbol } from './ic-color-symbol.svg?react';
 export { default as DialogIcon } from './ic-dialog.svg?react';
 export { default as Document } from './ic-document.svg?react';
 export { default as Dot } from './ic-dot.svg?react';
+export { default as Kakao } from './ic-kakao.svg?react';
 export { default as LoadingIcon } from './ic-loading.svg?react';
 export { default as MainSymbol } from './ic-main-symbol.svg?react';
 export { default as Menu } from './ic-menu.svg?react';
