@@ -1,9 +1,4 @@
-import {
-  CHAT_CARD_COLOR_SEQUENCE,
-  CHAT_CARD_STATUS,
-  ChatCard,
-  DocumentIcon,
-} from '@/components';
+import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, DocumentIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { formatDate, type SessionItem, type SessionStatus } from '@/lib';
 

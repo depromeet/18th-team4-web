@@ -36,7 +36,12 @@ export const OnboardingContainer = () => {
           <StepProgress stepIds={stepIds} activeId={step.id} />
 
           <figure className="mt-[5.2rem] flex flex-col items-center">
-            <Image src={Logo} alt="Readum" priority className="h-[3.8rem] w-[21rem] object-contain" />
+            <Image
+              src={Logo}
+              alt="Readum"
+              priority
+              className="h-[3.8rem] w-[21rem] object-contain"
+            />
             <figcaption className="title1-bold mt-[1.8rem] text-center tracking-[-0.054rem] text-[#323539]">
               사유하는 독서가인
               <br />
@@ -93,7 +98,12 @@ export const OnboardingContainer = () => {
       )}
 
       <footer className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
-        <Button variant={BUTTON_VARIANT.BLACK} size="lg" className="w-full" onClick={handleNextClick}>
+        <Button
+          variant={BUTTON_VARIANT.BLACK}
+          size="lg"
+          className="w-full"
+          onClick={handleNextClick}
+        >
           다음
         </Button>
       </footer>
