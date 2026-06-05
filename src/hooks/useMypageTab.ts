@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MYPAGE_TAB, type MypageTab } from '@/constants';
 
 const toTab = (value: string | null): MypageTab =>
@@ -16,6 +16,17 @@ const toTab = (value: string | null): MypageTab =>
 export const useMypageTab = (buildHref: (tab: MypageTab) => string) => {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<MypageTab>(() => toTab(searchParams.get('tab')));
+
+  // replaceState로 URL만 바꾸므로 Next 라우터는 이를 감지하지 못한다.
+  // 브라우저 뒤로/앞으로 가기(popstate) 시 URL의 ?tab= 값으로 탭 상태를 되돌린다.
+  useEffect(() => {
+    const handlePopState = () => {
+      const tab = new URLSearchParams(window.location.search).get('tab');
+      setActiveTab(toTab(tab));
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const changeTab = (next: string) => {
     const tab = toTab(next);
