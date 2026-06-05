@@ -80,9 +80,10 @@ export const TabView = (props: Props) => {
     const observer = new ResizeObserver(sync);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [selectedIndex, tabs]);
+  }, [selectedIndex, tabs.length]);
 
   if (tabs.length === 0) {
+    console.error('TabView: `tabs`가 비어 있습니다. 최소 1개 이상의 탭이 필요합니다.');
     return null;
   }
 
