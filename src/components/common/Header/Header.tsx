@@ -46,7 +46,6 @@ export const Header = (props: HeaderProps) => {
             <Image src={Logo} alt="logo" className="absolute" />
           </div>
           <Link
-            type="button"
             href={PATH_NAME.mypage.main()}
             aria-label="프로필"
             className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
