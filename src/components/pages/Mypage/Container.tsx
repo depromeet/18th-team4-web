@@ -12,6 +12,7 @@ import {
 } from '@/components';
 import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
+import { MOCK_BOOKS, MOCK_RECORDS } from '@/lib';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
@@ -58,13 +59,13 @@ export const MypageContainer = () => {
           {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
-            count: 13,
+            count: MOCK_BOOKS.length,
             content: <RegisteredBooks />,
           },
           {
             value: MYPAGE_TAB.RECORDS,
             label: '감상 기록',
-            count: 24,
+            count: MOCK_RECORDS.length,
             content: <Records />,
           },
         ]}
