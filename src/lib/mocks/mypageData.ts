@@ -14,6 +14,12 @@ export type RecordItem = {
   summary: string;
 };
 
+export type BookSummary = {
+  id: number;
+  date: string;
+  summary: string;
+};
+
 export const MOCK_BOOKS: RegisteredBook[] = Array.from({ length: 13 }, (_, index) => ({
   id: index + 1,
   title: '셰익스피어의 영혼을 담아낸 평론집',
@@ -25,6 +31,13 @@ export const MOCK_BOOKS: RegisteredBook[] = Array.from({ length: 13 }, (_, index
 export const MOCK_RECORDS: RecordItem[] = Array.from({ length: 24 }, (_, index) => ({
   id: index + 1,
   bookTitle: '해리포터와 마법사의 돌',
+  summary:
+    '대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구',
+}));
+
+export const MOCK_BOOK_SUMMARIES: BookSummary[] = Array.from({ length: 3 }, (_, index) => ({
+  id: index + 1,
+  date: '24.01.13',
   summary:
     '대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구',
 }));

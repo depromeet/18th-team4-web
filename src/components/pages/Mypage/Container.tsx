@@ -10,7 +10,7 @@ import {
   ProfileImageIcon,
   TabView,
 } from '@/components';
-import { MYPAGE_TAB, type MypageTab, PATH_NAME } from '@/constants';
+import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
@@ -21,12 +21,10 @@ const ACCOUNT_MENUS = [
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
 
-const buildMypageHref = (tab: MypageTab) => `${PATH_NAME.mypage.main()}?tab=${tab}`;
-
 export const MypageContainer = () => {
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { activeTab, changeTab } = useMypageTab(buildMypageHref);
+  const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">

@@ -16,7 +16,7 @@ export const PATH_NAME = {
   },
 
   mypage: {
-    main: () => '/mypage',
+    main: (tab?: string) => (tab ? `/mypage?tab=${tab}` : '/mypage'),
     list: (tab: string) => `/mypage/list?tab=${tab}`,
   },
 

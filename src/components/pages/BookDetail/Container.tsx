@@ -4,33 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ExampleBook } from '@/assets';
 import { ChatCard, chatCardColorByIndex, Header, HEADER_VARIANT } from '@/components';
-
-type BookSummary = {
-  id: number;
-  date: string;
-  summary: string;
-};
-
-const MOCK_SUMMARIES: BookSummary[] = [
-  {
-    id: 1,
-    date: '24.01.13',
-    summary:
-      '대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구',
-  },
-  {
-    id: 2,
-    date: '24.01.13',
-    summary:
-      '대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구',
-  },
-  {
-    id: 3,
-    date: '24.01.13',
-    summary:
-      '대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구 대화한 내용 간단 요약 어쩌구 저쩌구',
-  },
-];
+import { MOCK_BOOK_SUMMARIES } from '@/lib';
 
 type Props = {
   bookId: string;
@@ -72,7 +46,7 @@ export const BookDetailContainer = (props: Props) => {
       </section>
 
       <ul className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] py-[2.4rem]">
-        {MOCK_SUMMARIES.map((item, index) => (
+        {MOCK_BOOK_SUMMARIES.map((item, index) => (
           <li key={item.id}>
             <ChatCard color={chatCardColorByIndex(index)} date={item.date} summary={item.summary} />
           </li>
