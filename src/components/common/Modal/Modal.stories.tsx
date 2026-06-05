@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { type Meta, type StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+import { MODAL_TYPE } from '@/constants';
 import { Modal } from './Modal';
 
 const meta = {
@@ -11,6 +12,7 @@ const meta = {
   tags: ['autodocs'],
   argTypes: {
     isOpen: { control: 'boolean' },
+    modalType: { control: 'select', options: Object.keys(MODAL_TYPE) },
     onCancel: { action: 'cancelled' },
     onConfirm: { action: 'confirmed' },
   },
@@ -22,6 +24,7 @@ type Story = StoryObj<typeof meta>;
 export const Open: Story = {
   args: {
     isOpen: true,
+    modalType: 'DELETE',
     onCancel: () => {},
     onConfirm: () => {},
   },
@@ -30,6 +33,7 @@ export const Open: Story = {
 export const Closed: Story = {
   args: {
     isOpen: false,
+    modalType: 'DELETE',
     onCancel: () => {},
     onConfirm: () => {},
   },
@@ -48,6 +52,7 @@ const InteractiveTemplate = () => {
       </button>
       <Modal
         isOpen={isOpen}
+        modalType="DELETE"
         onCancel={() => setIsOpen(false)}
         onConfirm={() => {
           alert('확인!');
@@ -61,6 +66,7 @@ const InteractiveTemplate = () => {
 export const Interactive: Story = {
   args: {
     isOpen: false,
+    modalType: 'DELETE',
     onCancel: () => {},
     onConfirm: () => {},
   },

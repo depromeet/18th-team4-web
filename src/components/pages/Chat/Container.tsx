@@ -3,7 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
+import { Header, HEADER_VARIANT, Modal, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME, QUERY_KEY } from '@/constants';
 import { useModal } from '@/hooks';
 import {
@@ -16,7 +16,6 @@ import {
   useToastStore,
 } from '@/lib';
 import { Chat } from './Chat';
-import { Modal } from './Modal';
 
 const chatMatchesHistory = (history: ChatMessage, pending: ChatMessage) =>
   pending.id === history.id ||
@@ -309,8 +308,8 @@ const Container = () => {
 
       <Modal
         key={mountKey}
+        modalType="DELETE"
         isOpen={isOpen}
-        isConfirming={isCreatingSummary || isSummaryLeaving}
         onCancel={close}
         onConfirm={handleConfirmSummary}
       />
