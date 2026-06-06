@@ -1,33 +1,28 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
-import { CHAT_CARD_COLOR, type ChatCardColor, chatCardGradientColor } from '@/components';
+import { useEffect, useRef, useState } from 'react';
+import { TabView } from '@/components';
 import { CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
-import { cn, type SummaryData, useGetMessages, useSummary, useToastStore } from '@/lib';
+import { type SummaryData, useGetMessages, useSummary, useToastStore } from '@/lib';
 import { SummaryChatHistory } from './SummaryChatHistory';
 import { SummaryHeader } from './SummaryHeader';
 import { SummaryLoading } from './SummaryLoading';
-import { SummaryResult, type SummarySection } from './SummaryResult';
+import { SummaryResult } from './SummaryResult';
 
-const toSections = (data: SummaryData): SummarySection[] => {
-  const sections: SummarySection[] = [{ heading: data.title, body: data.body }];
-  if (data.quote) {
-    sections.push({ heading: '인용', body: data.quote });
-  }
-  return sections;
-};
+type SummaryTab = 'summary' | 'chat';
 
 type Props = {
   sessionId: string;
   initialSummary: SummaryData | null;
-  color?: ChatCardColor;
 };
 
 export const SummaryContainer = (props: Props) => {
-  const { sessionId, initialSummary, color = CHAT_CARD_COLOR.GREEN } = props;
+  const { sessionId, initialSummary } = props;
   const router = useRouter();
   const openToast = useToastStore((s) => s.openToast);
+
+  const [activeTab, setActiveTab] = useState<SummaryTab>('summary');
 
   const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
 
@@ -71,27 +66,32 @@ export const SummaryContainer = (props: Props) => {
     );
   }
 
-  const sections = toSections(data);
-
   return (
     <div className="flex flex-col min-h-dvh bg-background-primary-base">
       <SummaryHeader />
 
-      <div className="relative isolate">
-        <div
-          className={cn(
-            'pointer-events-none absolute inset-x-0 -bottom-100 h-200 -z-10',
-            chatCardGradientColor[color],
-          )}
-        />
-        <SummaryResult sections={sections} />
-      </div>
-
-      <SummaryChatHistory
-        messages={archivedChats}
-        hasOlder={!!hasNextPage}
-        isFetchingOlder={isFetchingNextPage}
-        onLoadOlder={() => void fetchNextPage()}
+      <TabView
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as SummaryTab)}
+        tabs={[
+          {
+            value: 'summary',
+            label: '요약',
+            content: <SummaryResult title={data.title} body={data.body} />,
+          },
+          {
+            value: 'chat',
+            label: 'AI 채팅',
+            content: (
+              <SummaryChatHistory
+                messages={archivedChats}
+                hasOlder={!!hasNextPage}
+                isFetchingOlder={isFetchingNextPage}
+                onLoadOlder={() => void fetchNextPage()}
+              />
+            ),
+          },
+        ]}
       />
     </div>
   );
