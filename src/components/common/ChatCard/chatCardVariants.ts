@@ -29,16 +29,6 @@ export const chatCardBackgroundColor: Record<ChatCardColor, string> = {
   blue: 'bg-[rgba(205,229,255,0.8)]',
 };
 
-export const chatCardGradientColor: Record<ChatCardColor, string> = {
-  teal: 'bg-chat-card-gradient-teal',
-  magenta: 'bg-chat-card-gradient-magenta',
-  yellow: 'bg-chat-card-gradient-yellow',
-  sky: 'bg-chat-card-gradient-sky',
-  green: 'bg-chat-card-gradient-green',
-  purple: 'bg-chat-card-gradient-purple',
-  blue: 'bg-chat-card-gradient-blue',
-};
-
 export const chatCardVariants = cva(
   'relative flex items-start gap-[0.8rem] rounded-[1.4rem] px-[2.4rem] py-[1.8rem]',
   {

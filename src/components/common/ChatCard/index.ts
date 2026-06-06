@@ -5,6 +5,5 @@ export {
   CHAT_CARD_STATUS,
   chatCardBackgroundColor,
   type ChatCardColor,
-  chatCardGradientColor,
   type ChatCardStatus,
 } from './chatCardVariants';
