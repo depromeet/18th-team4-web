@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createResponseSchema } from '@/lib';
+import { createResponseSchema } from '@/lib/api/types';
 
 export const CreateSessionDataSchema = z.object({
   sessionId: z.number(),

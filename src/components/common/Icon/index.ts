@@ -1,10 +1,10 @@
 export { ArrowIcon } from './ArrowIcon';
-export { DocumentIcon } from './DocumentIcon';
 export { BookmarkCheckIcon } from './BookmarkCheckIcon';
 export { BookmarkIcon } from './BookmarkIcon';
 export { CheckIcon } from './CheckIcon';
 export { ChevronIcon } from './ChevronIcon';
 export { ColorSymbolIcon } from './ColorSymbolIcon';
+export { DocumentIcon } from './DocumentIcon';
 export { DotIcon } from './DotIcon';
 export { MainSymbolIcon } from './MainSymbolIcon';
 export { MenuIcon } from './MenuIcon';

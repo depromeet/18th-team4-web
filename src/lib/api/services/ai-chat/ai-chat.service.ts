@@ -1,9 +1,9 @@
 'use client';
 
 import { type InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query';
-import { type SessionListData } from './ai-chat.type';
 import { QUERY_KEY } from '@/constants';
 import { createSession, getSessions } from './ai-chat.client';
+import { type SessionListData } from './ai-chat.type';
 
 const SESSION_PAGE_SIZE = 7;
 
