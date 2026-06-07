@@ -12,17 +12,32 @@ import { SummaryResult } from './SummaryResult';
 
 type SummaryTab = 'summary' | 'chat';
 
+const buildSummaryUrl = (sessionId: string, tab: SummaryTab) =>
+  `${PATH_NAME.summary.detail(sessionId)}?tab=${tab}`;
+
 type Props = {
   sessionId: string;
   initialSummary: SummaryData | null;
+  initialTab?: SummaryTab;
 };
 
 export const SummaryContainer = (props: Props) => {
-  const { sessionId, initialSummary } = props;
+  const { sessionId, initialSummary, initialTab = 'summary' } = props;
   const router = useRouter();
   const openToast = useToastStore((s) => s.openToast);
 
-  const [activeTab, setActiveTab] = useState<SummaryTab>('summary');
+  const [activeTab, setActiveTab] = useState<SummaryTab>(initialTab);
+
+  const handleTabChange = (next: string) => {
+    const tab = next as SummaryTab;
+    setActiveTab(tab);
+    window.history.replaceState(null, '', buildSummaryUrl(sessionId, tab));
+  };
+
+  // 최초 진입 시 tab 파라미터가 없거나 유효하지 않으면 현재 탭 기준으로 URL을 정규화한다.
+  useEffect(() => {
+    window.history.replaceState(null, '', buildSummaryUrl(sessionId, initialTab));
+  }, [sessionId, initialTab]);
 
   const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
 
@@ -72,7 +87,7 @@ export const SummaryContainer = (props: Props) => {
 
       <TabView
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as SummaryTab)}
+        onValueChange={handleTabChange}
         tabs={[
           {
             value: 'summary',
