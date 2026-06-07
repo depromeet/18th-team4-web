@@ -7,5 +7,5 @@ import { PATH_NAME } from '@/constants';
 export const SummaryHeader = () => {
   const router = useRouter();
   const handleBack = () => router.push(PATH_NAME.main());
-  return <Header variant={HEADER_VARIANT.BACK} onBack={handleBack} />;
+  return <Header variant={HEADER_VARIANT.BACK} className="bg-text-white" onBack={handleBack} />;
 };

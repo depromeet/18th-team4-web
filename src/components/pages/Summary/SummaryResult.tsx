@@ -9,7 +9,7 @@ export const SummaryResult = (props: Props) => {
   return (
     <section className="flex flex-col gap-[1.2rem] px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
       <h1 className="headline1-extrabold tracking-[-0.03em] text-text-default">{title}</h1>
-      <p className="caption1-medium tracking-[-0.03em] text-text-caption whitespace-pre-line">
+      <p className="caption1-medium-reading tracking-[-0.03em] text-text-description whitespace-pre-line">
         {body}
       </p>
     </section>

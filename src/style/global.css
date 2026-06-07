@@ -118,6 +118,7 @@
   --leading-body1: 1.5;
   --leading-body2: 1.5;
   --leading-caption1: 1.4;
+  --leading-caption1-reading: 1.5;
   --leading-caption2: 1.4rem;
 }
 
@@ -226,6 +227,13 @@
   font-family: var(--font-sans);
   font-size: var(--text-caption1);
   line-height: var(--leading-caption1);
+  font-weight: 500;
+}
+
+@utility caption1-medium-reading {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1-reading);
   font-weight: 500;
 }
 

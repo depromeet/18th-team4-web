@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import { SummaryContainer } from '@/components';
-import { getSummary } from '@/lib';
+import { getMessagesFirstPage, getSummary } from '@/lib';
 
 export const generateMetadata = async (): Promise<Metadata> => ({
   title: 'Readum:요약',
@@ -18,13 +18,17 @@ const SummaryPage = async (props: Props) => {
   const { summaryId } = await props.params;
   const { tab } = await props.searchParams;
   const initialTab = parseTab(tab);
-  const initialSummary = await getSummary(summaryId).catch(() => null);
+  const [initialSummary, initialMessages] = await Promise.all([
+    getSummary(summaryId).catch(() => null),
+    initialTab === 'chat' ? getMessagesFirstPage(summaryId) : Promise.resolve(null),
+  ]);
 
   return (
     <SummaryContainer
       sessionId={summaryId}
-      initialSummary={initialSummary}
       initialTab={initialTab}
+      initialSummary={initialSummary}
+      initialMessages={initialMessages}
     />
   );
 };

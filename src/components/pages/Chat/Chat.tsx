@@ -15,23 +15,29 @@ type Props = VariantProps<typeof containerVariants> & {
 };
 
 export const Chat = (props: Props) => {
-  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone, time } = props;
+  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, time } = props;
   const isMe = user === CHAT_USER.ME;
 
   const bubble = (
-    <div className={cn(containerVariants({ user, tone }))}>
+    <div className={cn(containerVariants({ user }))}>
       {showIcon ? (
         <Image src={Chatbot} alt="chatbot" width={32} height={32} className="mb-[0.6rem]" />
       ) : null}
       {isStreaming && !message ? <TypingDots /> : null}
-      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
+      <p className="body2-semibold whitespace-pre-wrap break-words tracking-[-0.03em] text-text-default">
+        {message}
+      </p>
     </div>
   );
 
   if (isMe) {
     return (
       <div className="flex items-end gap-[0.6rem] self-end">
-        {time && <span className="caption1-medium shrink-0 text-text-caption">{time}</span>}
+        {time && (
+          <span className="caption2-medium shrink-0 whitespace-nowrap tracking-[-0.03em] text-gray-alpha-200">
+            {time}
+          </span>
+        )}
         {bubble}
       </div>
     );

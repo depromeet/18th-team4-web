@@ -1,20 +1,35 @@
 'use client';
 
 import { Chat } from '@/components';
-import { type ChatMessage } from '@/constants';
+import { CHAT_USER, type ChatMessage } from '@/constants';
+
+const formatTime = (isoString: string): string =>
+  new Date(isoString).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
 
 type Props = {
   messages: ChatMessage[];
   hasOlder: boolean;
   isFetchingOlder: boolean;
   onLoadOlder: () => void;
+  isLoading?: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
 };
 
 export const SummaryChatHistory = (props: Props) => {
-  const { messages, hasOlder, isFetchingOlder, onLoadOlder } = props;
+  const { messages, hasOlder, isFetchingOlder, onLoadOlder, isLoading, isError, onRetry } = props;
+
+  const lastAiIndex = messages.reduce(
+    (last, chat, index) => (chat.user === CHAT_USER.AI ? index : last),
+    -1,
+  );
 
   return (
-    <section className="flex flex-col gap-[2.4rem] px-[2.4rem] pt-[2rem] pb-[2.8rem]">
+    <section className="flex flex-col gap-[2.8rem] px-[2.4rem] pt-[2rem] pb-[2.8rem]">
       {hasOlder ? (
         <button
           type="button"
@@ -26,13 +41,38 @@ export const SummaryChatHistory = (props: Props) => {
         </button>
       ) : null}
 
-      {messages.length === 0 ? (
+      {isError && messages.length === 0 ? (
+        <div className="flex flex-col items-center gap-[1.2rem] py-[2.4rem]">
+          <p className="body2-medium text-text-caption text-center">대화를 불러오지 못했어요.</p>
+          {onRetry ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="body2-semibold text-text-caption underline-offset-2 hover:underline"
+            >
+              다시 시도
+            </button>
+          ) : null}
+        </div>
+      ) : isLoading && messages.length === 0 ? (
+        <p className="body2-medium text-text-caption text-center py-[2.4rem]">
+          대화를 불러오는 중...
+        </p>
+      ) : messages.length === 0 ? (
         <p className="body2-medium text-text-caption text-center py-[2.4rem]">
           아직 나눈 대화가 없어요.
         </p>
       ) : (
-        messages.map((chat) => (
-          <Chat key={chat.id} user={chat.user} message={chat.message} tone="soft" />
+        messages.map((chat, index) => (
+          <Chat
+            key={chat.id}
+            user={chat.user}
+            message={chat.message}
+            time={
+              chat.user === CHAT_USER.ME && chat.createdAt ? formatTime(chat.createdAt) : undefined
+            }
+            showIcon={index === lastAiIndex}
+          />
         ))
       )}
     </section>
