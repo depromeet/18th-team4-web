@@ -1,7 +1,9 @@
 import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import { Logo } from '@/assets';
-import { ArrowIcon, Tooltip, UserIcon } from '@/components';
+import { ArrowIcon, UserIcon } from '@/components';
+import { AnimateTooltip } from '@/components/common/Tooltip/AnimateTooltip';
+import ChatToast from '@/components/pages/Chat/ChatToast';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
@@ -10,6 +12,7 @@ type HeaderProps = React.ComponentProps<'header'> &
     summarizeActive?: boolean;
     onBack?: () => void;
     onCta?: () => void;
+    progress?: number;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
@@ -21,6 +24,7 @@ export const Header = (props: HeaderProps) => {
     summarizeActive = false,
     onBack,
     onCta,
+    progress,
     ...rest
   } = props;
 
@@ -63,29 +67,17 @@ export const Header = (props: HeaderProps) => {
         </button>
       )}
 
-      {variant === HEADER_VARIANT.CHAT && (
-        <div className="relative">
-          <button
-            aria-label="요약하기"
-            disabled={!summarizeActive}
-            onClick={onCta}
-            className={cn('body1-bold tracking-[-0.048rem]', {
-              'cursor-pointer text-icon-primary': summarizeActive,
-              'cursor-default text-icon-disabled': !summarizeActive,
-            })}
-          >
-            요약하기
-          </button>
-          {summarizeActive && (
-            <div className="absolute right-0 top-[calc(100%+1.3rem)] z-50">
-              <Tooltip
-                role="tooltip"
-                content="이제 대화를 요약할 수 있어요"
-                arrowSide="top"
-                arrowAlignment="right"
-              />
-            </div>
-          )}
+      {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
+
+      {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
+        <div className="absolute bottom-0 left-0 h-[0.3rem] w-full bg-gray-alpha-10">
+          <div
+            className="progress-gradient h-full rounded-r-full transition-[width] duration-300 ease-out"
+            style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+          />
+          <div className="pl-[2.4rem] pt-[1.5rem]">
+            <AnimateTooltip arrowAlignment="left" content="AI와 나눌 수 있는 대화 분량이에요" />
+          </div>
         </div>
       )}
     </header>

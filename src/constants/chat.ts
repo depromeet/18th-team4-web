@@ -9,4 +9,5 @@ export type ChatMessage = {
   id: string;
   user: (typeof CHAT_USER)[keyof typeof CHAT_USER];
   message: string;
+  createdAt?: string;
 };
