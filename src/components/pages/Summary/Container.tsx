@@ -18,9 +18,6 @@ import { SummaryResult } from './SummaryResult';
 
 type SummaryTab = 'summary' | 'chat';
 
-const buildSummaryUrl = (sessionId: string, tab: SummaryTab) =>
-  `${PATH_NAME.summary.detail(sessionId)}?tab=${tab}`;
-
 type Props = {
   sessionId: string;
   initialSummary: SummaryData | null;
@@ -38,12 +35,12 @@ export const SummaryContainer = (props: Props) => {
   const handleTabChange = (next: string) => {
     const tab = next as SummaryTab;
     setActiveTab(tab);
-    window.history.replaceState(null, '', buildSummaryUrl(sessionId, tab));
+    window.history.replaceState(null, '', PATH_NAME.summary.detail(sessionId, tab));
   };
 
   // 최초 진입 시 tab 파라미터가 없거나 유효하지 않으면 현재 탭 기준으로 URL을 정규화한다.
   useEffect(() => {
-    window.history.replaceState(null, '', buildSummaryUrl(sessionId, initialTab));
+    window.history.replaceState(null, '', PATH_NAME.summary.detail(sessionId, initialTab));
   }, [sessionId, initialTab]);
 
   const { data, isError } = useSummary(sessionId, { initialData: initialSummary });

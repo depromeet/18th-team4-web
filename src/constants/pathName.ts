@@ -12,7 +12,8 @@ export const PATH_NAME = {
   },
 
   summary: {
-    detail: (summaryId: string) => `/summary/${summaryId}`,
+    detail: (summaryId: string, tab?: string) =>
+      tab ? `/summary/${summaryId}?tab=${tab}` : `/summary/${summaryId}`,
   },
 
   mypage: () => '/mypage',
