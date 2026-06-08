@@ -1,9 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { TabView } from '@/components';
-import { CHAT_USER, type ChatMessage, PATH_NAME } from '@/constants';
+import { CHAT_USER, type ChatMessage, PATH_NAME, SUMMARY_TAB, type SummaryTab } from '@/constants';
+import { useSummaryTab } from '@/hooks';
 import {
   type MessagesData,
   type SummaryData,
@@ -16,8 +17,6 @@ import { SummaryHeader } from './SummaryHeader';
 import { SummaryLoading } from './SummaryLoading';
 import { SummaryResult } from './SummaryResult';
 
-type SummaryTab = 'summary' | 'chat';
-
 type Props = {
   sessionId: string;
   initialSummary: SummaryData | null;
@@ -26,22 +25,11 @@ type Props = {
 };
 
 export const SummaryContainer = (props: Props) => {
-  const { sessionId, initialTab = 'summary', initialSummary, initialMessages } = props;
+  const { sessionId, initialTab = SUMMARY_TAB.SUMMARY, initialSummary, initialMessages } = props;
   const router = useRouter();
   const openToast = useToastStore((s) => s.openToast);
 
-  const [activeTab, setActiveTab] = useState<SummaryTab>(initialTab);
-
-  const handleTabChange = (next: string) => {
-    const tab = next as SummaryTab;
-    setActiveTab(tab);
-    window.history.replaceState(null, '', PATH_NAME.summary.detail(sessionId, tab));
-  };
-
-  // 최초 진입 시 tab 파라미터가 없거나 유효하지 않으면 현재 탭 기준으로 URL을 정규화한다.
-  useEffect(() => {
-    window.history.replaceState(null, '', PATH_NAME.summary.detail(sessionId, initialTab));
-  }, [sessionId, initialTab]);
+  const { activeTab, changeTab } = useSummaryTab(sessionId, initialTab);
 
   const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
 
@@ -54,7 +42,7 @@ export const SummaryContainer = (props: Props) => {
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
   } = useGetMessages(sessionId, {
-    enabled: activeTab === 'chat',
+    enabled: activeTab === SUMMARY_TAB.CHAT,
     initialMessages,
     refetchOnMount: 'always',
   });
@@ -101,15 +89,15 @@ export const SummaryContainer = (props: Props) => {
         <TabView
           stickyHeader
           value={activeTab}
-          onValueChange={handleTabChange}
+          onValueChange={changeTab}
           tabs={[
             {
-              value: 'summary',
+              value: SUMMARY_TAB.SUMMARY,
               label: '요약',
               content: <SummaryResult title={data.title} body={data.body} />,
             },
             {
-              value: 'chat',
+              value: SUMMARY_TAB.CHAT,
               label: 'AI 채팅',
               content: (
                 <SummaryChatHistory
