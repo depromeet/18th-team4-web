@@ -44,7 +44,7 @@ export const ChatCard = (props: ChatCardProps) => {
 
       <div className="relative flex min-w-0 flex-1 flex-col gap-[0.2rem]">
         {(isDefault || isLoading) && (bookTitle ?? date) && (
-          <p className="body2-semibold w-full shrink-0 break-words tracking-[-0.042rem] text-[rgba(0,0,0,0.27)]">
+          <p className="body2-semibold line-clamp-1 w-full shrink-0 break-words tracking-[-0.042rem] text-[rgba(0,0,0,0.27)]">
             {bookTitle ?? date}
           </p>
         )}
@@ -58,7 +58,7 @@ export const ChatCard = (props: ChatCardProps) => {
         {isDefault && (
           <p
             className={cn(
-              'body1-bold w-full break-words tracking-[-0.064rem]',
+              'body1-bold line-clamp-2 w-full break-words tracking-[-0.064rem]',
               chatCardTitleColor[color],
             )}
           >

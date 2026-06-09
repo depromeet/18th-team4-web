@@ -15,5 +15,12 @@ export const PATH_NAME = {
     detail: (summaryId: string) => `/summary/${summaryId}`,
   },
 
-  mypage: () => '/mypage',
+  mypage: {
+    main: (tab?: string) => (tab ? `/mypage?tab=${tab}` : '/mypage'),
+    list: (tab: string) => `/mypage/list?tab=${tab}`,
+  },
+
+  book: {
+    detail: (bookId: string) => `/book/${bookId}`,
+  },
 } as const;
