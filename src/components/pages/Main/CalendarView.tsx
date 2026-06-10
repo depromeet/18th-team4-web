@@ -37,8 +37,11 @@ export const CalendarView = (props: Props) => {
   const earliestStr = streakDates.length ? streakDates.reduce((a, b) => (a < b ? a : b)) : todayStr;
   const [ey, em, ed] = earliestStr.split('-').map(Number);
   const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : today;
-  const rangeStart = startOfWeek(earliestDate.getTime() < today.getTime() ? earliestDate : today);
-  // 스트립 끝: baseDate(또는 오늘) 기준 한 달 버퍼까지 — 미래로 계속 넘어갈 수 있도록 확장.
+  const firstOfFocusMonth = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+  const earliestOrToday = earliestDate.getTime() < today.getTime() ? earliestDate : today;
+  const rangeStartAnchor =
+    earliestOrToday.getTime() < firstOfFocusMonth.getTime() ? earliestOrToday : firstOfFocusMonth;
+  const rangeStart = startOfWeek(rangeStartAnchor);
   const futureAnchor = baseDate.getTime() > today.getTime() ? baseDate : today;
   const rangeEndWeek = startOfWeek(
     new Date(futureAnchor.getFullYear(), futureAnchor.getMonth() + 2, 0),

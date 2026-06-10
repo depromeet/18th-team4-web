@@ -6,4 +6,5 @@ export { default as HomeLogo } from './home-logo.webp';
 export { default as Logo } from './logo.webp';
 export { default as Onboarding1 } from './onboarding-1.webp';
 export { default as Onboarding2 } from './onboarding-2.webp';
+export { default as Onboarding3 } from './onboarding-3.webp';
 export { default as Summary } from './summary.webp';
