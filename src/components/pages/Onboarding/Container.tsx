@@ -48,7 +48,7 @@ export const OnboardingContainer = () => {
               당신을 위해
             </figcaption>
           </figure>
-          <div className="relative mt-[1.9rem] h-[16.8rem] w-[22.1rem]">
+          <div className="relative mt-[3.4rem] h-[20.3rem] w-[23.8rem]">
             {step.image && (
               <Image src={step.image} alt="Readum book" fill priority className="object-contain" />
             )}
@@ -88,13 +88,15 @@ export const OnboardingContainer = () => {
       </section>
 
       {step.image && (
-        <Image
-          src={step.image}
-          alt=""
-          aria-hidden
-          priority
-          className="pointer-events-none absolute inset-x-0 bottom-[-7.8rem] h-auto w-full"
-        />
+        <div className="flex flex-1 items-center justify-center">
+          <Image
+            src={step.image}
+            alt=""
+            aria-hidden
+            priority
+            className="pointer-events-none h-[32.5rem] w-[25.2rem] object-contain"
+          />
+        </div>
       )}
 
       <footer className="relative z-10 mt-auto px-[2.4rem] pb-[2.4rem]">
