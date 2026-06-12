@@ -168,18 +168,15 @@ const Container = () => {
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
+  const GREETING_MESSAGE: ChatMessage = {
+    id: 'initial-greeting',
+    user: CHAT_USER.AI,
+    message: '어떤 얘기부터 시작할까요?\n지금 떠오르는 생각들을 자유롭게 던져보세요.',
+  };
+
   const baseChats = [...historyChats, ...visiblePendingChats];
-  const showGreeting = isFetched && baseChats.length === 0 && !isStreaming;
-  const allChats = showGreeting
-    ? [
-        {
-          id: 'initial-greeting',
-          user: CHAT_USER.AI,
-          message: '어떤 얘기부터 시작할까요?\n지금 떠오르는 생각들을 자유롭게 던져보세요.',
-        } satisfies ChatMessage,
-        ...baseChats,
-      ]
-    : baseChats;
+  const firstIsAI = historyChats.length > 0 && historyChats[0].user === CHAT_USER.AI;
+  const allChats = isFetched && !firstIsAI ? [GREETING_MESSAGE, ...baseChats] : baseChats;
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,

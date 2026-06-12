@@ -75,7 +75,7 @@ export const Header = (props: HeaderProps) => {
             className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
-          <div className="pl-[2.4rem] pt-[1.5rem]">
+          <div className=" pt-[1.2rem]">
             <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
           </div>
         </div>
