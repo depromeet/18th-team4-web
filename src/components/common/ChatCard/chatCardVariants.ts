@@ -40,7 +40,7 @@ export const chatCardGradientColor: Record<ChatCardColor, string> = {
 };
 
 export const chatCardVariants = cva(
-  'relative flex items-start gap-[0.8rem] rounded-tl-[2.4rem] rounded-tr-[2.4rem] border border-white pb-[8rem] pt-[2.4rem] px-[2.4rem]',
+  'relative flex items-start gap-[0.8rem] rounded-[1.4rem] px-[2.4rem] py-[1.8rem]',
   {
     variants: {
       color: chatCardBackgroundColor,
@@ -73,10 +73,14 @@ export const chatCardIconColor: Record<ChatCardColor, string> = {
 
 export const CHAT_CARD_COLOR_SEQUENCE: readonly ChatCardColor[] = [
   CHAT_CARD_COLOR.TEAL,
-  CHAT_CARD_COLOR.GREEN,
   CHAT_CARD_COLOR.PURPLE,
-  CHAT_CARD_COLOR.YELLOW,
+  CHAT_CARD_COLOR.GREEN,
   CHAT_CARD_COLOR.MAGENTA,
-  CHAT_CARD_COLOR.SKY,
   CHAT_CARD_COLOR.BLUE,
+  CHAT_CARD_COLOR.YELLOW,
+  CHAT_CARD_COLOR.SKY,
 ];
+
+/** 인덱스를 색상 시퀀스에 순환 매핑한다(목록에서 카드 색을 순서대로 배정할 때 사용). */
+export const chatCardColorByIndex = (index: number): ChatCardColor =>
+  CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length];

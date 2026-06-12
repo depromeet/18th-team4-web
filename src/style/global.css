@@ -238,6 +238,13 @@
   font-weight: 700;
 }
 
+@utility body1-extrabold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
+  font-weight: 800;
+}
+
 @utility body2-medium {
   font-family: var(--font-sans);
   font-size: var(--text-body2);
@@ -457,6 +464,36 @@
   }
 }
 
+@keyframes lightbox-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-lightbox-zoom {
+  animation: lightbox-zoom-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes list-fill-up {
+  from {
+    opacity: 0;
+    transform: translateY(2.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-list-fill {
+  animation: list-fill-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .btn-appear {
   max-height: 16rem;
   opacity: 1;
@@ -542,6 +579,21 @@
 
 @utility animate-text-caret-blink {
   animation: text-caret-blink 1.06s linear infinite;
+}
+
+@keyframes calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-calendar-in {
+  animation: calendar-fade-in 0.22s ease-out both;
 }
 
 @utility progress-gradient {

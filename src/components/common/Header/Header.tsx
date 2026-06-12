@@ -2,7 +2,7 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, PlusIcon } from '@/components';
+import { ArrowIcon, UserIcon } from '@/components';
 import { AnimateTooltip } from '@/components/common/Tooltip/AnimateTooltip';
 import ChatToast from '@/components/pages/Chat/ChatToast';
 import { PATH_NAME } from '@/constants';
@@ -13,7 +13,6 @@ type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
     summarizeActive?: boolean;
     onBack?: () => void;
-    onCta?: () => void;
     progress?: number;
   };
 
@@ -25,7 +24,6 @@ export const Header = (props: HeaderProps) => {
     className,
     summarizeActive = false,
     onBack,
-    onCta,
     progress,
     ...rest
   } = props;
@@ -50,11 +48,11 @@ export const Header = (props: HeaderProps) => {
             <Image src={Logo} alt="logo" className="absolute" />
           </div>
           <Link
-            href={PATH_NAME.register.list()}
-            aria-label="책 등록하기"
-            className="relative flex shrink-0 size-[4.6rem] cursor-pointer items-center justify-center rounded-[3.6rem] bg-linear-to-b from-[rgba(255,255,255,0.47)] to-[rgba(255,255,255,0.19)] p-[1.1rem] shadow-[0_0_3.2rem_rgba(0,0,0,0.16)]"
+            href={PATH_NAME.mypage.main()}
+            aria-label="프로필"
+            className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
           >
-            <PlusIcon className="size-[2.4rem]" />
+            <UserIcon className="size-[2.4rem] text-icon-tertiary" />
           </Link>
         </>
       )}

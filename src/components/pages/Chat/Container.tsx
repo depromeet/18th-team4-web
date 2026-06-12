@@ -3,7 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT, TextfieldChat } from '@/components';
+import { Header, HEADER_VARIANT, Modal, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
 import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME, QUERY_KEY } from '@/constants';
 import { useModal } from '@/hooks';
 import {
@@ -310,6 +310,26 @@ const Container = () => {
           />
         </footer>
       </div>
+
+      {isSummaryLeaving && !isOpen ? (
+        <div
+          aria-busy="true"
+          aria-live="polite"
+          className="fixed inset-0 z-101 flex flex-col items-center justify-center gap-[1.6rem] bg-dim backdrop-blur-sm"
+        >
+          <ReadumMarkLoadingIcon className="h-auto w-[7.3rem] animate-pulse text-text-white" />
+          <p className="body2-bold px-[2.4rem] text-center text-text-white">
+            요약 페이지로 이동 중이에요
+          </p>
+        </div>
+      ) : null}
+      <Modal
+        key={mountKey}
+        modalType="DELETE"
+        isOpen={isOpen}
+        onCancel={close}
+        onConfirm={handleConfirmSummary}
+      />
     </div>
   );
 };
