@@ -82,7 +82,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
 };
 
-const Container = () => {
+export const ChatContainer = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
@@ -342,5 +342,3 @@ const Container = () => {
     </div>
   );
 };
-
-export default Container;
