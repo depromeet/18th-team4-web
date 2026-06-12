@@ -70,9 +70,9 @@ export const Header = (props: HeaderProps) => {
       {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
 
       {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
-        <div className="absolute bottom-0 left-0 h-[0.3rem] w-full bg-gray-alpha-10">
+        <div className="absolute bottom-0 left-[2rem] right-[2rem] h-[0.3rem] rounded-[999px] bg-gray-10">
           <div
-            className="progress-gradient h-full rounded-r-full transition-[width] duration-300 ease-out"
+            className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
           <div className="pl-[2.4rem] pt-[1.5rem]">
