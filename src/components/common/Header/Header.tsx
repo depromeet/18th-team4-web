@@ -70,15 +70,23 @@ export const Header = (props: HeaderProps) => {
       {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
 
       {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
-        <div className="absolute bottom-0 left-[2rem] right-[2rem] h-[0.3rem] rounded-[999px] bg-gray-10">
+        <figure className="absolute bottom-0 left-[2rem] right-[2rem] m-0 h-[0.3rem] rounded-[999px] bg-gray-10">
+          <meter
+            aria-label="요약 생성 진행도"
+            value={Math.min(100, Math.max(0, progress))}
+            min={0}
+            max={100}
+            className="sr-only"
+          />
           <div
+            aria-hidden="true"
             className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
-          <div className=" pt-[1.2rem]">
+          <figcaption className="pt-[1.2rem]">
             <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       )}
     </header>
   );
