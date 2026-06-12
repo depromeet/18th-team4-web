@@ -4,18 +4,14 @@ import { useEffect, useState } from 'react';
 import { Tooltip, type TooltipProps } from '@/components';
 import { cn } from '@/lib';
 
-type AnimateTooltipProps = TooltipProps & {
-  durationMs?: number;
-};
-
-export const AnimateTooltip = (props: AnimateTooltipProps) => {
-  const { durationMs = 3000, ...tooltipProps } = props;
+export const AnimateTooltip = (props: TooltipProps) => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(false), durationMs);
-    return () => clearTimeout(timer);
-  }, [durationMs]);
+    const handleClick = () => setVisible(false);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
 
   return (
     <div
@@ -24,7 +20,7 @@ export const AnimateTooltip = (props: AnimateTooltipProps) => {
         visible ? 'opacity-100' : 'pointer-events-none opacity-0',
       )}
     >
-      <Tooltip {...tooltipProps} />
+      <Tooltip {...props} />
     </div>
   );
 };

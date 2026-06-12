@@ -76,7 +76,7 @@ export const Header = (props: HeaderProps) => {
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
           <div className="pl-[2.4rem] pt-[1.5rem]">
-            <AnimateTooltip arrowAlignment="left" content="AI와 나눌 수 있는 대화 분량이에요" />
+            <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
           </div>
         </div>
       )}
