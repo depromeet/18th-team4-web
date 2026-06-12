@@ -1,35 +1,41 @@
 import { type VariantProps } from 'class-variance-authority';
-import { ColorSymbolIcon } from '@/components';
+import Image from 'next/image';
+import { Chatbot } from '@/assets';
 import { CHAT_USER, ChatUser } from '@/constants';
 import { cn } from '@/lib';
 import { containerVariants } from './chatVariants';
+import { TypingDots } from './TypingDots';
 
 type Props = VariantProps<typeof containerVariants> & {
   user?: ChatUser;
   message: string;
+  time?: string;
   isStreaming?: boolean;
   showIcon?: boolean;
 };
 
 export const Chat = (props: Props) => {
-  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone } = props;
+  const { user = CHAT_USER.ME, message, isStreaming = false, showIcon = false, tone, time } = props;
+  const isMe = user === CHAT_USER.ME;
 
-  return (
+  const bubble = (
     <div className={cn(containerVariants({ user, tone }))}>
-      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">
-        {message}
-        {isStreaming ? (
-          <span
-            aria-hidden
-            className="animate-text-caret-blink ml-px inline-block h-[0.95em] w-px bg-current align-baseline motion-reduce:animate-none motion-reduce:opacity-85"
-          />
-        ) : null}
-      </p>
       {showIcon ? (
-        <span className="chat-symbol-soft-blink mt-[1.2rem] inline-flex shrink-0">
-          <ColorSymbolIcon />
-        </span>
+        <Image src={Chatbot} alt="chatbot" width={32} height={32} className="mb-[0.6rem]" />
       ) : null}
+      {isStreaming && !message ? <TypingDots /> : null}
+      <p className="body2-semibold whitespace-pre-wrap break-words text-text-default">{message}</p>
     </div>
   );
+
+  if (isMe) {
+    return (
+      <div className="flex items-end gap-[0.6rem] self-end">
+        {time && <span className="caption1-medium shrink-0 text-gray-alpha-200">{time}</span>}
+        {bubble}
+      </div>
+    );
+  }
+
+  return bubble;
 };

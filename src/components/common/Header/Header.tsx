@@ -2,7 +2,7 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, Tooltip, UserIcon } from '@/components';
+import { AnimateTooltip, ArrowIcon, ChatToast, UserIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
@@ -11,7 +11,7 @@ type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
     summarizeActive?: boolean;
     onBack?: () => void;
-    onCta?: () => void;
+    progress?: number;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
@@ -22,7 +22,7 @@ export const Header = (props: HeaderProps) => {
     className,
     summarizeActive = false,
     onBack,
-    onCta,
+    progress,
     ...rest
   } = props;
 
@@ -65,30 +65,26 @@ export const Header = (props: HeaderProps) => {
         </button>
       )}
 
-      {variant === HEADER_VARIANT.CHAT && (
-        <div className="relative">
-          <button
-            aria-label="요약하기"
-            disabled={!summarizeActive}
-            onClick={onCta}
-            className={cn('body1-bold tracking-[-0.048rem]', {
-              'cursor-pointer text-icon-primary': summarizeActive,
-              'cursor-default text-icon-disabled': !summarizeActive,
-            })}
-          >
-            요약하기
-          </button>
-          {summarizeActive && (
-            <div className="absolute right-0 top-[calc(100%+1.3rem)] z-50">
-              <Tooltip
-                role="tooltip"
-                content="이제 대화를 요약할 수 있어요"
-                arrowSide="top"
-                arrowAlignment="right"
-              />
-            </div>
-          )}
-        </div>
+      {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
+
+      {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
+        <figure className="absolute bottom-0 left-[2rem] right-[2rem] m-0 h-[0.3rem] rounded-[999px] bg-gray-10">
+          <meter
+            aria-label="요약 생성 진행도"
+            value={Math.min(100, Math.max(0, progress))}
+            min={0}
+            max={100}
+            className="sr-only"
+          />
+          <div
+            aria-hidden="true"
+            className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
+            style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+          />
+          <figcaption className="pt-[1.2rem]">
+            <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
+          </figcaption>
+        </figure>
       )}
     </header>
   );

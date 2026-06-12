@@ -17,6 +17,7 @@
 
   --color-gray-white: #ffffff;
   --color-gray-10: #e7eaea;
+  --color-gray-20: #dfe6e6;
   --color-gray-50: #dadddd;
   --color-gray-100: #ced1d1;
   --color-gray-200: #a9adad;
@@ -58,6 +59,7 @@
   --color-icon-tertiary: #595c5c;
   --color-icon-secondary: #2f3131;
   --color-icon-primary: #171c1b;
+  --color-icon-dot: #c0c6c6;
 
   --color-background-primary-base: #f1f2f6;
   --color-background-primary-white: #ffffff;
@@ -76,6 +78,7 @@
   --color-sub-blue: #325390;
 
   --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
+  --shadow-chat-toast: 0 0 32px 0 rgba(0, 0, 0, 0.16);
   --background-image-gradient-line: linear-gradient(
     90deg,
     rgba(207, 220, 220, 0) 0%,
@@ -151,6 +154,7 @@
   --text-body1: 1.6rem;
   --text-body2: 1.4rem;
   --text-caption1: 1.2rem;
+  --text-caption2: 1rem;
 
   --leading-headline1: 1.35;
   --leading-headline2: 1.4;
@@ -158,6 +162,7 @@
   --leading-body1: 1.5;
   --leading-body2: 1.5;
   --leading-caption1: 1.4;
+  --leading-caption2: 1.4rem;
 }
 
 @source inline("text-sub-teal text-sub-magenta text-sub-yellow text-sub-sky text-sub-green text-sub-purple text-sub-blue");
@@ -275,6 +280,13 @@
   font-weight: 700;
 }
 
+@utility caption2-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption2);
+  line-height: var(--leading-caption2);
+  font-weight: 500;
+}
+
 @utility z-modal {
   z-index: 100;
 }
@@ -333,6 +345,23 @@
     opacity: 0;
     transform: translateY(min(40vh, 28rem));
   }
+}
+
+@keyframes typing-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-typing-dot {
+  animation: typing-dot 1.8s ease-in-out infinite;
 }
 
 @utility animate-modal-sheet-exit {
@@ -565,6 +594,11 @@
 
 @utility animate-calendar-in {
   animation: calendar-fade-in 0.22s ease-out both;
+}
+
+@utility progress-gradient {
+  background: -webkit-linear-gradient(left, #858a8a 0%, #47efe4 143.7%);
+  background: linear-gradient(90deg, #858a8a 0%, #47efe4 143.7%);
 }
 
 /* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */

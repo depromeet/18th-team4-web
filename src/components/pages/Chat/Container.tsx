@@ -47,9 +47,20 @@ const stripPendingSyncedWithHistoryTail = (
   return pending;
 };
 
+const formatTime = (isoString: string): string =>
+  new Date(isoString).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+
 const mapInfinitePagesToHistoryChats = (
   data:
-    | { pages: Array<{ messages: Array<{ id: string; role: string; content: string }> }> }
+    | {
+        pages: Array<{
+          messages: Array<{ id: string; role: string; content: string; createdAt: string }>;
+        }>;
+      }
     | undefined,
 ): ChatMessage[] => {
   if (!data?.pages?.length) return [];
@@ -60,6 +71,7 @@ const mapInfinitePagesToHistoryChats = (
       id: msg.id,
       user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
+      createdAt: msg.createdAt,
     }));
 };
 
@@ -70,7 +82,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
 };
 
-const Container = () => {
+export const ChatContainer = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
@@ -116,6 +128,7 @@ const Container = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetched,
   } = useGetMessages(sessionId);
 
   const historyChats: ChatMessage[] = mapInfinitePagesToHistoryChats(messagesData);
@@ -155,7 +168,15 @@ const Container = () => {
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
-  const allChats = [...historyChats, ...visiblePendingChats];
+  const GREETING_MESSAGE: ChatMessage = {
+    id: 'initial-greeting',
+    user: CHAT_USER.AI,
+    message: '어떤 얘기부터 시작할까요?\n지금 떠오르는 생각들을 자유롭게 던져보세요.',
+  };
+
+  const baseChats = [...historyChats, ...visiblePendingChats];
+  const firstIsAI = historyChats.length > 0 && historyChats[0].user === CHAT_USER.AI;
+  const allChats = isFetched && !firstIsAI ? [GREETING_MESSAGE, ...baseChats] : baseChats;
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,
@@ -175,6 +196,7 @@ const Container = () => {
       id: crypto.randomUUID(),
       user: CHAT_USER.ME,
       message: trimmedMessage,
+      createdAt: new Date().toISOString(),
     };
     setNewChats((prev) => [...prev, userMessage]);
 
@@ -254,23 +276,28 @@ const Container = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="bg-gradient-chat pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
+      <div className="bg-text-white pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
 
       <div className="relative z-10 flex h-screen flex-col">
         <Header
           variant={HEADER_VARIANT.CHAT}
           summarizeActive={canSummarize}
           onBack={() => router.back()}
-          onCta={open}
+          progress={30}
         />
 
-        <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
+        <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
             <div ref={topRef} />
             {allChats.map((chat, index) => (
               <Chat
                 key={chat.id}
                 user={chat.user}
+                time={
+                  chat.user === CHAT_USER.ME && chat.createdAt
+                    ? formatTime(chat.createdAt)
+                    : undefined
+                }
                 message={chat.message}
                 showIcon={!isStreaming && index === lastAIIndex}
               />
@@ -285,7 +312,7 @@ const Container = () => {
         <footer className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125">
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
-            placeholder="이야기를 나눠보세요"
+            placeholder="오늘은 어떤 얘기를 해볼까요?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onSend={handleSend}
@@ -305,7 +332,6 @@ const Container = () => {
           </p>
         </div>
       ) : null}
-
       <Modal
         key={mountKey}
         modalType="DELETE"
@@ -316,5 +342,3 @@ const Container = () => {
     </div>
   );
 };
-
-export default Container;
