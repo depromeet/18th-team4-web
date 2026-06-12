@@ -315,7 +315,7 @@ const Container = () => {
         <footer className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125">
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
-            placeholder="이야기를 나눠보세요"
+            placeholder="오늘은 어떤 얘기를 해볼까요?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onSend={handleSend}
