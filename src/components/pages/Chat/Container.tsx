@@ -128,6 +128,7 @@ const Container = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetched,
   } = useGetMessages(sessionId);
 
   const historyChats: ChatMessage[] = mapInfinitePagesToHistoryChats(messagesData);
@@ -167,7 +168,18 @@ const Container = () => {
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
-  const allChats = [...historyChats, ...visiblePendingChats];
+  const baseChats = [...historyChats, ...visiblePendingChats];
+  const showGreeting = isFetched && baseChats.length === 0 && !isStreaming;
+  const allChats = showGreeting
+    ? [
+        {
+          id: 'initial-greeting',
+          user: CHAT_USER.AI,
+          message: '어떤 얘기부터 시작할까요?\n지금 떠오르는 생각들을 자유롭게 던져보세요.',
+        } satisfies ChatMessage,
+        ...baseChats,
+      ]
+    : baseChats;
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,
