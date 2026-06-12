@@ -31,7 +31,7 @@ export const Chat = (props: Props) => {
   if (isMe) {
     return (
       <div className="flex items-end gap-[0.6rem] self-end">
-        {time && <span className="caption1-medium shrink-0 text-text-caption">{time}</span>}
+        {time && <span className="caption1-medium shrink-0 text-gray-alpha-200">{time}</span>}
         {bubble}
       </div>
     );
