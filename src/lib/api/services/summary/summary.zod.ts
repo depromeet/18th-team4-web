@@ -8,3 +8,8 @@ export const SummaryDataSchema = z.object({
 });
 
 export const SummaryResponseSchema = createResponseSchema(SummaryDataSchema);
+
+export const UpdateSummaryRequestSchema = z.object({
+  title: z.string(),
+  body: z.string(),
+});
