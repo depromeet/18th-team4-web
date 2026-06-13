@@ -26,8 +26,8 @@ const RootLayout = (props: Props): React.ReactElement => {
 
   return (
     <html lang="ko" className={`${suit.variable} antialiased`}>
-      <body className="min-h-dvh bg-gray-50">
-        <main className="relative mx-auto min-h-dvh w-full max-w-150 overflow-x-hidden bg-primary-base">
+      <body className="min-h-dvh bg-gray-10">
+        <main className="relative mx-auto min-h-dvh w-full max-w-mobile-responsive overflow-x-hidden bg-primary-base">
           <div className="relative">
             <QueryProvider>
               <PageTransition>{children}</PageTransition>

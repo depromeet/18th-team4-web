@@ -389,6 +389,14 @@
   }
 }
 
+@utility max-w-mobile-responsive {
+  max-width: none;
+
+  @media (width > 444px) {
+    max-width: 37.5rem; /* 375px (1rem = 10px) */
+  }
+}
+
 @layer utilities {
   .scrollbar-hide {
     /* IE and Edge */

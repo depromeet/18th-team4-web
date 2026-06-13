@@ -70,7 +70,7 @@ export const BottomSheet = (props: BottomSheetProps) => {
   return createPortal(
     <div
       className={cn(
-        'pointer-events-none fixed bottom-0 left-1/2 top-0 z-50 w-full max-w-150 -translate-x-1/2 overflow-x-hidden',
+        'pointer-events-none fixed bottom-0 left-1/2 top-0 z-50 w-full max-w-mobile-responsive -translate-x-1/2 overflow-x-hidden',
       )}
       data-state={open ? 'open' : 'closed'}
     >
