@@ -11,8 +11,8 @@ type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
     summarizeActive?: boolean;
     onBack?: () => void;
-    onCta?: () => void;
     progress?: number;
+    rightSlot?: React.ReactNode;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
@@ -23,8 +23,8 @@ export const Header = (props: HeaderProps) => {
     className,
     summarizeActive = false,
     onBack,
-    onCta,
     progress,
+    rightSlot,
     ...rest
   } = props;
 
@@ -66,6 +66,8 @@ export const Header = (props: HeaderProps) => {
           <ArrowIcon className="-rotate-90 size-[2.4rem] fill-icon-primary" />
         </button>
       )}
+
+      {variant === HEADER_VARIANT.BACK && rightSlot}
 
       {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
 

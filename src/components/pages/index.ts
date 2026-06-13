@@ -6,3 +6,4 @@ export { OnboardingContainer } from './Onboarding/Container';
 export { RegisterComplete } from './Register/Complete';
 export { RegisterContainer } from './Register/Container';
 export { SummaryContainer } from './Summary/Container';
+export { SummaryEditContainer } from './Summary/EditContainer';

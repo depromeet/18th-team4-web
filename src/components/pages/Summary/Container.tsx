@@ -73,7 +73,7 @@ export const SummaryContainer = (props: Props) => {
   if (!data) {
     return (
       <div className="flex h-dvh flex-col bg-background-primary-white">
-        <SummaryHeader />
+        <SummaryHeader summaryId={sessionId} />
         <div className="flex w-full px-[2.4rem] flex-1 items-center justify-center">
           <SummaryLoading />
         </div>
@@ -83,7 +83,7 @@ export const SummaryContainer = (props: Props) => {
 
   return (
     <div className="flex h-dvh flex-col bg-background-primary-white">
-      <SummaryHeader />
+      <SummaryHeader summaryId={sessionId} showEdit={activeTab === SUMMARY_TAB.SUMMARY} />
 
       <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto">
         <TabView
