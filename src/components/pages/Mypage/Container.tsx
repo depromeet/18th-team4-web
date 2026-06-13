@@ -6,18 +6,22 @@ import {
   ChevronIcon,
   Header,
   HEADER_VARIANT,
+  Modal,
   PencilIcon,
   ProfileImageIcon,
   TabView,
 } from '@/components';
-import { MYPAGE_TAB, PATH_NAME } from '@/constants';
+import { type ModalType, MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
 import { MOCK_BOOKS, MOCK_RECORDS } from '@/lib';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
 
+const OPINION_FORM_URL = 'https://forms.gle/7bviar4fy8NwSc549';
+
 const ACCOUNT_MENUS = [
+  { key: 'opinion', label: '의견 남기기' },
   { key: 'logout', label: '로그아웃' },
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
@@ -25,7 +29,19 @@ const ACCOUNT_MENUS = [
 export const MypageContainer = () => {
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [modalType, setModalType] = useState<Extract<ModalType, 'LOGOUT' | 'WITHDRAW'>>('LOGOUT');
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
+
+  const handleAccountMenuClick = (menuKey: (typeof ACCOUNT_MENUS)[number]['key']) => {
+    if (menuKey === 'opinion') {
+      window.open(OPINION_FORM_URL, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    setModalType(menuKey === 'logout' ? 'LOGOUT' : 'WITHDRAW');
+    setIsAccountModalOpen(true);
+  };
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
@@ -78,6 +94,7 @@ export const MypageContainer = () => {
           <button
             key={menu.key}
             type="button"
+            onClick={() => handleAccountMenuClick(menu.key)}
             className="body1-bold flex w-full cursor-pointer items-center justify-between gap-[1rem] px-[2.4rem] py-[1rem] tracking-[-0.064rem] text-text-caption"
           >
             {menu.label}
@@ -87,6 +104,12 @@ export const MypageContainer = () => {
       </nav>
 
       <ProfileLightbox isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+      <Modal
+        modalType={modalType}
+        isOpen={isAccountModalOpen}
+        onCancel={() => setIsAccountModalOpen(false)}
+        onConfirm={() => setIsAccountModalOpen(false)}
+      />
     </div>
   );
 };
