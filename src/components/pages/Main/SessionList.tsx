@@ -15,12 +15,11 @@ const SESSION_STATUS_TO_CARD: Record<
 type Props = {
   sessions: SessionItem[];
   filteredSessions: SessionItem[];
-  sentinelRef: React.RefObject<HTMLLIElement | null>;
   onNavigate: (path: string) => Promise<void>;
 };
 
 export const SessionList = (props: Props) => {
-  const { sessions, filteredSessions, sentinelRef, onNavigate } = props;
+  const { sessions, filteredSessions, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -55,14 +54,13 @@ export const SessionList = (props: Props) => {
                   color={color}
                   status={SESSION_STATUS_TO_CARD[session.status]}
                   date={formatDate(session.lastChattedDate)}
-                  summary={session.title}
+                  summary={session.latestSummaryContent ?? session.title}
                   bookmarked={session.status === 'CLOSED'}
                 />
               </button>
             </li>
           );
         })}
-        <li ref={sentinelRef} aria-hidden />
       </ol>
     </div>
   );

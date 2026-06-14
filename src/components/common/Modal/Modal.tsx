@@ -11,13 +11,14 @@ type Props = {
   modalType: ModalType;
   onCancel: () => void;
   onConfirm: () => void;
+  confirmDisabled?: boolean;
 };
 
 const prefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const Modal = (props: Props) => {
-  const { isOpen, modalType = 'DELETE', onCancel, onConfirm } = props;
+  const { isOpen, modalType = 'DELETE', onCancel, onConfirm, confirmDisabled = false } = props;
   const { title, content } = MODAL_TYPE[modalType];
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
@@ -107,7 +108,7 @@ export const Modal = (props: Props) => {
               size="lg"
               className="rounded-[1.6rem]"
               onClick={dismissWithSlide}
-              disabled={isExiting}
+              disabled={isExiting || confirmDisabled}
             >
               취소
             </Button>
@@ -117,7 +118,7 @@ export const Modal = (props: Props) => {
               size="lg"
               className="rounded-[1.6rem]"
               onClick={handleConfirm}
-              disabled={isExiting}
+              disabled={isExiting || confirmDisabled}
             >
               삭제하기
             </Button>
