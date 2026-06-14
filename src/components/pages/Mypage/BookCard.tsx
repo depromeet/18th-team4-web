@@ -39,7 +39,7 @@ export const BookCard = (props: Props) => {
       <p className="body2-bold mt-[1.6rem] w-full truncate text-center tracking-[-0.042rem] text-text-default">
         {book.title}
       </p>
-      <p className="caption1-medium mt-[0.4rem] w-full truncate text-center tracking-[-0.036rem] text-text-caption">
+      <p className="caption1-medium w-full truncate text-center tracking-[-0.036rem] text-text-caption">
         {`${book.publishedYear} | ${book.publisher}`}
       </p>
     </Link>

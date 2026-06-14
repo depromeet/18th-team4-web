@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { DialogIcon } from '@/assets';
 import {
   Button,
   Empty,
@@ -26,14 +25,7 @@ const SEARCH_DEBOUNCE_API_MS = 1000;
 
 const SearchMinLengthHint = () => {
   return (
-    <section className="flex flex-col items-center justify-center gap-[1.6rem] pt-16">
-      <DialogIcon />
-
-      <div className="flex flex-col">
-        <p className="title1-bold text-text-caption">검색어는 두 글자 이상 입력해주세요</p>
-        <p className="body1-medium text-text-disable">책 제목으로 검색할 수 있어요</p>
-      </div>
-    </section>
+    <Empty title="검색어는 두 글자 이상 입력해주세요" description="책 제목으로 검색할 수 있어요" />
   );
 };
 
