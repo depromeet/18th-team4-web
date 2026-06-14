@@ -122,6 +122,7 @@ export const ChatContainer = () => {
   const { data: eligibilityData, refetch: refetchEligibility } =
     useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
+  const progress = eligibilityData?.progressPercent ?? 0;
 
   const {
     data: messagesData,
@@ -283,7 +284,7 @@ export const ChatContainer = () => {
           variant={HEADER_VARIANT.CHAT}
           summarizeActive={canSummarize}
           onBack={() => router.back()}
-          progress={30}
+          progress={progress}
         />
 
         <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
