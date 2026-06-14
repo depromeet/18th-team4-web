@@ -1,6 +1,7 @@
 import { type Metadata } from 'next';
 import { Suspense } from 'react';
 import { MypageListContainer } from '@/components';
+import { MYPAGE_LIST_PAGE_SIZE } from '@/constants';
 import { getSummariesServer, getUserBooksServer } from '@/lib';
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -12,17 +13,14 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 const page = async () => {
   const [userBooksData, summariesData] = await Promise.all([
-    getUserBooksServer().catch(() => null),
-    getSummariesServer({ page: 1 }).catch(() => null),
+    getUserBooksServer({ page: 1, size: MYPAGE_LIST_PAGE_SIZE }).catch(() => null),
+    getSummariesServer({ page: 1, size: MYPAGE_LIST_PAGE_SIZE }).catch(() => null),
   ]);
 
   // 활성 탭은 클라이언트에서 ?tab= 쿼리로 읽으므로 Suspense로 감싼다.
   return (
     <Suspense>
-      <MypageListContainer
-        initialBooks={userBooksData?.books ?? []}
-        initialSummaries={summariesData}
-      />
+      <MypageListContainer initialBooks={userBooksData} initialSummaries={summariesData} />
     </Suspense>
   );
 };

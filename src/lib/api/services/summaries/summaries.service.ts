@@ -5,7 +5,7 @@ import { QUERY_KEY } from '@/constants';
 import { getSummaries } from './summaries.client';
 import { type SummaryListData } from './summaries.type';
 
-export const useGetSummaries = (initialData?: SummaryListData | null) => {
+export const useGetSummaries = (initialData?: SummaryListData | null, pageSize?: number) => {
   return useInfiniteQuery<
     SummaryListData,
     Error,
@@ -13,8 +13,8 @@ export const useGetSummaries = (initialData?: SummaryListData | null) => {
     ReturnType<typeof QUERY_KEY.summaries.list>,
     number
   >({
-    queryKey: QUERY_KEY.summaries.list(),
-    queryFn: ({ pageParam }) => getSummaries({ page: pageParam }),
+    queryKey: QUERY_KEY.summaries.list(pageSize),
+    queryFn: ({ pageParam }) => getSummaries({ page: pageParam, size: pageSize }),
     initialPageParam: 1,
     initialData: initialData
       ? {

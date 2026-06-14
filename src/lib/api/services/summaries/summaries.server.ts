@@ -7,10 +7,17 @@ export const getSummariesServer = cache(async (params: SummaryListRequest) => {
   const query = new URLSearchParams({
     page: String(params.page),
   });
+  if (params.size !== undefined) query.set('size', String(params.size));
 
   const response = await publicHttp.get<SummaryListResponse>(
     `${ENDPOINTS.SUMMARIES.list()}?${query.toString()}`,
   );
 
-  return response.data;
+  return {
+    ...response.data,
+    summaries:
+      params.size !== undefined
+        ? response.data.summaries.slice(0, params.size)
+        : response.data.summaries,
+  };
 });

@@ -1,35 +1,40 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 import {
   ChatCard,
   chatCardColorByIndex,
   Empty,
   Header,
   HEADER_VARIANT,
-  Loading,
   TabView,
 } from '@/components';
 import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
-import { type SummaryListData, useGetSummaries, type UserBookItem } from '@/lib';
+import { type SummaryListData, type UserBookListData } from '@/lib';
 import { BookCard } from './BookCard';
 
 type BooksGridProps = {
-  books: UserBookItem[];
+  initialBooks: UserBookListData | null;
 };
 
 const BooksGrid = (props: BooksGridProps) => {
-  const { books } = props;
+  const { initialBooks } = props;
+  const books = initialBooks?.books ?? [];
 
   return (
     <ul className="animate-list-fill grid list-none grid-cols-2 gap-x-[1.6rem] gap-y-[2.4rem] px-[2.4rem] pb-[4rem] pt-[3.6rem]">
-      {books.map((book) => (
-        <li key={book.userBookId} className="flex min-w-0 flex-col">
-          <BookCard book={book} />
+      {books.length === 0 ? (
+        <li className="col-span-2">
+          <Empty title="등록된 책이 없습니다." description="책을 추가하고 대화를 시작해봐요!" />
         </li>
-      ))}
+      ) : (
+        books.map((book) => (
+          <li key={book.userBookId} className="flex min-w-0 flex-col">
+            <BookCard book={book} />
+          </li>
+        ))
+      )}
     </ul>
   );
 };
@@ -40,35 +45,7 @@ type RecordsListProps = {
 
 const RecordsList = (props: RecordsListProps) => {
   const { initialSummaries } = props;
-  const bottomSentinelRef = useRef<HTMLLIElement>(null);
-  const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetSummaries(initialSummaries);
-  const records = (data?.pages ?? []).flatMap((page) => page.summaries);
-
-  useEffect(() => {
-    const sentinel = bottomSentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          void fetchNextPage();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  if (isPending) {
-    return (
-      <div className="flex min-h-[24rem] items-center justify-center">
-        <Loading />
-      </div>
-    );
-  }
+  const records = initialSummaries?.summaries ?? [];
 
   return (
     <ul className="animate-list-fill flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-[4rem] pt-[2.4rem]">
@@ -90,18 +67,12 @@ const RecordsList = (props: RecordsListProps) => {
           </li>
         ))
       )}
-      <li ref={bottomSentinelRef} className="h-px" />
-      {isFetchingNextPage && (
-        <li className="flex min-h-[8rem]">
-          <Loading />
-        </li>
-      )}
     </ul>
   );
 };
 
 type Props = {
-  initialBooks: UserBookItem[];
+  initialBooks: UserBookListData | null;
   initialSummaries: SummaryListData | null;
 };
 
@@ -121,8 +92,8 @@ export const MypageListContainer = (props: Props) => {
           {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
-            count: initialBooks.length,
-            content: <BooksGrid books={initialBooks} />,
+            count: initialBooks?.books.length ?? 0,
+            content: <BooksGrid initialBooks={initialBooks} />,
           },
           {
             value: MYPAGE_TAB.RECORDS,

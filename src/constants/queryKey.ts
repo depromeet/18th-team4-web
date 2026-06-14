@@ -3,7 +3,8 @@ export const QUERY_KEY = {
    * 내 책장
    */
   userBooks: {
-    list: () => ['userBooks', 'list'] as const,
+    all: () => ['userBooks'] as const,
+    list: (size?: number) => ['userBooks', 'list', size] as const,
   },
 
   /*
@@ -40,7 +41,7 @@ export const QUERY_KEY = {
    * 감상 기록
    */
   summaries: {
-    list: () => ['summaries', 'list'] as const,
+    list: (size?: number) => ['summaries', 'list', size] as const,
   },
 
   /*

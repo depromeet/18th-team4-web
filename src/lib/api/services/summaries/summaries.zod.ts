@@ -18,4 +18,5 @@ export const SummaryListResponseSchema = createResponseSchema(SummaryListDataSch
 
 export const SummaryListRequestSchema = z.object({
   page: z.number().int().min(1),
+  size: z.number().int().min(1).optional(),
 });

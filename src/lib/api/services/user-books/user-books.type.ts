@@ -6,6 +6,7 @@ import {
   UserBookDataSchema,
   UserBookItemSchema,
   UserBookListDataSchema,
+  UserBookListRequestSchema,
   UserBookListResponseSchema,
 } from './user-books.zod';
 
@@ -15,4 +16,5 @@ export type DeleteUserBookRequest = z.infer<typeof DeleteUserBookRequestSchema>;
 export type UserBookData = z.infer<typeof UserBookDataSchema>;
 export type UserBookItem = z.infer<typeof UserBookItemSchema>;
 export type UserBookListData = z.infer<typeof UserBookListDataSchema>;
+export type UserBookListRequest = z.infer<typeof UserBookListRequestSchema>;
 export type UserBookListResponse = z.infer<typeof UserBookListResponseSchema>;
