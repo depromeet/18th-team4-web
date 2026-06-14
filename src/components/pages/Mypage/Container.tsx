@@ -100,7 +100,11 @@ export const MypageContainer = (props: Props) => {
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
-      <Header variant={HEADER_VARIANT.BACK} onBack={() => router.back()} className="bg-white" />
+      <Header
+        variant={HEADER_VARIANT.BACK}
+        onBack={() => router.push(PATH_NAME.main())}
+        className="bg-white"
+      />
 
       <section className="flex flex-col items-center gap-[1.2rem] px-[2.4rem] pb-[1.2rem] pt-[2.4rem]">
         <button
