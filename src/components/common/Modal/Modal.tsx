@@ -20,6 +20,7 @@ const prefersReducedMotion = (): boolean =>
 export const Modal = (props: Props) => {
   const { isOpen, modalType = 'DELETE', onCancel, onConfirm, confirmDisabled = false } = props;
   const { title, content } = MODAL_TYPE[modalType];
+  const isDeleteModal = modalType === 'DELETE';
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
 
@@ -103,15 +104,17 @@ export const Modal = (props: Props) => {
           </header>
 
           <footer className="flex w-full gap-[1rem]">
-            <Button
-              variant={BUTTON_VARIANT.LIGHTGRAY}
-              size="lg"
-              className="rounded-[1.6rem]"
-              onClick={dismissWithSlide}
-              disabled={isExiting || confirmDisabled}
-            >
-              취소
-            </Button>
+            {isDeleteModal ? (
+              <Button
+                variant={BUTTON_VARIANT.LIGHTGRAY}
+                size="lg"
+                className="rounded-[1.6rem]"
+                onClick={dismissWithSlide}
+                disabled={isExiting || confirmDisabled}
+              >
+                취소
+              </Button>
+            ) : null}
 
             <Button
               variant={BUTTON_VARIANT.BLACK}
@@ -120,7 +123,7 @@ export const Modal = (props: Props) => {
               onClick={handleConfirm}
               disabled={isExiting || confirmDisabled}
             >
-              삭제하기
+              {isDeleteModal ? '삭제하기' : '확인'}
             </Button>
           </footer>
         </div>

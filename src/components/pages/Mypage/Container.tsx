@@ -8,11 +8,12 @@ import {
   ChevronIcon,
   Header,
   HEADER_VARIANT,
+  Modal,
   PencilIcon,
   ProfileImageIcon,
   TabView,
 } from '@/components';
-import { MYPAGE_TAB, PATH_NAME } from '@/constants';
+import { type ModalType, MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
 import {
   type SummaryListData,
@@ -25,7 +26,10 @@ import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
 
+const OPINION_FORM_URL = 'https://forms.gle/7bviar4fy8NwSc549';
+
 const ACCOUNT_MENUS = [
+  { key: 'opinion', label: '의견 남기기' },
   { key: 'logout', label: '로그아웃' },
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
@@ -35,16 +39,19 @@ const NICKNAME_PATTERN = /^[A-Za-z0-9가-힣]+$/;
 type Props = {
   initialProfile: UserProfile | null;
   initialBooks: UserBookItem[];
+  initialBooksHasNext?: boolean;
   initialSummaries: SummaryListData | null;
 };
 
 export const MypageContainer = (props: Props) => {
-  const { initialBooks, initialProfile, initialSummaries } = props;
+  const { initialBooks, initialBooksHasNext = false, initialProfile, initialSummaries } = props;
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNicknameOpen, setIsNicknameOpen] = useState(false);
   const [nickname, setNickname] = useState(initialProfile?.nickname ?? 'Readum 사용자');
   const [nicknameInput, setNicknameInput] = useState(nickname);
+  const [modalType, setModalType] = useState<Extract<ModalType, 'LOGOUT' | 'WITHDRAW'>>('LOGOUT');
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
   const { mutateAsync: updateNickname, isPending: isUpdatingNickname } = useUpdateNickname();
   const openToast = useToastStore((s) => s.openToast);
@@ -81,6 +88,16 @@ export const MypageContainer = (props: Props) => {
     }
   };
 
+  const handleAccountMenuClick = (menuKey: (typeof ACCOUNT_MENUS)[number]['key']) => {
+    if (menuKey === 'opinion') {
+      window.open(OPINION_FORM_URL, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    setModalType(menuKey === 'logout' ? 'LOGOUT' : 'WITHDRAW');
+    setIsAccountModalOpen(true);
+  };
+
   return (
     <div className="flex min-h-dvh flex-col bg-white">
       <Header variant={HEADER_VARIANT.BACK} onBack={() => router.back()} className="bg-white" />
@@ -115,7 +132,7 @@ export const MypageContainer = (props: Props) => {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
             count: initialBooks.length,
-            content: <RegisteredBooks books={initialBooks} />,
+            content: <RegisteredBooks books={initialBooks} hasMore={initialBooksHasNext} />,
           },
           {
             value: MYPAGE_TAB.RECORDS,
@@ -133,6 +150,7 @@ export const MypageContainer = (props: Props) => {
           <button
             key={menu.key}
             type="button"
+            onClick={() => handleAccountMenuClick(menu.key)}
             className="body1-bold flex w-full cursor-pointer items-center justify-between gap-[1rem] px-[2.4rem] py-[1rem] tracking-[-0.064rem] text-text-caption"
           >
             {menu.label}
@@ -203,6 +221,13 @@ export const MypageContainer = (props: Props) => {
           </form>
         </div>
       )}
+
+      <Modal
+        modalType={modalType}
+        isOpen={isAccountModalOpen}
+        onCancel={() => setIsAccountModalOpen(false)}
+        onConfirm={() => setIsAccountModalOpen(false)}
+      />
     </div>
   );
 };

@@ -23,6 +23,7 @@ const page = async () => {
       <MypageContainer
         initialProfile={profileData?.profile ?? null}
         initialBooks={userBooksData?.books ?? []}
+        initialBooksHasNext={userBooksData?.hasNext ?? false}
         initialSummaries={summariesData}
       />
     </Suspense>

@@ -6,11 +6,12 @@ import { MoreButton } from './MoreButton';
 
 type Props = {
   books: UserBookItem[];
+  hasMore?: boolean;
 };
 
 export const RegisteredBooks = (props: Props) => {
-  const { books } = props;
-  const hasMoreBooks = books.length > PREVIEW_COUNT;
+  const { books, hasMore = false } = props;
+  const hasMoreBooks = hasMore || books.length > PREVIEW_COUNT;
 
   if (books.length === 0) {
     return <Empty title="등록된 책이 없습니다." description="책을 추가하고 대화를 시작해봐요!" />;
