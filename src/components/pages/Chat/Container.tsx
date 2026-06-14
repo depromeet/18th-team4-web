@@ -82,7 +82,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
 };
 
-const Container = () => {
+export const ChatContainer = () => {
   const router = useRouter();
   const params = useParams<{ sessionId: string }>();
   const sessionId = params.sessionId;
@@ -128,6 +128,7 @@ const Container = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isFetched,
   } = useGetMessages(sessionId);
 
   const historyChats: ChatMessage[] = mapInfinitePagesToHistoryChats(messagesData);
@@ -167,7 +168,15 @@ const Container = () => {
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
-  const allChats = [...historyChats, ...visiblePendingChats];
+  const GREETING_MESSAGE: ChatMessage = {
+    id: 'initial-greeting',
+    user: CHAT_USER.AI,
+    message: '어떤 얘기부터 시작할까요?\n지금 떠오르는 생각들을 자유롭게 던져보세요.',
+  };
+
+  const baseChats = [...historyChats, ...visiblePendingChats];
+  const firstIsAI = historyChats.length > 0 && historyChats[0].user === CHAT_USER.AI;
+  const allChats = isFetched && !firstIsAI ? [GREETING_MESSAGE, ...baseChats] : baseChats;
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,
@@ -303,7 +312,7 @@ const Container = () => {
         <footer className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125">
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
-            placeholder="이야기를 나눠보세요"
+            placeholder="오늘은 어떤 얘기를 해볼까요?"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onSend={handleSend}
@@ -323,7 +332,6 @@ const Container = () => {
           </p>
         </div>
       ) : null}
-
       <Modal
         key={mountKey}
         modalType="DELETE"
@@ -334,5 +342,3 @@ const Container = () => {
     </div>
   );
 };
-
-export default Container;

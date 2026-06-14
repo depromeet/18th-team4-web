@@ -103,7 +103,7 @@ export const RecordsBody = (props: Props) => {
           </div>
         ) : isEmpty ? (
           <EmptyState
-            message={isToday ? '첫 대화를 시작해볼까요?' : '이 날은 대화 기록이 없어요'}
+            message={isToday ? '오늘의 첫 대화를 시작해볼까요?' : '이 날은 대화 기록이 없어요'}
           />
         ) : (
           <SessionList

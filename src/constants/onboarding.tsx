@@ -1,6 +1,6 @@
 import { type StaticImageData } from 'next/image';
 import { type ReactNode } from 'react';
-import { HomeLogo, Onboarding1, Onboarding2 } from '@/assets';
+import { Onboarding1, Onboarding2, Onboarding3 } from '@/assets';
 
 export type OnboardingStep = {
   id: string;
@@ -34,6 +34,6 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'login',
     title: null,
-    image: HomeLogo,
+    image: Onboarding3,
   },
 ];

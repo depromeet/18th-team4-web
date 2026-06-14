@@ -4,12 +4,12 @@ export const MODAL_TYPE = {
     content: '관련된 요약과 대화 내용이 모두 삭제돼요.',
   },
   LOGOUT: {
-    title: '로그아웃 할까요?',
-    content: '카카오톡으로 다시 로그인할 수 있어요.',
+    title: '아직 준비중입니다!',
+    content: '현재 로그인 기능은 지원하지 않습니다.',
   },
   WITHDRAW: {
-    title: '회원을 탈퇴할까요?',
-    content: '등록한 책과 대화 내용이 모두 삭제돼요.',
+    title: '아직 준비중입니다!',
+    content: '현재 로그인 기능은 지원하지 않습니다.',
   },
 } as const;
 

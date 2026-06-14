@@ -70,3 +70,7 @@ export const CHAT_CARD_COLOR_SEQUENCE: readonly ChatCardColor[] = [
   CHAT_CARD_COLOR.YELLOW,
   CHAT_CARD_COLOR.SKY,
 ];
+
+/** 인덱스를 색상 시퀀스에 순환 매핑한다(목록에서 카드 색을 순서대로 배정할 때 사용). */
+export const chatCardColorByIndex = (index: number): ChatCardColor =>
+  CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length];

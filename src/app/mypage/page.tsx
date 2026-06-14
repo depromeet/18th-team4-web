@@ -1,4 +1,5 @@
 import { type Metadata } from 'next';
+import { Suspense } from 'react';
 import { MypageContainer } from '@/components';
 
 export const generateMetadata = async (): Promise<Metadata> => {
@@ -9,7 +10,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
 };
 
 const page = () => {
-  return <MypageContainer />;
+  // 활성 탭은 클라이언트에서 ?tab= 쿼리로 읽으므로 Suspense로 감싼다.
+  return (
+    <Suspense>
+      <MypageContainer />
+    </Suspense>
+  );
 };
 
 export default page;

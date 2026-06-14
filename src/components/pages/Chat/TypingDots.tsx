@@ -17,7 +17,7 @@ export const TypingDots = (props: Props) => {
           key={i}
           className={cn(
             'w-[0.7rem] h-[0.7rem] rounded-full animate-typing-dot',
-            dark ? 'bg-gray-300' : 'bg-icon-dot',
+            dark ? 'bg-gray-300' : 'bg-gray-100',
           )}
           style={{ animationDelay: `${i * 0.3}s` }}
         />
