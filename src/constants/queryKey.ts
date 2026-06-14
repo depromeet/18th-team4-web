@@ -35,4 +35,11 @@ export const QUERY_KEY = {
     summaryEligibility: (sessionId: string) => ['aiChat', 'summaryEligibility', sessionId] as const,
     summary: (sessionId: string) => ['aiChat', 'summary', sessionId] as const,
   },
+
+  /*
+   * 감상 기록
+   */
+  summaries: {
+    list: () => ['summaries', 'list'] as const,
+  },
 } as const;

@@ -1,8 +1,8 @@
 'use client';
 
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '@/constants';
-import { addUserBook, getUserBooks } from './user-books.client';
+import { addUserBook, deleteUserBook, getUserBooks } from './user-books.client';
 
 export const useGetUserBooks = () => {
   return useQuery({
@@ -14,5 +14,16 @@ export const useGetUserBooks = () => {
 export const useAddUserBook = () => {
   return useMutation({
     mutationFn: (bookExternalId: string) => addUserBook({ bookExternalId }),
+  });
+};
+
+export const useDeleteUserBook = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userBookId: number) => deleteUserBook({ userBookId }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: QUERY_KEY.userBooks.list() });
+    },
   });
 };

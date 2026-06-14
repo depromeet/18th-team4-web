@@ -1,25 +1,14 @@
 'use client';
 
-import { type InfiniteData, useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '@/constants';
-import { createSession, getSessions } from './ai-chat.client';
-import { type SessionListData } from './ai-chat.type';
-
-const SESSION_PAGE_SIZE = 7;
+import { createSession, getBookSessions } from './ai-chat.client';
 
 export const useGetSessions = (userBookId: number) => {
-  return useInfiniteQuery<
-    SessionListData,
-    Error,
-    InfiniteData<SessionListData>,
-    ReturnType<typeof QUERY_KEY.aiChat.sessions>,
-    number
-  >({
+  return useQuery({
     queryKey: QUERY_KEY.aiChat.sessions(userBookId),
-    queryFn: ({ pageParam }) =>
-      getSessions({ userBookId, page: pageParam, size: SESSION_PAGE_SIZE }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    queryFn: () => getBookSessions({ userBookId }),
+    enabled: Number.isSafeInteger(userBookId) && userBookId > 0,
     staleTime: 0,
   });
 };

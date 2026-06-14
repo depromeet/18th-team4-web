@@ -1,0 +1,16 @@
+import { cache } from 'react';
+import { ENDPOINTS } from '@/constants';
+import { publicHttp } from '@/lib';
+import { type SummaryListRequest, type SummaryListResponse } from './summaries.type';
+
+export const getSummariesServer = cache(async (params: SummaryListRequest) => {
+  const query = new URLSearchParams({
+    page: String(params.page),
+  });
+
+  const response = await publicHttp.get<SummaryListResponse>(
+    `${ENDPOINTS.SUMMARIES.list()}?${query.toString()}`,
+  );
+
+  return response.data;
+});

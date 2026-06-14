@@ -1,24 +1,40 @@
 import { ENDPOINTS } from '@/constants';
 import { publicHttp } from '@/lib';
 import {
+  type BookSessionData,
+  type BookSessionRequest,
+  type BookSessionResponse,
   type CreateSessionRequest,
   type CreateSessionResponse,
   type SessionListRequest,
-  type SessionListResponse,
 } from './ai-chat.type';
 
-export const getSessions = async (params: SessionListRequest) => {
-  const query = new URLSearchParams({
-    userBookId: String(params.userBookId),
-    page: String(params.page),
-    size: String(params.size),
-  });
+const normalizeBookSessionData = (data: BookSessionResponse['data']): BookSessionData => ({
+  book: data.book,
+  sessions: data.sessions.map((session) => ({
+    ...session,
+    title: session.latestSummaryContent ?? '아직 작성된 감상 기록이 없어요',
+    status: 'ACTIVE',
+  })),
+});
 
-  const response = await publicHttp.get<SessionListResponse>(
-    `${ENDPOINTS.AI_CHAT.getSessions()}?${query.toString()}`,
+export const getBookSessions = async (params: BookSessionRequest) => {
+  const response = await publicHttp.get<BookSessionResponse>(
+    ENDPOINTS.AI_CHAT.getSessions(params.userBookId),
   );
 
-  return response.data;
+  return normalizeBookSessionData(response.data);
+};
+
+export const getSessions = async (params: SessionListRequest) => {
+  const data = await getBookSessions({ userBookId: params.userBookId });
+
+  return {
+    sessions: data.sessions,
+    page: params.page,
+    size: data.sessions.length,
+    hasNext: false,
+  };
 };
 
 export const createSession = async (params: CreateSessionRequest) => {

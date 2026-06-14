@@ -5,6 +5,10 @@ export const AddUserBookRequestSchema = z.object({
   bookExternalId: z.string().min(1),
 });
 
+export const DeleteUserBookRequestSchema = z.object({
+  userBookId: z.number().int().positive(),
+});
+
 export const UserBookDataSchema = z.object({
   id: z.number(),
   userId: z.number(),
@@ -26,6 +30,7 @@ export const UserBookItemSchema = z.object({
   publisher: z.string(),
   publishedYear: z.number(),
   coverUrl: z.string(),
+  chatSessionCount: z.number(),
 });
 
 export const UserBookListDataSchema = z.object({
