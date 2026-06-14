@@ -10,30 +10,19 @@ type Props = {
 
 export const BookCard = (props: Props) => {
   const { book } = props;
+  const coverSrc = book.coverUrl || ExampleBook;
 
   return (
     <Link href={PATH_NAME.book.detail(String(book.userBookId))} className="flex min-w-0 flex-col">
       <div className="relative mx-auto h-[15.4rem] w-[10.4rem]">
         <div
           aria-hidden
-          className="absolute inset-0 rotate-6 overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.12)]"
+          className="absolute inset-0 rotate-6 overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 opacity-80 shadow-[0_0_3.2rem_rgba(0,0,0,0.18)]"
         >
-          <Image
-            src={ExampleBook}
-            alt=""
-            fill
-            className="object-cover blur-[0.5rem]"
-            sizes="104px"
-          />
+          <Image src={coverSrc} alt="" fill className="object-cover blur-[0.25rem]" sizes="104px" />
         </div>
-        <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.12)]">
-          <Image
-            src={book.coverUrl || ExampleBook}
-            alt={book.title}
-            fill
-            className="object-cover"
-            sizes="104px"
-          />
+        <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.18)]">
+          <Image src={coverSrc} alt={book.title} fill className="object-cover" sizes="104px" />
         </div>
         <span
           className={cn(
