@@ -1,8 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import {
+  Button,
+  BUTTON_VARIANT,
   ChevronIcon,
   Header,
   HEADER_VARIANT,
@@ -12,7 +14,13 @@ import {
 } from '@/components';
 import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
-import { type SummaryListData, type UserBookItem, type UserProfile } from '@/lib';
+import {
+  type SummaryListData,
+  type UserBookItem,
+  type UserProfile,
+  useToastStore,
+  useUpdateNickname,
+} from '@/lib';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
@@ -21,6 +29,8 @@ const ACCOUNT_MENUS = [
   { key: 'logout', label: '로그아웃' },
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
+
+const NICKNAME_PATTERN = /^[A-Za-z0-9가-힣]+$/;
 
 type Props = {
   initialProfile: UserProfile | null;
@@ -32,8 +42,44 @@ export const MypageContainer = (props: Props) => {
   const { initialBooks, initialProfile, initialSummaries } = props;
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNicknameOpen, setIsNicknameOpen] = useState(false);
+  const [nickname, setNickname] = useState(initialProfile?.nickname ?? 'Readum 사용자');
+  const [nicknameInput, setNicknameInput] = useState(nickname);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
-  const nickname = initialProfile?.nickname ?? 'Readum 사용자';
+  const { mutateAsync: updateNickname, isPending: isUpdatingNickname } = useUpdateNickname();
+  const openToast = useToastStore((s) => s.openToast);
+  const trimmedNickname = nicknameInput.trim();
+  const isNicknameValid =
+    trimmedNickname.length >= 1 &&
+    trimmedNickname.length <= 10 &&
+    NICKNAME_PATTERN.test(trimmedNickname);
+
+  const openNicknameModal = () => {
+    setNicknameInput(nickname);
+    setIsNicknameOpen(true);
+  };
+
+  const closeNicknameModal = () => {
+    if (isUpdatingNickname) return;
+    setIsNicknameOpen(false);
+  };
+
+  const handleSubmitNickname = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isNicknameValid || isUpdatingNickname) return;
+
+    try {
+      const data = await updateNickname({ nickname: trimmedNickname });
+      setNickname(data.user.nickname);
+      setIsNicknameOpen(false);
+      router.refresh();
+    } catch {
+      openToast({
+        type: 'error',
+        message: '닉네임을 수정하지 못했어요. 잠시 후 다시 시도해주세요.',
+      });
+    }
+  };
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
@@ -53,6 +99,7 @@ export const MypageContainer = (props: Props) => {
           <button
             type="button"
             aria-label="닉네임 수정"
+            onClick={openNicknameModal}
             className="flex size-[2.4rem] shrink-0 cursor-pointer items-center justify-center rounded-full bg-gray-alpha-50 p-[0.6rem]"
           >
             <PencilIcon className="size-[1.2rem]" />
@@ -95,6 +142,67 @@ export const MypageContainer = (props: Props) => {
       </nav>
 
       <ProfileLightbox isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+
+      {isNicknameOpen && (
+        <div className="fixed inset-0 z-modal flex items-center justify-center px-[2.4rem]">
+          <button
+            type="button"
+            aria-label="닉네임 수정 닫기"
+            className="absolute inset-0 cursor-pointer bg-dim"
+            onClick={closeNicknameModal}
+          />
+
+          <form
+            onSubmit={(e) => void handleSubmitNickname(e)}
+            className="relative flex w-full max-w-[33rem] flex-col overflow-hidden rounded-[2rem] bg-white p-[2.4rem] pt-[2.8rem]"
+          >
+            <header className="flex flex-col items-center gap-[0.4rem] text-center">
+              <h3 className="headline2-bold text-text-default">닉네임 수정</h3>
+              <p className="body2-medium text-text-description">1~10자의 닉네임을 입력해주세요.</p>
+            </header>
+
+            <label className="mt-[2.4rem] flex flex-col gap-[0.8rem]">
+              <span className="sr-only">닉네임</span>
+              <input
+                value={nicknameInput}
+                onChange={(e) => setNicknameInput(e.target.value)}
+                maxLength={10}
+                autoFocus
+                className="body1-bold h-[5.2rem] w-full rounded-[1.2rem] bg-gray-alpha-50 px-[1.6rem] text-center text-text-default outline-none placeholder:text-text-disable"
+                placeholder="닉네임"
+                disabled={isUpdatingNickname}
+              />
+              <span className="caption1-medium min-h-[1.7rem] text-center text-text-disable">
+                {trimmedNickname && !isNicknameValid
+                  ? '영문, 한글, 숫자로 1~10자까지 입력할 수 있어요.'
+                  : `${trimmedNickname.length}/10`}
+              </span>
+            </label>
+
+            <footer className="mt-[2rem] flex w-full gap-[1rem]">
+              <Button
+                type="button"
+                variant={BUTTON_VARIANT.LIGHTGRAY}
+                size="lg"
+                className="rounded-[1.6rem]"
+                onClick={closeNicknameModal}
+                disabled={isUpdatingNickname}
+              >
+                취소
+              </Button>
+              <Button
+                type="submit"
+                variant={BUTTON_VARIANT.BLACK}
+                size="lg"
+                className="rounded-[1.6rem]"
+                disabled={!isNicknameValid || isUpdatingNickname}
+              >
+                확인
+              </Button>
+            </footer>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

@@ -31,6 +31,9 @@ export const ENDPOINTS = {
     // 내 프로필 조회
     profile: () => '/users/me/profile',
 
+    // 닉네임 수정
+    nickname: () => '/users/me/nickname',
+
     // 사용자 세션 생성
     create: () => '/users/sessions',
 

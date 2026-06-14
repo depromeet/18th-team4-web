@@ -42,4 +42,11 @@ export const QUERY_KEY = {
   summaries: {
     list: () => ['summaries', 'list'] as const,
   },
+
+  /*
+   * 사용자
+   */
+  users: {
+    profile: () => ['users', 'profile'] as const,
+  },
 } as const;

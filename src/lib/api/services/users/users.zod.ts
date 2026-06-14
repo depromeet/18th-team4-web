@@ -27,6 +27,16 @@ export const UserProfileDataSchema = z.object({
 
 export const UserProfileResponseSchema = createResponseSchema(UserProfileDataSchema);
 
+export const UpdateNicknameRequestSchema = z.object({
+  nickname: z.string().trim().min(1).max(10),
+});
+
+export const UpdateNicknameDataSchema = z.object({
+  user: UserProfileSchema,
+});
+
+export const UpdateNicknameResponseSchema = createResponseSchema(UpdateNicknameDataSchema);
+
 export const UserSchema = z.object({
   id: z.number(),
   createdAt: z.string(),
