@@ -263,10 +263,11 @@ export const ChatContainer = () => {
 
       <div className="relative z-10 flex h-screen flex-col">
         <Header variant={HEADER_VARIANT.CHAT} onBack={() => router.back()} progress={progress} />
+        <div className="h-[2rem] bg-text-white shrink-0" />
 
         <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
+          <div ref={topRef} />
           <div className="flex flex-col gap-[2.8rem]">
-            <div ref={topRef} />
             {allChats.map((chat, index) => (
               <Chat
                 key={chat.id}
