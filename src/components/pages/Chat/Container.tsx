@@ -3,17 +3,14 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT, Modal, ReadumMarkLoadingIcon, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, PATH_NAME, QUERY_KEY } from '@/constants';
+import { Header, HEADER_VARIANT, SummarizeModal, TextfieldChat } from '@/components';
+import { CHAT_BG_VARIANT, CHAT_USER, type ChatMessage, QUERY_KEY } from '@/constants';
 import { useModal } from '@/hooks';
 import {
-  HttpError,
   streamChatMessage,
   useCheckSummaryEligibility,
-  useCreateSummaryDraft,
   useGetMessages,
   usePendingChatStore,
-  useToastStore,
 } from '@/lib';
 import { Chat } from './Chat';
 
@@ -90,29 +87,6 @@ export const ChatContainer = () => {
   const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
   const { isOpen, mountKey, open, close } = useModal();
-  const openToast = useToastStore((s) => s.openToast);
-  const { mutateAsync: createSummaryDraft, isPending: isCreatingSummary } = useCreateSummaryDraft();
-  const [isSummaryLeaving, setIsSummaryLeaving] = useState(false);
-
-  const handleConfirmSummary = async () => {
-    if (isCreatingSummary || isSummaryLeaving) return;
-    setIsSummaryLeaving(true);
-    try {
-      await createSummaryDraft(sessionId);
-      close();
-      router.push(PATH_NAME.summary.detail(sessionId));
-    } catch (error) {
-      setIsSummaryLeaving(false);
-      if (error instanceof HttpError && error.status === 422) {
-        openToast({
-          type: 'error',
-          message: '대화가 더 필요해요. 조금 더 이야기를 나눠주세요.',
-        });
-        return;
-      }
-      openToast({ type: 'error', message: '요약을 시작하지 못했어요. 잠시 후 다시 시도해주세요.' });
-    }
-  };
 
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -123,6 +97,14 @@ export const ChatContainer = () => {
     useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
   const progress = eligibilityData?.progressPercent ?? 0;
+
+  const hasAutoOpenedRef = useRef(false);
+  useEffect(() => {
+    if (canSummarize && !hasAutoOpenedRef.current) {
+      hasAutoOpenedRef.current = true;
+      open();
+    }
+  }, [canSummarize, open]);
 
   const {
     data: messagesData,
@@ -280,12 +262,7 @@ export const ChatContainer = () => {
       <div className="bg-text-white pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
 
       <div className="relative z-10 flex h-screen flex-col">
-        <Header
-          variant={HEADER_VARIANT.CHAT}
-          summarizeActive={canSummarize}
-          onBack={() => router.back()}
-          progress={progress}
-        />
+        <Header variant={HEADER_VARIANT.CHAT} onBack={() => router.back()} progress={progress} />
 
         <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
           <div className="flex flex-col gap-[2.8rem]">
@@ -321,25 +298,7 @@ export const ChatContainer = () => {
         </footer>
       </div>
 
-      {isSummaryLeaving && !isOpen ? (
-        <div
-          aria-busy="true"
-          aria-live="polite"
-          className="fixed inset-0 z-101 flex flex-col items-center justify-center gap-[1.6rem] bg-dim backdrop-blur-sm"
-        >
-          <ReadumMarkLoadingIcon className="h-auto w-[7.3rem] animate-pulse text-text-white" />
-          <p className="body2-bold px-[2.4rem] text-center text-text-white">
-            요약 페이지로 이동 중이에요
-          </p>
-        </div>
-      ) : null}
-      <Modal
-        key={mountKey}
-        modalType="DELETE"
-        isOpen={isOpen}
-        onCancel={close}
-        onConfirm={handleConfirmSummary}
-      />
+      {canSummarize && <SummarizeModal key={mountKey} isOpen={isOpen} onCancel={close} />}
     </div>
   );
 };
