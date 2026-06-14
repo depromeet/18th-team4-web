@@ -21,7 +21,7 @@ export const Empty = (props: Props) => {
 
       <div className="flex flex-col items-center">
         <p className="title1-bold text-text-caption">{title}</p>
-        <p className="body1-medium text-text-disable">{description}</p>
+        <p className="body2-medium text-text-disable">{description}</p>
       </div>
     </section>
   );

@@ -89,8 +89,8 @@ export const BookDetailContainer = (props: Props) => {
         <section className="flex flex-1 flex-col items-center px-[2.4rem] pt-[4.8rem] text-center">
           <Image src={emptyIcon} alt="" width={2408} height={2408} className="h-auto w-[22rem]" />
           <div className="mt-[2.8rem] flex flex-col items-center gap-[0.4rem]">
-            <p className="headline2-bold text-text-caption">등록된 감상 기록이 없습니다.</p>
-            <p className="body1-medium text-text-disable">채팅으로 감상 기록을 시작해봐요!</p>
+            <p className="title1-bold text-text-caption">등록된 감상 기록이 없습니다.</p>
+            <p className="body2-medium text-text-disable">채팅으로 감상 기록을 시작해봐요!</p>
           </div>
         </section>
       ) : (
