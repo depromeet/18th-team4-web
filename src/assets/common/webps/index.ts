@@ -1,4 +1,5 @@
 export { default as Chatbot } from './chatbot.webp';
+export { default as Empty } from './empty-books.webp';
 export { default as emptyIcon } from './empty-chat.webp';
 export { default as ErrorCharacter } from './error-404.webp';
 export { default as ExampleBook } from './example-book.webp';

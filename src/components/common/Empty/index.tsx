@@ -1,13 +1,27 @@
-import { DialogIcon } from '@/assets';
+import Image from 'next/image';
+import { Empty as EmptyIcon } from '@/assets';
 
-export const Empty = () => {
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+export const Empty = (props: Props) => {
+  const { title = '검색 결과가 없습니다', description = '책 제목을 다시 확인해주세요' } = props;
+
   return (
-    <section className="flex items-center justify-center flex-col pt-16 gap-[1.6rem]">
-      <DialogIcon />
+    <section className="flex w-full flex-col items-center justify-center gap-[0.8rem] py-[2.2rem]">
+      <Image
+        src={EmptyIcon}
+        alt=""
+        width={1150}
+        height={581}
+        className="h-auto w-[28.7rem] max-w-full"
+      />
 
-      <div className="flex flex-col">
-        <p className="text-text-caption title1-bold">검색 결과가 없습니다</p>
-        <p className="text-text-disable body1-medium">책 제목을 다시 확인해주세요</p>
+      <div className="flex flex-col items-center">
+        <p className="title1-bold text-text-caption">{title}</p>
+        <p className="body1-medium text-text-disable">{description}</p>
       </div>
     </section>
   );

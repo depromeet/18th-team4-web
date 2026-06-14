@@ -12,7 +12,7 @@ import {
 } from '@/components';
 import { MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
-import { MOCK_BOOKS, MOCK_RECORDS } from '@/lib';
+import { type SummaryListData, type UserBookItem, type UserProfile } from '@/lib';
 import { ProfileLightbox } from './ProfileLightbox';
 import { Records } from './Records';
 import { RegisteredBooks } from './RegisteredBooks';
@@ -22,10 +22,18 @@ const ACCOUNT_MENUS = [
   { key: 'withdraw', label: '회원탈퇴' },
 ] as const;
 
-export const MypageContainer = () => {
+type Props = {
+  initialProfile: UserProfile | null;
+  initialBooks: UserBookItem[];
+  initialSummaries: SummaryListData | null;
+};
+
+export const MypageContainer = (props: Props) => {
+  const { initialBooks, initialProfile, initialSummaries } = props;
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
+  const nickname = initialProfile?.nickname ?? 'Readum 사용자';
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
@@ -41,7 +49,7 @@ export const MypageContainer = () => {
           <ProfileImageIcon className="block h-[5.6rem] w-auto shrink-0" />
         </button>
         <div className="flex items-center gap-[0.4rem]">
-          <span className="headline2-bold text-text-default">멋쟁이곰돌이2403</span>
+          <span className="headline2-bold text-text-default">{nickname}</span>
           <button
             type="button"
             aria-label="닉네임 수정"
@@ -59,14 +67,14 @@ export const MypageContainer = () => {
           {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
-            count: MOCK_BOOKS.length,
-            content: <RegisteredBooks />,
+            count: initialBooks.length,
+            content: <RegisteredBooks books={initialBooks} />,
           },
           {
             value: MYPAGE_TAB.RECORDS,
             label: '감상 기록',
-            count: MOCK_RECORDS.length,
-            content: <Records />,
+            count: initialSummaries?.summaries.length ?? 0,
+            content: <Records initialSummaries={initialSummaries} />,
           },
         ]}
       />
