@@ -58,7 +58,9 @@ export const BookDetailContainer = (props: Props) => {
 
       <section className="flex items-start justify-between gap-[0.8rem] px-[2.4rem] py-[0.8rem]">
         <div className="flex min-w-0 flex-1 flex-col">
-          <h1 className="headline2-bold tracking-[-0.06rem] text-text-default">{title}</h1>
+          <h1 className="line-clamp-3 headline2-bold tracking-[-0.06rem] text-text-default">
+            {title}
+          </h1>
           {publisherInfo && (
             <p className="caption1-medium mt-[0.4rem] tracking-[-0.036rem] text-text-caption">
               {publisherInfo}
