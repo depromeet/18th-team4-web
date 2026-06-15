@@ -7,7 +7,7 @@ import { addUserBook, deleteUserBook, getUserBooks } from './user-books.client';
 export const useGetUserBooks = (size?: number) => {
   return useQuery({
     queryKey: QUERY_KEY.userBooks.list(size),
-    queryFn: () => getUserBooks(size ? { page: 1, size } : {}),
+    queryFn: () => getUserBooks(size !== undefined ? { page: 1, size } : {}),
   });
 };
 

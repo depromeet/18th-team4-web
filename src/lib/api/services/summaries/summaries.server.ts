@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { ENDPOINTS } from '@/constants';
-import { publicHttp } from '@/lib';
+import { serverAuthHttp } from '@/lib';
 import { type SummaryListRequest, type SummaryListResponse } from './summaries.type';
 
 export const getSummariesServer = cache(async (params: SummaryListRequest) => {
@@ -9,7 +9,7 @@ export const getSummariesServer = cache(async (params: SummaryListRequest) => {
   });
   if (params.size !== undefined) query.set('size', String(params.size));
 
-  const response = await publicHttp.get<SummaryListResponse>(
+  const response = await serverAuthHttp.get<SummaryListResponse>(
     `${ENDPOINTS.SUMMARIES.list()}?${query.toString()}`,
   );
 
