@@ -2,7 +2,7 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { AnimateTooltip, ArrowIcon, UserIcon } from '@/components';
+import { AnimateTooltip, ArrowIcon, PlusIcon, UserIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
@@ -38,13 +38,22 @@ export const Header = (props: HeaderProps) => {
           <div className="relative h-[2.9rem] w-[12.3rem] shrink-0 overflow-hidden">
             <Image src={Logo} alt="logo" className="absolute" />
           </div>
-          <Link
-            href={PATH_NAME.mypage.main()}
-            aria-label="프로필"
-            className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
-          >
-            <UserIcon className="size-[2.4rem] text-icon-tertiary" />
-          </Link>
+          <div className="flex shrink-0 items-center gap-[1.6rem]">
+            <Link
+              href={PATH_NAME.register.list()}
+              aria-label="책 추가하기"
+              className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
+            >
+              <PlusIcon className="size-[2.4rem] text-icon-tertiary" />
+            </Link>
+            <Link
+              href={PATH_NAME.mypage.main()}
+              aria-label="프로필"
+              className="relative flex shrink-0 size-[2.4rem] cursor-pointer items-center justify-center"
+            >
+              <UserIcon className="size-[2.4rem] text-icon-tertiary" />
+            </Link>
+          </div>
         </>
       )}
 
