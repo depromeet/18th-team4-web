@@ -1,6 +1,12 @@
 import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { BaseInput, containerVariants, inputVariants, sendButtonVariants } from '@/components';
+import {
+  BaseInput,
+  containerVariants,
+  inputVariants,
+  sendButtonVariants,
+  sendIconVariants,
+} from '@/components';
 import { SendIcon } from '@/components/common/Icon';
 import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
 import { cn } from '@/lib';
@@ -58,7 +64,7 @@ export const TextfieldChat = (props: Props) => {
             )}
           />
         ) : (
-          <SendIcon className="size-[3.6rem]" />
+          <SendIcon className={cn('size-[3.6rem]', sendIconVariants({ status }))} />
         )}
       </button>
     </div>

@@ -2,16 +2,13 @@ import { type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/assets';
-import { ArrowIcon, UserIcon } from '@/components';
-import { AnimateTooltip } from '@/components/common/Tooltip/AnimateTooltip';
-import { ChatToast } from '@/components/pages/Chat';
+import { AnimateTooltip, ArrowIcon, UserIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, headerVariants } from './headerVariants';
 
 type HeaderProps = React.ComponentProps<'header'> &
   VariantProps<typeof headerVariants> & {
-    summarizeActive?: boolean;
     onBack?: () => void;
     progress?: number;
     rightSlot?: React.ReactNode;
@@ -20,15 +17,7 @@ type HeaderProps = React.ComponentProps<'header'> &
 const SLIDE_OUT_DURATION_MS = 280;
 
 export const Header = (props: HeaderProps) => {
-  const {
-    variant = HEADER_VARIANT.HOME,
-    className,
-    summarizeActive = false,
-    onBack,
-    progress,
-    rightSlot,
-    ...rest
-  } = props;
+  const { variant = HEADER_VARIANT.HOME, className, onBack, progress, rightSlot, ...rest } = props;
 
   const handleBack = () => {
     if (!onBack) return;
@@ -70,8 +59,6 @@ export const Header = (props: HeaderProps) => {
       )}
 
       {variant === HEADER_VARIANT.BACK && rightSlot}
-
-      {variant === HEADER_VARIANT.CHAT && <div>{summarizeActive && <ChatToast />}</div>}
 
       {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
         <figure className="absolute bottom-0 left-[2rem] right-[2rem] m-0 h-[0.3rem] rounded-[999px] bg-gray-10">
