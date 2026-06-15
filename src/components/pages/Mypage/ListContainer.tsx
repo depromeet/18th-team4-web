@@ -1,26 +1,72 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { type RefObject, useEffect, useRef } from 'react';
 import {
   ChatCard,
   chatCardColorByIndex,
   Empty,
   Header,
   HEADER_VARIANT,
+  Loading,
   TabView,
 } from '@/components';
-import { MYPAGE_TAB, PATH_NAME } from '@/constants';
+import { MYPAGE_LIST_PAGE_SIZE, MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
-import { type SummaryListData, type UserBookListData } from '@/lib';
+import {
+  type SummaryListData,
+  useGetInfiniteUserBooks,
+  useGetSummaries,
+  type UserBookListData,
+} from '@/lib';
 import { BookCard } from './BookCard';
+
+const useLoadMoreOnIntersect = (
+  enabled: boolean,
+  onLoadMore: () => void,
+): RefObject<HTMLLIElement | null> => {
+  const targetRef = useRef<HTMLLIElement | null>(null);
+
+  useEffect(() => {
+    const target = targetRef.current;
+    if (!enabled || !target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) onLoadMore();
+      },
+      { rootMargin: '16rem' },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [enabled, onLoadMore]);
+
+  return targetRef;
+};
 
 type BooksGridProps = {
   initialBooks: UserBookListData | null;
+  enabled: boolean;
 };
 
 const BooksGrid = (props: BooksGridProps) => {
-  const { initialBooks } = props;
-  const books = initialBooks?.books ?? [];
+  const { enabled, initialBooks } = props;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } =
+    useGetInfiniteUserBooks(initialBooks, MYPAGE_LIST_PAGE_SIZE);
+  const books = data?.pages.flatMap((page) => page.books) ?? [];
+  const loadMoreRef = useLoadMoreOnIntersect(
+    enabled && !!hasNextPage && !isFetchingNextPage,
+    () => void fetchNextPage(),
+  );
+
+  if (isPending) {
+    return (
+      <div className="flex min-h-[24rem] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <ul className="animate-list-fill grid list-none grid-cols-2 gap-x-[1.6rem] gap-y-[2.4rem] px-[2.4rem] pb-[4rem] pt-[3.6rem]">
@@ -35,17 +81,43 @@ const BooksGrid = (props: BooksGridProps) => {
           </li>
         ))
       )}
+
+      {hasNextPage && (
+        <li
+          ref={loadMoreRef}
+          className="col-span-2 flex min-h-[5.6rem] items-center justify-center"
+        >
+          {isFetchingNextPage && <Loading />}
+        </li>
+      )}
     </ul>
   );
 };
 
 type RecordsListProps = {
   initialSummaries: SummaryListData | null;
+  enabled: boolean;
 };
 
 const RecordsList = (props: RecordsListProps) => {
-  const { initialSummaries } = props;
-  const records = initialSummaries?.summaries ?? [];
+  const { enabled, initialSummaries } = props;
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } = useGetSummaries(
+    initialSummaries,
+    MYPAGE_LIST_PAGE_SIZE,
+  );
+  const records = data?.pages.flatMap((page) => page.summaries) ?? [];
+  const loadMoreRef = useLoadMoreOnIntersect(
+    enabled && !!hasNextPage && !isFetchingNextPage,
+    () => void fetchNextPage(),
+  );
+
+  if (isPending) {
+    return (
+      <div className="flex min-h-[24rem] items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <ul className="animate-list-fill flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-[4rem] pt-[2.4rem]">
@@ -66,6 +138,12 @@ const RecordsList = (props: RecordsListProps) => {
             />
           </li>
         ))
+      )}
+
+      {hasNextPage && (
+        <li ref={loadMoreRef} className="flex min-h-[5.6rem] items-center justify-center">
+          {isFetchingNextPage && <Loading />}
+        </li>
       )}
     </ul>
   );
@@ -93,13 +171,23 @@ export const MypageListContainer = (props: Props) => {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
             count: initialBooks?.books.length ?? 0,
-            content: <BooksGrid initialBooks={initialBooks} />,
+            content: (
+              <BooksGrid
+                initialBooks={initialBooks}
+                enabled={activeTab === MYPAGE_TAB.REGISTERED}
+              />
+            ),
           },
           {
             value: MYPAGE_TAB.RECORDS,
             label: '감상 기록',
             count: initialSummaries?.summaries.length ?? 0,
-            content: <RecordsList initialSummaries={initialSummaries} />,
+            content: (
+              <RecordsList
+                initialSummaries={initialSummaries}
+                enabled={activeTab === MYPAGE_TAB.RECORDS}
+              />
+            ),
           },
         ]}
       />
