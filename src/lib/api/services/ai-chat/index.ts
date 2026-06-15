@@ -5,6 +5,5 @@ export {
   type BookSessionBook,
   type BookSessionData,
   type SessionItem,
-  type SessionListRequest,
   type SessionStatus,
 } from './ai-chat.type';
