@@ -13,11 +13,5 @@ export const getSummariesServer = cache(async (params: SummaryListRequest) => {
     `${ENDPOINTS.SUMMARIES.list()}?${query.toString()}`,
   );
 
-  return {
-    ...response.data,
-    summaries:
-      params.size !== undefined
-        ? response.data.summaries.slice(0, params.size)
-        : response.data.summaries,
-  };
+  return response.data;
 });
