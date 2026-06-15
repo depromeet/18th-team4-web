@@ -13,7 +13,23 @@ import {
 } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { useModal } from '@/hooks';
-import { type BookSessionData, formatDate, useDeleteUserBook, useToastStore } from '@/lib';
+import {
+  type BookSessionData,
+  formatDate,
+  type SessionStatus,
+  useDeleteUserBook,
+  useToastStore,
+} from '@/lib';
+
+const SESSION_STATUS_TO_CARD: Record<
+  SessionStatus,
+  (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]
+> = {
+  ACTIVE: CHAT_CARD_STATUS.DEFAULT,
+  SUMMARIZING: CHAT_CARD_STATUS.LOADING,
+  CLOSED: CHAT_CARD_STATUS.DEFAULT,
+  FAILED: CHAT_CARD_STATUS.ERROR,
+};
 
 type Props = {
   bookId: string;
@@ -110,9 +126,9 @@ export const BookDetailContainer = (props: Props) => {
                   >
                     <ChatCard
                       color={color}
-                      status={CHAT_CARD_STATUS.DEFAULT}
+                      status={SESSION_STATUS_TO_CARD[session.status]}
                       date={formatDate(session.lastChattedDate)}
-                      summary={session.latestSummaryContent ?? session.title}
+                      summary={session.title}
                     />
                   </button>
                 </li>
