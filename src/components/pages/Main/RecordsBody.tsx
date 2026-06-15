@@ -30,6 +30,7 @@ export const RecordsBody = (props: Props) => {
   const { data, isPending } = useGetSessions(userBookId);
 
   const sessions = data?.sessions ?? [];
+  const bookTitle = data?.book.title;
 
   const selectedDate = useCalendarStore((s) => s.selectedDate);
   const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
@@ -89,6 +90,7 @@ export const RecordsBody = (props: Props) => {
           <SessionList
             sessions={sessions}
             filteredSessions={filteredSessions}
+            bookTitle={bookTitle}
             onNavigate={handleNavigate}
           />
         )}
