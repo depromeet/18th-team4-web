@@ -17,6 +17,26 @@ export const UserSessionRequestSchema = z.object({
   user_session: z.string(),
 });
 
+export const UserProfileSchema = z.object({
+  nickname: z.string(),
+});
+
+export const UserProfileDataSchema = z.object({
+  profile: UserProfileSchema,
+});
+
+export const UserProfileResponseSchema = createResponseSchema(UserProfileDataSchema);
+
+export const UpdateNicknameRequestSchema = z.object({
+  nickname: z.string().trim().min(1).max(10),
+});
+
+export const UpdateNicknameDataSchema = z.object({
+  user: UserProfileSchema,
+});
+
+export const UpdateNicknameResponseSchema = createResponseSchema(UpdateNicknameDataSchema);
+
 export const UserSchema = z.object({
   id: z.number(),
   createdAt: z.string(),

@@ -1,24 +1,19 @@
 import { ENDPOINTS } from '@/constants';
 import { publicHttp } from '@/lib';
 import {
+  type BookSessionRequest,
+  type BookSessionResponse,
   type CreateSessionRequest,
   type CreateSessionResponse,
-  type SessionListRequest,
-  type SessionListResponse,
 } from './ai-chat.type';
+import { normalizeBookSessionData } from './ai-chat.utils';
 
-export const getSessions = async (params: SessionListRequest) => {
-  const query = new URLSearchParams({
-    userBookId: String(params.userBookId),
-    page: String(params.page),
-    size: String(params.size),
-  });
-
-  const response = await publicHttp.get<SessionListResponse>(
-    `${ENDPOINTS.AI_CHAT.getSessions()}?${query.toString()}`,
+export const getBookSessions = async (params: BookSessionRequest) => {
+  const response = await publicHttp.get<BookSessionResponse>(
+    ENDPOINTS.AI_CHAT.getSessions(params.userBookId),
   );
 
-  return response.data;
+  return normalizeBookSessionData(response.data);
 };
 
 export const createSession = async (params: CreateSessionRequest) => {

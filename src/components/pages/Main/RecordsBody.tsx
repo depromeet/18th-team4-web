@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 import { Header, HEADER_VARIANT, Loading } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
@@ -27,29 +26,10 @@ export const RecordsBody = (props: Props) => {
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const { mutateAsync: createSessionAsync } = useCreateSession();
-  const bottomSentinelRef = useRef<HTMLLIElement>(null);
 
-  const { data, isPending, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetSessions(userBookId);
+  const { data, isPending } = useGetSessions(userBookId);
 
-  const sessions = (data?.pages ?? []).flatMap((page) => page.sessions);
-
-  useEffect(() => {
-    const sentinel = bottomSentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          void fetchNextPage();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  const sessions = data?.sessions ?? [];
 
   const selectedDate = useCalendarStore((s) => s.selectedDate);
   const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
@@ -108,7 +88,6 @@ export const RecordsBody = (props: Props) => {
         ) : (
           <SessionList
             filteredSessions={filteredSessions}
-            sentinelRef={bottomSentinelRef}
             onNavigate={handleNavigate}
           />
         )}

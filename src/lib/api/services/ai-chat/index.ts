@@ -1,3 +1,9 @@
-export { createSession, getSessions } from './ai-chat.client';
+export { createSession, getBookSessions } from './ai-chat.client';
+export { getBookSessionsServer } from './ai-chat.server';
 export { useCreateSession, useGetSessions } from './ai-chat.service';
-export { type SessionItem, type SessionListRequest, type SessionStatus } from './ai-chat.type';
+export {
+  type BookSessionBook,
+  type BookSessionData,
+  type SessionItem,
+  type SessionStatus,
+} from './ai-chat.type';
