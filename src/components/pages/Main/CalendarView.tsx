@@ -29,6 +29,7 @@ export const CalendarView = (props: Props) => {
   const baseDateMs = useCalendarStore((s) => s.baseDateMs);
   const setBaseDateMs = useCalendarStore((s) => s.setBaseDateMs);
   const baseDate = new Date(baseDateMs);
+  const monthLabel = `${baseDate.getFullYear()}. ${String(baseDate.getMonth() + 1).padStart(2, '0')}`;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -95,7 +96,7 @@ export const CalendarView = (props: Props) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between px-[2rem] pb-[0.8rem]">
+      <div className="flex items-center px-[2rem] pb-[0.8rem]">
         <div className="relative flex items-center rounded-full bg-gray-alpha-50 px-[0.5rem] py-[0.4rem] shadow-[inset_0px_0px_4px_0px_rgba(23,28,27,0.03)]">
           <div
             aria-hidden
@@ -125,6 +126,10 @@ export const CalendarView = (props: Props) => {
             월
           </button>
         </div>
+
+        <p className="body2-bold min-w-0 flex-1 whitespace-nowrap px-[1rem] tracking-[-0.042rem] text-text-caption">
+          {monthLabel}
+        </p>
 
         <div className="flex items-center gap-[0.8rem]">
           <button
