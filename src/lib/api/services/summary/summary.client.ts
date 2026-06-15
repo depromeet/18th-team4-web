@@ -1,6 +1,6 @@
 import { ENDPOINTS } from '@/constants';
 import { HttpError, publicHttp } from '@/lib';
-import { type SummaryData, type SummaryResponse } from './summary.type';
+import { type SummaryData, type SummaryResponse, type UpdateSummaryRequest } from './summary.type';
 
 /**
  * 감상문 조회.
@@ -41,4 +41,19 @@ export const createSummaryDraft = async (sessionId: string): Promise<void> => {
     }
     throw error;
   }
+};
+
+/**
+ * 감상문 수정.
+ * - 200/204: 성공
+ * - 그 외: 호출자가 status로 분기하도록 throw
+ */
+export const updateSummary = async (
+  sessionId: string,
+  body: UpdateSummaryRequest,
+): Promise<void> => {
+  await publicHttp.put<UpdateSummaryRequest, void>(
+    ENDPOINTS.AI_CHAT.updateSummary(sessionId),
+    body,
+  );
 };

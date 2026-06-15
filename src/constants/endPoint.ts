@@ -77,6 +77,9 @@ export const ENDPOINTS = {
 
     // 감상문 조회
     getSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
+
+    // 감상문 수정
+    updateSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
   },
 
   /*

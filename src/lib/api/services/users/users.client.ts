@@ -7,9 +7,10 @@ export type PatchLastSelectedUserBookRequest = {
 };
 
 export const patchLastSelectedUserBookId = async (userBookId: number) => {
-  await publicHttp.patch<PatchLastSelectedUserBookRequest, unknown>(ENDPOINTS.USERS.me(), {
-    lastSelectedUserBookId: userBookId,
-  });
+  // TODO: 백엔드에서 lastSelectedUserBookId를 PATCH할 수 있는 API를 제공 시 다시 연결한다.
+  // await publicHttp.patch<PatchLastSelectedUserBookRequest, unknown>(ENDPOINTS.USERS.me(), {
+  //   lastSelectedUserBookId: userBookId,
+  // });
 };
 
 export const updateNickname = async (params: UpdateNicknameRequest) => {

@@ -27,6 +27,7 @@ type Props = {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   className?: string;
+  stickyHeader?: boolean;
 };
 
 /**
@@ -41,7 +42,7 @@ type Props = {
  * `onValueChange` 등 함수 prop은 클라이언트 컴포넌트에서만 전달할 수 있다.
  */
 export const TabView = (props: Props) => {
-  const { tabs, value, defaultValue, onValueChange, className } = props;
+  const { tabs, value, defaultValue, onValueChange, className, stickyHeader = false } = props;
 
   const baseId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -110,7 +111,13 @@ export const TabView = (props: Props) => {
 
   return (
     <div className={cn('flex w-full flex-col', className)}>
-      <div role="tablist" className="relative flex w-full px-[2.4rem]">
+      <div
+        role="tablist"
+        className={cn(
+          'flex w-full justify-center px-[2.4rem]',
+          stickyHeader && 'sticky top-0 z-10 bg-background-primary-white',
+        )}
+      >
         {tabs.map((tab, index) => {
           const isActiveTab = index === selectedIndex;
 

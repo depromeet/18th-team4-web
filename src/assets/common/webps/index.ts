@@ -1,6 +1,8 @@
 export { default as Chatbot } from './chatbot.webp';
 export { default as Empty } from './empty-books.webp';
 export { default as emptyIcon } from './empty-chat.webp';
+// NOTE: 해당 에셋이 없어서 에러 발생, 일시적으로 주석처리
+// export { default as Shelve } from './empty-shelve.webp';
 export { default as ErrorCharacter } from './error-404.webp';
 export { default as ExampleBook } from './example-book.webp';
 export * from './gradient';

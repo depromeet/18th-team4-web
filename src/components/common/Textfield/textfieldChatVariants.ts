@@ -37,6 +37,18 @@ export const inputVariants = cva(
   },
 );
 
+export const sendIconVariants = cva('', {
+  variants: {
+    status: {
+      default: 'fill-text-default',
+      disabled: 'fill-icon-disabled',
+      error: 'fill-icon-disabled',
+      loading: '',
+    },
+  },
+  defaultVariants: { status: 'default' },
+});
+
 export const sendButtonVariants = cva('cursor-pointer', {
   variants: {
     status: {
