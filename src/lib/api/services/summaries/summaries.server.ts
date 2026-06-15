@@ -1,6 +1,6 @@
 import { cache } from 'react';
 import { ENDPOINTS } from '@/constants';
-import { serverAuthHttp } from '@/lib';
+import { serverAuthHttp } from '@/lib/api/http/serverAuthHttp';
 import { type SummaryListRequest, type SummaryListResponse } from './summaries.type';
 
 export const getSummariesServer = cache(async (params: SummaryListRequest) => {

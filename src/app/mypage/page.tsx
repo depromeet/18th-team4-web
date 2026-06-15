@@ -1,7 +1,8 @@
 import { type Metadata } from 'next';
 import { Suspense } from 'react';
 import { MypageContainer } from '@/components';
-import { getSummariesServer, getUserBooksServer, getUserProfile } from '@/lib';
+import { getUserBooksServer, getUserProfile } from '@/lib';
+import { getSummariesServer } from '@/lib/api/services/summaries/summaries.server';
 
 export const generateMetadata = async (): Promise<Metadata> => {
   return {
