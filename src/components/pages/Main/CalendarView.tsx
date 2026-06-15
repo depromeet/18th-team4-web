@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ChevronIcon } from '@/components';
 import { cn, toLocalDateString, useCalendarStore } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
@@ -26,6 +27,11 @@ export const CalendarView = (props: Props) => {
   const { streakDates = [], selectedDate, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
   const setView = useCalendarStore((s) => s.setView);
+
+  // localStorage에 저장된 주/월 선택을 마운트 후 적용(persist skipHydration 대응).
+  useEffect(() => {
+    void useCalendarStore.persist.rehydrate();
+  }, []);
   const baseDateMs = useCalendarStore((s) => s.baseDateMs);
   const setBaseDateMs = useCalendarStore((s) => s.setBaseDateMs);
   const baseDate = new Date(baseDateMs);
