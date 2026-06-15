@@ -127,18 +127,16 @@ export const CalendarView = (props: Props) => {
           </button>
         </div>
 
-        <p className="body2-bold min-w-0 flex-1 whitespace-nowrap px-[1rem] tracking-[-0.042rem] text-text-caption">
+        <button
+          type="button"
+          aria-label="오늘로 이동"
+          onClick={handleTodayClick}
+          className="body2-bold min-w-0 flex-1 cursor-pointer whitespace-nowrap px-[1rem] text-left tracking-[-0.042rem] text-text-caption"
+        >
           {monthLabel}
-        </p>
+        </button>
 
         <div className="flex items-center gap-[0.8rem]">
-          <button
-            type="button"
-            onClick={handleTodayClick}
-            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[1.1rem] py-[1rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
-          >
-            오늘
-          </button>
           <button
             type="button"
             aria-label="이전"
