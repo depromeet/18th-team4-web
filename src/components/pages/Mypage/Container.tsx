@@ -17,6 +17,8 @@ import { type ModalType, MYPAGE_TAB, PATH_NAME } from '@/constants';
 import { useMypageTab } from '@/hooks';
 import {
   type SummaryListData,
+  useGetSummaries,
+  useGetUserBooks,
   type UserBookItem,
   type UserProfile,
   useToastStore,
@@ -53,8 +55,13 @@ export const MypageContainer = (props: Props) => {
   const [modalType, setModalType] = useState<Extract<ModalType, 'LOGOUT' | 'WITHDRAW'>>('LOGOUT');
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
+  const { data: userBooksData } = useGetUserBooks();
+  const { data: summariesQueryData } = useGetSummaries(initialSummaries);
   const { mutateAsync: updateNickname, isPending: isUpdatingNickname } = useUpdateNickname();
   const openToast = useToastStore((s) => s.openToast);
+  const books = userBooksData?.books ?? initialBooks;
+  const booksHasNext = userBooksData?.hasNext ?? initialBooksHasNext;
+  const summaries = summariesQueryData?.pages[0] ?? initialSummaries;
   const trimmedNickname = nicknameInput.trim();
   const isNicknameValid =
     trimmedNickname.length >= 1 &&
@@ -135,14 +142,14 @@ export const MypageContainer = (props: Props) => {
           {
             value: MYPAGE_TAB.REGISTERED,
             label: '등록된 책',
-            count: initialBooks.length,
-            content: <RegisteredBooks books={initialBooks} hasMore={initialBooksHasNext} />,
+            count: books.length,
+            content: <RegisteredBooks books={books} hasMore={booksHasNext} />,
           },
           {
             value: MYPAGE_TAB.RECORDS,
             label: '감상 기록',
-            count: initialSummaries?.summaries.length ?? 0,
-            content: <Records initialSummaries={initialSummaries} />,
+            count: summaries?.summaries.length ?? 0,
+            content: <Records initialSummaries={summaries} />,
           },
         ]}
       />
