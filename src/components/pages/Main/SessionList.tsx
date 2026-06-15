@@ -41,7 +41,7 @@ export const SessionList = (props: Props) => {
             ];
           const path =
             session.status === 'CLOSED' || session.status === 'SUMMARIZING'
-              ? `${PATH_NAME.summary.detail(sessionIdStr)}?color=${color}`
+              ? PATH_NAME.summary.detail(sessionIdStr)
               : PATH_NAME.chat.detail(sessionIdStr);
 
           return (
