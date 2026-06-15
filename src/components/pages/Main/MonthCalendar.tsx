@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { DAY_LABELS } from '@/constants';
 import { cn, toLocalDateString } from '@/lib';
 
@@ -27,6 +28,8 @@ type Props = {
   todayDate?: Date;
   selectedDate?: string;
   className?: string;
+  /** 세션 로드가 끝나 스트립 위치가 안정된 뒤에만 true. 마운트·데이터 로드 중에는 transition을 끈다. */
+  ready?: boolean;
   onDayClick?: (dateStr: string) => void;
 };
 
@@ -100,8 +103,20 @@ export const MonthCalendar = (props: Props) => {
     todayDate,
     selectedDate,
     className,
+    ready = false,
     onDayClick,
   } = props;
+
+  // 데이터 로드로 위치가 안정된 다음 프레임부터만 transition을 켜서,
+  // 마운트·streakDates 도착에 따른 초기 위치 보정이 애니메이션 없이 즉시 반영되게 한다.
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    if (!ready || animate) {
+      return;
+    }
+    const id = requestAnimationFrame(() => setAnimate(true));
+    return () => cancelAnimationFrame(id);
+  }, [ready, animate]);
 
   const baseDate = new Date(baseDateMs);
   const focusYear = baseDate.getFullYear();
@@ -128,13 +143,17 @@ export const MonthCalendar = (props: Props) => {
   return (
     <div
       className={cn(
-        'w-full overflow-hidden transition-[height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        'w-full overflow-hidden',
+        animate && 'transition-[height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
         className,
       )}
       style={{ height: `${visibleRows * ROW_HEIGHT_REM}rem` }}
     >
       <div
-        className="flex flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+        className={cn(
+          'flex flex-col',
+          animate && 'transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        )}
         style={{ transform: `translateY(-${topIndex * ROW_HEIGHT_REM}rem)` }}
       >
         {weeks.map((week) => (

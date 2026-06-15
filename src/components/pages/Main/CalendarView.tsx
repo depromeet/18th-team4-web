@@ -8,6 +8,7 @@ import { MonthCalendar } from './MonthCalendar';
 type Props = {
   streakDates?: string[];
   selectedDate?: string;
+  ready?: boolean;
   onDaySelect?: (dateStr: string) => void;
 };
 
@@ -24,7 +25,7 @@ const startOfWeek = (d: Date) => {
 };
 
 export const CalendarView = (props: Props) => {
-  const { streakDates = [], selectedDate, onDaySelect } = props;
+  const { streakDates = [], selectedDate, ready = false, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
   const setView = useCalendarStore((s) => s.setView);
 
@@ -172,6 +173,7 @@ export const CalendarView = (props: Props) => {
         streakDates={streakDates}
         todayDate={today}
         selectedDate={selectedDate}
+        ready={ready}
         onDayClick={handleDaySelect}
       />
     </div>

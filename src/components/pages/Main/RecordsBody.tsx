@@ -96,6 +96,7 @@ export const RecordsBody = (props: Props) => {
         <CalendarView
           streakDates={streakDates}
           selectedDate={selectedDate}
+          ready={!isPending}
           onDaySelect={setSelectedDate}
         />
         {isPending ? (
