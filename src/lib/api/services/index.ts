@@ -2,6 +2,7 @@ export * from './ai-chat';
 export * from './books';
 export * from './chat';
 export * from './messages';
+export * from './summaries';
 export * from './summary';
 export * from './summary-eligibility';
 export * from './user-books';

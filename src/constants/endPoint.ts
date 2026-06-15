@@ -8,6 +8,9 @@ export const ENDPOINTS = {
 
     // 내 책장 도서 추가
     add: () => '/user-books',
+
+    // 내 책장 도서 삭제
+    delete: (userBookId: number) => `/user-books/${userBookId}`,
   },
 
   /*
@@ -24,6 +27,12 @@ export const ENDPOINTS = {
   USERS: {
     // 현재 세션 정보 조회
     me: () => '/users/me',
+
+    // 내 프로필 조회
+    profile: () => '/users/me/profile',
+
+    // 닉네임 수정
+    nickname: () => '/users/me/nickname',
 
     // 사용자 세션 생성
     create: () => '/users/sessions',
@@ -50,8 +59,8 @@ export const ENDPOINTS = {
     // AI 채팅 세션 생성
     createSession: () => '/ai-chat/sessions',
 
-    // AI 채팅 세션 목록 조회
-    getSessions: () => '/ai-chat/sessions',
+    // 책별 AI 채팅 세션 목록 조회
+    getSessions: (userBookId: number) => `/ai-chat/books/${userBookId}/sessions`,
 
     // 세션의 메시지 이력 조회 (페이지네이션)
     getMessages: (sessionId: string) => `/ai-chat/sessions/${sessionId}/messages`,
@@ -71,6 +80,14 @@ export const ENDPOINTS = {
 
     // 감상문 수정
     updateSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
+  },
+
+  /*
+   * 감상 기록 - 사용자가 완성한 감상문 목록 조회
+   */
+  SUMMARIES: {
+    // 내 감상 기록 목록 조회
+    list: () => '/summaries',
   },
 
   /*

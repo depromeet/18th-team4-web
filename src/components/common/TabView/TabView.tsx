@@ -114,7 +114,7 @@ export const TabView = (props: Props) => {
       <div
         role="tablist"
         className={cn(
-          'flex w-full justify-center px-[2.4rem]',
+          'relative flex w-full justify-center px-[2.4rem]',
           stickyHeader && 'sticky top-0 z-10 bg-background-primary-white',
         )}
       >

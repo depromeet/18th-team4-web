@@ -15,12 +15,11 @@ const SESSION_STATUS_TO_CARD: Record<
 type Props = {
   sessions: SessionItem[];
   filteredSessions: SessionItem[];
-  sentinelRef: React.RefObject<HTMLLIElement | null>;
   onNavigate: (path: string) => Promise<void>;
 };
 
 export const SessionList = (props: Props) => {
-  const { sessions, filteredSessions, sentinelRef, onNavigate } = props;
+  const { sessions, filteredSessions, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -62,7 +61,6 @@ export const SessionList = (props: Props) => {
             </li>
           );
         })}
-        <li ref={sentinelRef} aria-hidden />
       </ol>
     </div>
   );
