@@ -10,6 +10,6 @@ export const SummaryDataSchema = z.object({
 export const SummaryResponseSchema = createResponseSchema(SummaryDataSchema);
 
 export const UpdateSummaryRequestSchema = z.object({
-  title: z.string(),
-  body: z.string(),
+  title: z.string().nonempty({ message: 'title must not be empty' }),
+  body: z.string().nonempty({ message: 'body must not be empty' }),
 });
