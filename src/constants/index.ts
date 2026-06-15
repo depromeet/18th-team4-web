@@ -6,4 +6,5 @@ export * from './mypage';
 export * from './onboarding';
 export * from './pathName';
 export * from './queryKey';
+export * from './summary';
 export * from './textfieldChat';

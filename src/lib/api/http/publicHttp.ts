@@ -37,11 +37,16 @@ export const publicHttp = {
       },
     }),
 
-  put: <T>(url: string, body?: Request) =>
-    httpBase<T>(`${API_URL}${url}`, {
+  put: <req, res>(url: string, body?: req, options: ResponseInit = {}) =>
+    httpBase<res>(`${API_URL}${url}`, {
       method: 'PUT',
-      body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
+      body: body ? JSON.stringify(body) : undefined,
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
     }),
 
   delete: <T>(url: string) =>
