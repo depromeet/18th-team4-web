@@ -13,14 +13,13 @@ const SESSION_STATUS_TO_CARD: Record<
 };
 
 type Props = {
-  sessions: SessionItem[];
   filteredSessions: SessionItem[];
   sentinelRef: React.RefObject<HTMLLIElement | null>;
   onNavigate: (path: string) => Promise<void>;
 };
 
 export const SessionList = (props: Props) => {
-  const { sessions, filteredSessions, sentinelRef, onNavigate } = props;
+  const { filteredSessions, sentinelRef, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -32,12 +31,11 @@ export const SessionList = (props: Props) => {
         </p>
       </div>
       <ol className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-32">
-        {filteredSessions.map((session) => {
+        {filteredSessions.map((session, index) => {
           const sessionIdStr = String(session.sessionId);
-          const originalIndex = sessions.indexOf(session);
           const color =
             CHAT_CARD_COLOR_SEQUENCE[
-              (sessions.length - 1 - originalIndex) % CHAT_CARD_COLOR_SEQUENCE.length
+              (filteredSessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
             ];
           const path =
             session.status === 'CLOSED' || session.status === 'SUMMARIZING'

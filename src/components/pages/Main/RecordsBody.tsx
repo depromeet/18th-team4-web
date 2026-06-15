@@ -107,7 +107,6 @@ export const RecordsBody = (props: Props) => {
           />
         ) : (
           <SessionList
-            sessions={sessions}
             filteredSessions={filteredSessions}
             sentinelRef={bottomSentinelRef}
             onNavigate={handleNavigate}
