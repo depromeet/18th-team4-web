@@ -1,22 +1,13 @@
 import { ENDPOINTS } from '@/constants';
 import { publicHttp } from '@/lib';
 import {
-  type BookSessionData,
   type BookSessionRequest,
   type BookSessionResponse,
   type CreateSessionRequest,
   type CreateSessionResponse,
   type SessionListRequest,
 } from './ai-chat.type';
-
-const normalizeBookSessionData = (data: BookSessionResponse['data']): BookSessionData => ({
-  book: data.book,
-  sessions: data.sessions.map((session) => ({
-    ...session,
-    title: session.latestSummaryContent ?? '아직 작성된 감상 기록이 없어요',
-    status: 'ACTIVE',
-  })),
-});
+import { normalizeBookSessionData } from './ai-chat.utils';
 
 export const getBookSessions = async (params: BookSessionRequest) => {
   const response = await publicHttp.get<BookSessionResponse>(
