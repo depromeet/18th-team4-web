@@ -1,4 +1,4 @@
-export { createSession, getBookSessions, getSessions } from './ai-chat.client';
+export { createSession, getBookSessions } from './ai-chat.client';
 export { getBookSessionsServer } from './ai-chat.server';
 export { useCreateSession, useGetSessions } from './ai-chat.service';
 export {

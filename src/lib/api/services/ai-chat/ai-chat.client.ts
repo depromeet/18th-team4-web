@@ -5,7 +5,6 @@ import {
   type BookSessionResponse,
   type CreateSessionRequest,
   type CreateSessionResponse,
-  type SessionListRequest,
 } from './ai-chat.type';
 import { normalizeBookSessionData } from './ai-chat.utils';
 
@@ -15,17 +14,6 @@ export const getBookSessions = async (params: BookSessionRequest) => {
   );
 
   return normalizeBookSessionData(response.data);
-};
-
-export const getSessions = async (params: SessionListRequest) => {
-  const data = await getBookSessions({ userBookId: params.userBookId });
-
-  return {
-    sessions: data.sessions,
-    page: params.page,
-    size: data.sessions.length,
-    hasNext: false,
-  };
 };
 
 export const createSession = async (params: CreateSessionRequest) => {
