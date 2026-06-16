@@ -394,7 +394,7 @@ export const ChatContainer = () => {
           <div className="flex flex-col gap-[2.8rem]">
             {allChats.map((chat, index) => (
               <Chat
-                key={`${chat.id}-${index}`}
+                key={chat.id}
                 user={chat.user}
                 time={
                   chat.user === CHAT_USER.ME && chat.createdAt
