@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { type FormEvent, useState } from 'react';
+import { clearUserSessionAction } from '@/app/actions';
 import {
   Button,
   BUTTON_VARIANT,
@@ -54,6 +55,7 @@ export const MypageContainer = (props: Props) => {
   const [nicknameInput, setNicknameInput] = useState(nickname);
   const [modalType, setModalType] = useState<Extract<ModalType, 'LOGOUT' | 'WITHDRAW'>>('LOGOUT');
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isClearingSession, setIsClearingSession] = useState(false);
   const { activeTab, changeTab } = useMypageTab(PATH_NAME.mypage.main);
   const { data: userBooksData } = useGetUserBooks();
   const { data: summariesQueryData } = useGetSummaries(initialSummaries);
@@ -103,6 +105,23 @@ export const MypageContainer = (props: Props) => {
 
     setModalType(menuKey === 'logout' ? 'LOGOUT' : 'WITHDRAW');
     setIsAccountModalOpen(true);
+  };
+
+  const handleConfirmAccountModal = async () => {
+    if (isClearingSession) return;
+
+    setIsClearingSession(true);
+    const result = await clearUserSessionAction();
+    setIsClearingSession(false);
+
+    if (!result.success) {
+      openToast({ type: 'error', message: '처리에 실패했어요. 다시 시도해주세요.' });
+      return;
+    }
+
+    setIsAccountModalOpen(false);
+    router.replace(PATH_NAME.main());
+    router.refresh();
   };
 
   return (
@@ -236,8 +255,11 @@ export const MypageContainer = (props: Props) => {
       <Modal
         modalType={modalType}
         isOpen={isAccountModalOpen}
-        onCancel={() => setIsAccountModalOpen(false)}
-        onConfirm={() => setIsAccountModalOpen(false)}
+        onCancel={() => {
+          if (!isClearingSession) setIsAccountModalOpen(false);
+        }}
+        onConfirm={() => void handleConfirmAccountModal()}
+        confirmDisabled={isClearingSession}
       />
     </div>
   );
