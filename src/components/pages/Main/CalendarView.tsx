@@ -128,7 +128,10 @@ export const CalendarView = (props: Props) => {
 
   const prevWeekDate = addDays(baseDate, -7);
   const prevMonthDate = new Date(baseYear, baseMonth - 1, 1);
-  const canPrev = firstOfFocusMonth.getTime() > minCalendarMonthMs;
+  const minWeekStartMs = startOfWeek(MIN_CALENDAR_DATE).getTime();
+  const canPrevWeek = startOfWeek(baseDate).getTime() > minWeekStartMs;
+  const canPrevMonth = firstOfFocusMonth.getTime() > minCalendarMonthMs;
+  const canPrev = view === 'week' ? canPrevWeek : canPrevMonth;
   const canNext = true;
 
   const handlePrevClick = () => {
