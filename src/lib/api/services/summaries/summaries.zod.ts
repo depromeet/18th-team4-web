@@ -2,6 +2,7 @@ import z from 'zod';
 import { createResponseSchema } from '@/lib';
 
 export const SummaryListItemSchema = z.object({
+  summaryId: z.number(),
   bookTitle: z.string(),
   content: z.string(),
   createdAt: z.string(),
@@ -28,6 +29,18 @@ export const SummaryCalendarItemSchema = z.object({
   body: z.string(),
   bookTitle: z.string(),
 });
+
+export const SummaryDetailSchema = z.object({
+  aiChatSessionId: z.coerce.number(),
+  title: z.string(),
+  body: z.string(),
+});
+
+export const SummaryDetailResponseSchema = createResponseSchema(
+  z.object({
+    summary: SummaryDetailSchema,
+  }),
+);
 
 export const SummaryCalendarDataSchema = z.object({
   summaries: z.array(SummaryCalendarItemSchema),

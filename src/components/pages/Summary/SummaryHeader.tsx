@@ -7,13 +7,15 @@ import { PATH_NAME } from '@/constants';
 
 type Props = {
   summaryId: string;
+  editHref?: string;
   showEdit?: boolean;
 };
 
 export const SummaryHeader = (props: Props) => {
-  const { summaryId, showEdit = false } = props;
+  const { editHref, summaryId, showEdit = false } = props;
   const router = useRouter();
   const handleBack = () => router.push(PATH_NAME.main());
+  const shouldShowEdit = showEdit || !!editHref;
 
   return (
     <Header
@@ -21,9 +23,9 @@ export const SummaryHeader = (props: Props) => {
       className="justify-between bg-text-white"
       onBack={handleBack}
       rightSlot={
-        showEdit ? (
+        shouldShowEdit ? (
           <Link
-            href={PATH_NAME.summary.edit(summaryId)}
+            href={editHref ?? PATH_NAME.summary.edit(summaryId)}
             className="body1-bold tracking-[-0.04em] text-icon-primary"
           >
             편집

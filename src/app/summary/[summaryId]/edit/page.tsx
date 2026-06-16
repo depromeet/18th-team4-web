@@ -1,6 +1,7 @@
 import { type Metadata } from 'next';
 import { SummaryEditContainer } from '@/components';
-import { getSummary } from '@/lib';
+import { getSummaryDetailServer } from '@/lib/api/services/summaries/summaries.server';
+import { getSummary as getSessionSummaryServer } from '@/lib/api/services/summary/summary.server';
 
 export const generateMetadata = async (): Promise<Metadata> => ({
   title: 'Readum:요약 편집',
@@ -9,13 +10,29 @@ export const generateMetadata = async (): Promise<Metadata> => ({
 
 type Props = {
   params: Promise<{ summaryId: string }>;
+  searchParams: Promise<{ source?: string | string[] }>;
 };
 
 const SummaryEditPage = async (props: Props) => {
   const { summaryId } = await props.params;
-  const initialSummary = await getSummary(summaryId).catch(() => null);
+  const { source } = await props.searchParams;
+  const isSessionSource = source === 'session';
+  const [initialSummary, initialSessionSummary] = await Promise.all([
+    isSessionSource ? Promise.resolve(null) : getSummaryDetailServer(summaryId).catch(() => null),
+    isSessionSource ? getSessionSummaryServer(summaryId).catch(() => null) : Promise.resolve(null),
+  ]);
 
-  return <SummaryEditContainer summaryId={summaryId} initialSummary={initialSummary} />;
+  return (
+    <SummaryEditContainer
+      summaryId={summaryId}
+      sessionId={
+        isSessionSource ? summaryId : initialSummary ? String(initialSummary.aiChatSessionId) : ''
+      }
+      source={isSessionSource ? 'session' : 'detail'}
+      initialSummary={initialSummary}
+      initialSessionSummary={initialSessionSummary}
+    />
+  );
 };
 
 export default SummaryEditPage;

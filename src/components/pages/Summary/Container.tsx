@@ -1,15 +1,19 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TabView } from '@/components';
 import { CHAT_USER, type ChatMessage, PATH_NAME, SUMMARY_TAB, type SummaryTab } from '@/constants';
 import { useSummaryTab } from '@/hooks';
 import {
+  HttpError,
   type MessagesData,
   type SummaryData,
+  type SummaryDetail,
+  useCreateSummaryDraft,
   useGetMessages,
   useSummary,
+  useSummaryDetail,
   useToastStore,
 } from '@/lib';
 import { SummaryChatHistory } from './SummaryChatHistory';
@@ -18,20 +22,62 @@ import { SummaryLoading } from './SummaryLoading';
 import { SummaryResult } from './SummaryResult';
 
 type Props = {
+  summaryId: string;
   sessionId: string;
-  initialSummary: SummaryData | null;
+  source?: 'detail' | 'session';
+  shouldRequestDraft?: boolean;
+  initialSummary: SummaryDetail | null;
+  initialSessionSummary?: SummaryData | null;
   initialTab?: SummaryTab;
   initialMessages?: MessagesData | null;
 };
 
 export const SummaryContainer = (props: Props) => {
-  const { sessionId, initialTab = SUMMARY_TAB.SUMMARY, initialSummary, initialMessages } = props;
+  const {
+    summaryId,
+    sessionId,
+    source = 'detail',
+    shouldRequestDraft = false,
+    initialTab = SUMMARY_TAB.SUMMARY,
+    initialSummary,
+    initialSessionSummary,
+    initialMessages,
+  } = props;
   const router = useRouter();
   const openToast = useToastStore((s) => s.openToast);
+  const isSessionSource = source === 'session';
+  const activeSessionId = isSessionSource ? summaryId : sessionId;
+  const [isDraftRequestComplete, setIsDraftRequestComplete] = useState(!shouldRequestDraft);
 
-  const { activeTab, changeTab } = useSummaryTab(sessionId, initialTab);
+  const { activeTab, changeTab } = useSummaryTab(
+    summaryId,
+    initialTab,
+    isSessionSource ? 'session' : undefined,
+  );
 
-  const { data, isError } = useSummary(sessionId, { initialData: initialSummary });
+  const { data: detailSummary, isError: isDetailError } = useSummaryDetail(
+    summaryId,
+    initialSummary,
+    !isSessionSource,
+  );
+  const {
+    data: sessionSummary,
+    isError: isSessionError,
+    refetch: refetchSessionSummary,
+  } = useSummary(activeSessionId, {
+    enabled: isSessionSource && isDraftRequestComplete,
+    initialData: initialSessionSummary,
+  });
+  const { mutateAsync: createSummaryDraftAsync } = useCreateSummaryDraft();
+  const data = isSessionSource ? sessionSummary : detailSummary;
+  const isError = isSessionSource ? isSessionError : isDetailError;
+  const editableSummaryId = isSessionSource ? sessionSummary?.summaryId : Number(summaryId);
+  const editHref = isSessionSource
+    ? PATH_NAME.summary.edit(summaryId, 'session')
+    : Number.isFinite(editableSummaryId)
+      ? PATH_NAME.summary.edit(String(editableSummaryId))
+      : undefined;
+  const canShowEdit = activeTab === SUMMARY_TAB.SUMMARY && editHref !== undefined;
 
   const {
     data: messagesData,
@@ -41,8 +87,8 @@ export const SummaryContainer = (props: Props) => {
     isError: isMessagesError,
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
-  } = useGetMessages(sessionId, {
-    enabled: activeTab === SUMMARY_TAB.CHAT,
+  } = useGetMessages(activeSessionId, {
+    enabled: activeTab === SUMMARY_TAB.CHAT && !!activeSessionId,
     initialMessages,
     refetchOnMount: 'always',
   });
@@ -55,9 +101,48 @@ export const SummaryContainer = (props: Props) => {
       user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
       createdAt: msg.createdAt,
-    }));
+    }))
+    .filter((chat, index, chats) => chats.findIndex((item) => item.id === chat.id) === index);
 
   const handledRef = useRef(false);
+  const isDraftRequestingRef = useRef(false);
+
+  useEffect(() => {
+    if (!shouldRequestDraft || data || !activeSessionId || isDraftRequestingRef.current) return;
+
+    const requestSummaryDraft = async () => {
+      isDraftRequestingRef.current = true;
+
+      try {
+        await createSummaryDraftAsync(activeSessionId);
+        setIsDraftRequestComplete(true);
+        void refetchSessionSummary();
+      } catch (error) {
+        if (handledRef.current) return;
+
+        handledRef.current = true;
+        if (error instanceof HttpError && (error.status === 401 || error.status === 404)) {
+          router.replace(PATH_NAME.main());
+          return;
+        }
+
+        openToast({ type: 'error', message: '요약을 시작하지 못했어요. 다시 시도해주세요.' });
+        router.replace(PATH_NAME.main());
+      } finally {
+        isDraftRequestingRef.current = false;
+      }
+    };
+
+    void requestSummaryDraft();
+  }, [
+    activeSessionId,
+    createSummaryDraftAsync,
+    data,
+    openToast,
+    refetchSessionSummary,
+    router,
+    shouldRequestDraft,
+  ]);
 
   useEffect(() => {
     if (handledRef.current) return;
@@ -73,8 +158,8 @@ export const SummaryContainer = (props: Props) => {
   if (!data) {
     return (
       <div className="flex h-dvh flex-col bg-background-primary-white">
-        <SummaryHeader summaryId={sessionId} />
-        <div className="flex w-full px-[2.4rem] flex-1 items-center justify-center">
+        <SummaryHeader summaryId={summaryId} />
+        <div className="fixed inset-0 flex w-full items-center justify-center px-[2.4rem]">
           <SummaryLoading />
         </div>
       </div>
@@ -83,7 +168,11 @@ export const SummaryContainer = (props: Props) => {
 
   return (
     <div className="flex h-dvh flex-col bg-background-primary-white">
-      <SummaryHeader summaryId={sessionId} showEdit={activeTab === SUMMARY_TAB.SUMMARY} />
+      <SummaryHeader
+        summaryId={String(editableSummaryId ?? summaryId)}
+        editHref={editHref}
+        showEdit={canShowEdit}
+      />
 
       <main className="scrollbar-hide min-h-0 flex-1 overflow-y-auto">
         <TabView

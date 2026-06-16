@@ -2,6 +2,7 @@ import z from 'zod';
 import { createResponseSchema } from '@/lib';
 
 export const SummaryDataSchema = z.object({
+  summaryId: z.coerce.number().optional(),
   title: z.string(),
   body: z.string(),
   quote: z.string().nullable(),

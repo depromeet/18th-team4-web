@@ -2,8 +2,8 @@
 
 import { type InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { QUERY_KEY } from '@/constants';
-import { getSummaries, getSummaryCalendar } from './summaries.client';
-import { type SummaryListData } from './summaries.type';
+import { getSummaries, getSummaryCalendar, getSummaryDetail } from './summaries.client';
+import { type SummaryDetail, type SummaryListData } from './summaries.type';
 
 export const useGetSummaries = (initialData?: SummaryListData | null, pageSize?: number) => {
   return useInfiniteQuery<
@@ -32,5 +32,21 @@ export const useGetSummaryCalendar = (yearMonth: string) => {
     queryKey: QUERY_KEY.summaries.calendar(yearMonth),
     queryFn: () => getSummaryCalendar({ yearMonth }),
     staleTime: 0,
+  });
+};
+
+export const useSummaryDetail = (
+  summaryId: string,
+  initialData?: SummaryDetail | null,
+  enabled = true,
+) => {
+  return useQuery<SummaryDetail | null>({
+    queryKey: QUERY_KEY.summaries.detail(summaryId),
+    queryFn: () => getSummaryDetail(summaryId),
+    enabled: enabled && !!summaryId,
+    initialData: initialData ?? undefined,
+    staleTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 };

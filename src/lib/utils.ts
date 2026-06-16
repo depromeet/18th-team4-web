@@ -23,3 +23,13 @@ export const formatDate = (isoDate: string) => {
   if (datePart.length < 10) return '';
   return datePart.slice(2).replace(/-/g, '.');
 };
+
+const hasTimezone = (isoString: string) => /(?:Z|[+-]\d{2}:?\d{2})$/i.test(isoString);
+
+export const formatChatTime = (isoString: string): string =>
+  new Date(hasTimezone(isoString) ? isoString : `${isoString}Z`).toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'Asia/Seoul',
+  });

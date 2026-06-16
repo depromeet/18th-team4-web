@@ -73,14 +73,6 @@ export const streamChatMessage = async (
     });
   }
 
-  // pre-stream rate limit → Retry-After 헤더 확인 후 재시도
-  if (response.status === 429 && retryCount < SSE_RETRY_MAX) {
-    const retryAfter = Number(response.headers.get('Retry-After') ?? 5);
-    callbacks.onRetry?.();
-    await sleep(retryAfter * 1000);
-    return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
-  }
-
   if (!response.ok) {
     callbacks.onError(await parsePreStreamError(response));
     return;

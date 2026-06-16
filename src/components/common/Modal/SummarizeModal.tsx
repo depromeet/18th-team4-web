@@ -10,13 +10,24 @@ import { cn } from '@/lib';
 type Props = {
   isOpen: boolean;
   onCancel: () => void;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
 };
 
 const prefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 export const SummarizeModal = (props: Props) => {
-  const { isOpen, onCancel } = props;
+  const {
+    isOpen,
+    onCancel,
+    title = '대화 가능 분량을 모두 사용했어요',
+    description = (
+      <>
+        매일 오전 6시, 대화 내용이 자동으로 요약되면 <br /> 새로운 대화를 시작할 수 있어요.
+      </>
+    ),
+  } = props;
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
 
@@ -88,10 +99,10 @@ export const SummarizeModal = (props: Props) => {
           <header className="flex flex-col items-center gap-[0.4rem] text-center">
             <Image src={Summary} alt="summary" className="w-[4.3rem] h-[5.3rem]" />
             <h3 id="summary-modal-title" className="text-text-default headline2-bold mt-[1.2rem]">
-              대화 가능 분량을 모두 사용했어요
+              {title}
             </h3>
             <p id="summary-modal-description" className="body2-medium text-text-description">
-              매일 오전 6시, 대화 내용이 자동으로 요약되면 <br /> 새로운 대화를 시작할 수 있어요.
+              {description}
             </p>
           </header>
 

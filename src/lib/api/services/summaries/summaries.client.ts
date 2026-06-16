@@ -1,8 +1,11 @@
 import { ENDPOINTS } from '@/constants';
+import { publicHttp } from '@/lib';
 import { clientAuthHttp } from '@/lib/api/http/clientAuthHttp';
 import {
   type SummaryCalendarRequest,
   type SummaryCalendarResponse,
+  type SummaryDetail,
+  type SummaryDetailResponse,
   type SummaryListRequest,
   type SummaryListResponse,
 } from './summaries.type';
@@ -30,4 +33,12 @@ export const getSummaryCalendar = async (params: SummaryCalendarRequest) => {
   );
 
   return response.data;
+};
+
+export const getSummaryDetail = async (summaryId: string): Promise<SummaryDetail> => {
+  const response = await publicHttp.get<SummaryDetailResponse>(
+    ENDPOINTS.SUMMARIES.detail(summaryId),
+  );
+
+  return response.data.summary;
 };

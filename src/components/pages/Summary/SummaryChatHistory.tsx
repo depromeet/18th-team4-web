@@ -2,13 +2,7 @@
 
 import { Chat } from '@/components';
 import { CHAT_USER, type ChatMessage } from '@/constants';
-
-const formatTime = (isoString: string): string =>
-  new Date(isoString).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
+import { formatChatTime } from '@/lib';
 
 type Props = {
   messages: ChatMessage[];
@@ -65,11 +59,13 @@ export const SummaryChatHistory = (props: Props) => {
       ) : (
         messages.map((chat, index) => (
           <Chat
-            key={chat.id}
+            key={`${chat.id}-${index}`}
             user={chat.user}
             message={chat.message}
             time={
-              chat.user === CHAT_USER.ME && chat.createdAt ? formatTime(chat.createdAt) : undefined
+              chat.user === CHAT_USER.ME && chat.createdAt
+                ? formatChatTime(chat.createdAt)
+                : undefined
             }
             showIcon={index === lastAiIndex}
           />
