@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { toLocalDateString } from '../utils';
+import { toLocalDateString } from '@/lib';
 
 type CalendarView = 'week' | 'month';
 
