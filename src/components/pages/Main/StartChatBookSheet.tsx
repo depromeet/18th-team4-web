@@ -75,17 +75,14 @@ const BookSelectItem = (props: BookSelectItemProps) => {
 };
 
 export const StartChatBookSheet = (props: Props) => {
-  const { open, books, selectedUserBookId, onClose, onConfirm } = props;
+  const { open, books, onClose, onConfirm } = props;
 
-  const [pickedId, setPickedId] = useState<number | undefined>(selectedUserBookId);
+  const [pickedId, setPickedId] = useState<number | undefined>();
 
-  // 시트가 닫힘→열림으로 바뀔 때 현재 활성 책으로 선택을 초기화한다(렌더 중 보정).
   const [wasOpen, setWasOpen] = useState(open);
   if (open !== wasOpen) {
     setWasOpen(open);
-    if (open) {
-      setPickedId(selectedUserBookId);
-    }
+    if (!open && pickedId !== undefined) setPickedId(undefined);
   }
 
   const handleConfirm = () => {
@@ -112,7 +109,12 @@ export const StartChatBookSheet = (props: Props) => {
           </button>
         </div>
 
-        <ul className="min-h-0 flex-1 list-none overflow-y-auto overscroll-contain px-[1rem] pt-[2.4rem] pb-[11rem]">
+        <ul
+          className={cn(
+            'min-h-0 flex-1 list-none overflow-y-auto overscroll-contain px-[1rem] pt-[2.4rem]',
+            pickedId === undefined ? 'pb-[2.4rem]' : 'pb-[11rem]',
+          )}
+        >
           {books.map((book) => (
             <BookSelectItem
               key={book.userBookId}
@@ -123,16 +125,17 @@ export const StartChatBookSheet = (props: Props) => {
           ))}
         </ul>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-b from-transparent to-white to-[20%] px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
-          <button
-            type="button"
-            disabled={pickedId === undefined}
-            onClick={handleConfirm}
-            className="body1-bold pointer-events-auto w-full cursor-pointer rounded-[1.6rem] bg-gray-900 py-[1.8rem] text-center text-white disabled:cursor-default disabled:opacity-40"
-          >
-            확인
-          </button>
-        </div>
+        {pickedId !== undefined && (
+          <div className="btn-appear pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden bg-gradient-to-b from-transparent to-white to-[20%] px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
+            <button
+              type="button"
+              onClick={handleConfirm}
+              className="body1-bold pointer-events-auto w-full cursor-pointer rounded-[1.6rem] bg-gray-900 py-[1.8rem] text-center text-white"
+            >
+              확인
+            </button>
+          </div>
+        )}
       </div>
     </BottomSheet>
   );
