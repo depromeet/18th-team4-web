@@ -46,9 +46,13 @@ export const CalendarView = (props: Props) => {
   const [ey, em, ed] = earliestStr.split('-').map(Number);
   const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : today;
   const firstOfFocusMonth = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
+  const firstOfTodayMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const earliestOrToday = earliestDate.getTime() < today.getTime() ? earliestDate : today;
-  const rangeStartAnchor =
+  const monthRangeStartAnchor =
     earliestOrToday.getTime() < firstOfFocusMonth.getTime() ? earliestOrToday : firstOfFocusMonth;
+  const weekRangeStartAnchor =
+    earliestOrToday.getTime() < firstOfTodayMonth.getTime() ? earliestOrToday : firstOfTodayMonth;
+  const rangeStartAnchor = view === 'week' ? weekRangeStartAnchor : monthRangeStartAnchor;
   const rangeStart = startOfWeek(rangeStartAnchor);
   const futureAnchor = baseDate.getTime() > today.getTime() ? baseDate : today;
   const rangeEndWeek = startOfWeek(
