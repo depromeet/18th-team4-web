@@ -1,0 +1,72 @@
+name: Release PR Validate
+
+# main 대상 PR에 release:* label이 정확히 하나 있는지 검증한다.
+# 자세한 정책은 docs/plans/main-release-workflow.md 참조.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled, unlabeled, reopened, ready_for_review]
+    branches: [main]
+
+# 보안: pull_request_target을 쓰지 않고, 이벤트 payload만 읽으므로 read 권한이면 충분하다.
+permissions:
+  contents: read
+
+jobs:
+  validate-release-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate release label
+        env:
+          # 사용자 입력은 shell에 직접 삽입하지 않고 env로 받아 JSON 파싱한다.
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          PR_BASE: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          allowed='["release:major","release:minor","release:patch","release:skip"]'
+
+          # release:* 로 시작하는 label만 추출한다.
+          release_labels=$(printf '%s' "$PR_LABELS" | jq -c '[.[] | select(startswith("release:"))]')
+          count=$(printf '%s' "$release_labels" | jq 'length')
+
+          if [ "$count" -eq 0 ]; then
+            echo "::error::main 대상 PR에는 release:major, release:minor, release:patch, release:skip 중 하나가 필요합니다."
+            echo "현재 release label이 없습니다."
+            exit 1
+          fi
+
+          if [ "$count" -gt 1 ]; then
+            current=$(printf '%s' "$release_labels" | jq -r 'join(", ")')
+            echo "::error::main 대상 PR에는 release:major, release:minor, release:patch, release:skip 중 하나만 필요합니다."
+            echo "현재 label: $current"
+            exit 1
+          fi
+
+          label=$(printf '%s' "$release_labels" | jq -r '.[0]')
+
+          # 정의되지 않은 release:* label은 거부한다.
+          if ! printf '%s' "$allowed" | jq -e --arg l "$label" 'index($l) != null' > /dev/null; then
+            echo "::error::알 수 없는 release label입니다: $label"
+            echo "허용 label: release:major, release:minor, release:patch, release:skip"
+            exit 1
+          fi
+
+          # base는 트리거 필터상 main이지만 한 번 더 방어한다.
+          if [ "$PR_BASE" != "main" ]; then
+            echo "::error::이 워크플로우는 main 대상 PR에서만 동작합니다. 현재 base: $PR_BASE"
+            exit 1
+          fi
+
+          # release:skip이 아니면 head branch 권장 규칙을 확인한다.
+          # 일반 릴리즈는 dev, 긴급 대응은 hotfix/* 를 권장한다(강제 아님).
+          if [ "$label" != "release:skip" ]; then
+            case "$PR_HEAD" in
+              dev | hotfix/*)
+                : ;;
+              *)
+                echo "::warning::일반 릴리즈 PR의 head는 dev 또는 hotfix/* 를 권장합니다. 현재 head: $PR_HEAD" ;;
+            esac
+          fi
+
+          echo "release label 검증 통과: $label (head: $PR_HEAD -> base: $PR_BASE)"
