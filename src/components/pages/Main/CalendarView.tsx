@@ -190,7 +190,7 @@ export const CalendarView = (props: Props) => {
     setValue: (value: number) => void,
     rafRef: MutableRefObject<number | null>,
   ) => {
-    if (rafRef.current !== null) return;
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
 
     rafRef.current = requestAnimationFrame(() => {
       rafRef.current = null;
