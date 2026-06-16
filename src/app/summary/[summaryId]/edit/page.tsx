@@ -15,7 +15,8 @@ type Props = {
 
 const SummaryEditPage = async (props: Props) => {
   const { summaryId } = await props.params;
-  const { source } = await props.searchParams;
+  const { source: rawSource } = await props.searchParams;
+  const source = Array.isArray(rawSource) ? rawSource[0] : rawSource;
   const isSessionSource = source === 'session';
   const [initialSummary, initialSessionSummary] = await Promise.all([
     isSessionSource ? Promise.resolve(null) : getSummaryDetailServer(summaryId).catch(() => null),

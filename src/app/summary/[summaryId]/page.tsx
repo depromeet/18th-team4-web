@@ -21,7 +21,10 @@ type Props = {
 
 const SummaryPage = async (props: Props) => {
   const { summaryId } = await props.params;
-  const { draft, source, tab } = await props.searchParams;
+  const { draft: rawDraft, source: rawSource, tab: rawTab } = await props.searchParams;
+  const source = Array.isArray(rawSource) ? rawSource[0] : rawSource;
+  const draft = Array.isArray(rawDraft) ? rawDraft[0] : rawDraft;
+  const tab = Array.isArray(rawTab) ? rawTab[0] : rawTab;
   const isSessionSource = source === 'session';
   const shouldRequestDraft = isSessionSource && draft === 'true';
   const initialTab = tab === SUMMARY_TAB.CHAT ? SUMMARY_TAB.CHAT : SUMMARY_TAB.SUMMARY;
