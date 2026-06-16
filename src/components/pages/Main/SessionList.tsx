@@ -1,4 +1,7 @@
-import { CHAT_CARD_COLOR_SEQUENCE, ChatCard, DocumentIcon } from '@/components';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { type SummaryCalendarItem } from '@/lib';
 
@@ -8,14 +11,72 @@ type Props = {
   onNavigate: (path: string) => void;
 };
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TARGET_HOUR = 6;
+
+const getNextSixState = () => {
+  const now = new Date();
+  const nextSix = new Date(now);
+  nextSix.setHours(TARGET_HOUR, 0, 0, 0);
+
+  if (nextSix.getTime() <= now.getTime()) {
+    nextSix.setDate(nextSix.getDate() + 1);
+  }
+
+  const remainingMs = nextSix.getTime() - now.getTime();
+  const remainingMinutes = Math.max(0, Math.ceil(remainingMs / (60 * 1000)));
+  const remainingHours = Math.floor(remainingMinutes / 60);
+  const minutes = remainingMinutes % 60;
+
+  return {
+    remainingRatio: Math.min(1, Math.max(0, remainingMs / DAY_MS)),
+    label:
+      remainingHours > 0
+        ? `오전 6시까지 ${remainingHours}시간 ${minutes}분 남음`
+        : `오전 6시까지 ${minutes}분 남음`,
+  };
+};
+
+const SixAMCountdownPie = () => {
+  const [state, setState] = useState<ReturnType<typeof getNextSixState> | null>(null);
+
+  useEffect(() => {
+    const update = () => setState(getNextSixState());
+    update();
+
+    const id = window.setInterval(update, 60 * 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  if (!state) {
+    return <span className="size-[1.4rem] shrink-0 rounded-full bg-gray-alpha-50" />;
+  }
+
+  const degrees = Math.round(state.remainingRatio * 360);
+
+  return (
+    <span
+      role="img"
+      aria-label={state.label}
+      title={state.label}
+      className="relative size-[1.4rem] shrink-0 rounded-full"
+      style={{
+        background: `conic-gradient(var(--color-green-darkest) ${degrees}deg, var(--color-gray-10) ${degrees}deg 360deg)`,
+      }}
+    >
+      <span className="absolute inset-[0.35rem] rounded-full bg-white" />
+    </span>
+  );
+};
+
 export const SessionList = (props: Props) => {
   const { summaries, filteredSummaries, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
       <div className="flex items-center gap-[0.4rem] px-[2.4rem]">
-        <DocumentIcon className="shrink-0 text-text-caption" />
-        <p className="body2-semibold tracking-[-0.042rem]">
+        <SixAMCountdownPie />
+        <p className="body2-semibold flex min-w-0 items-center gap-[0.4rem] tracking-[-0.042rem]">
           <span className="text-text-description">오전 6시에</span>
           <span className="text-text-caption"> AI가 독후감을 작성해요</span>
         </p>
