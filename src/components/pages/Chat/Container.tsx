@@ -4,7 +4,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT, SummarizeModal, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_STATUS, CHAT_USER, type ChatMessage, QUERY_KEY } from '@/constants';
+import {
+  CHAT_BG_VARIANT,
+  CHAT_STATUS,
+  CHAT_USER,
+  type ChatMessage,
+  PATH_NAME,
+  QUERY_KEY,
+} from '@/constants';
 import { useModal } from '@/hooks';
 import {
   streamChatMessage,
@@ -262,7 +269,11 @@ export const ChatContainer = () => {
       <div className="bg-text-white pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
 
       <div className="relative z-10 flex h-screen flex-col">
-        <Header variant={HEADER_VARIANT.CHAT} onBack={() => router.back()} progress={progress} />
+        <Header
+          variant={HEADER_VARIANT.CHAT}
+          onBack={() => router.replace(PATH_NAME.main())}
+          progress={progress}
+        />
         <div className="h-[2rem] bg-text-white shrink-0" />
 
         <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">

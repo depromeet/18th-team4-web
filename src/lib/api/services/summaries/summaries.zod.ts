@@ -20,3 +20,21 @@ export const SummaryListRequestSchema = z.object({
   page: z.number().int().min(1),
   size: z.number().int().min(1).optional(),
 });
+
+export const SummaryCalendarItemSchema = z.object({
+  summaryId: z.number(),
+  summaryDate: z.string(),
+  title: z.string(),
+  body: z.string(),
+  bookTitle: z.string(),
+});
+
+export const SummaryCalendarDataSchema = z.object({
+  summaries: z.array(SummaryCalendarItemSchema),
+});
+
+export const SummaryCalendarResponseSchema = createResponseSchema(SummaryCalendarDataSchema);
+
+export const SummaryCalendarRequestSchema = z.object({
+  yearMonth: z.string(),
+});

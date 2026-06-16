@@ -18,6 +18,7 @@ import {
   countBookSearchKeywordUnits,
   useAddUserBook,
   useBookSearch,
+  useCreateSession,
 } from '@/lib';
 
 const SEARCH_DEBOUNCE_UI_MS = 500;
@@ -43,7 +44,8 @@ export const RegisterBody = () => {
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useBookSearch(debouncedKeywordApi);
 
-  const { mutate: addBook, isPending } = useAddUserBook();
+  const { mutateAsync: addBookAsync, isPending: isAddingBook } = useAddUserBook();
+  const { mutateAsync: createSessionAsync, isPending: isCreatingSession } = useCreateSession();
 
   const minKeywordUnits = BOOK_SEARCH_MIN_CHARS ?? 2;
 
@@ -115,11 +117,13 @@ export const RegisterBody = () => {
     if (!query.trim()) return;
   };
 
-  const handleRegister = () => {
+  const isPending = isAddingBook || isCreatingSession;
+
+  const handleRegister = async () => {
     if (!selectedIsbn) return;
-    addBook(selectedIsbn, {
-      onSuccess: () => router.push(PATH_NAME.register.complete()),
-    });
+    const registeredBook = await addBookAsync(selectedIsbn);
+    const sessionData = await createSessionAsync(registeredBook.id);
+    router.push(`${PATH_NAME.register.complete()}?sessionId=${sessionData.sessionId}`);
   };
 
   return (

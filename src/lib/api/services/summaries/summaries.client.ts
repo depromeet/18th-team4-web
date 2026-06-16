@@ -1,6 +1,11 @@
 import { ENDPOINTS } from '@/constants';
 import { clientAuthHttp } from '@/lib/api/http/clientAuthHttp';
-import { type SummaryListRequest, type SummaryListResponse } from './summaries.type';
+import {
+  type SummaryCalendarRequest,
+  type SummaryCalendarResponse,
+  type SummaryListRequest,
+  type SummaryListResponse,
+} from './summaries.type';
 
 export const getSummaries = async (params: SummaryListRequest) => {
   const query = new URLSearchParams({
@@ -10,6 +15,18 @@ export const getSummaries = async (params: SummaryListRequest) => {
 
   const response = await clientAuthHttp.get<SummaryListResponse>(
     `${ENDPOINTS.SUMMARIES.list()}?${query.toString()}`,
+  );
+
+  return response.data;
+};
+
+export const getSummaryCalendar = async (params: SummaryCalendarRequest) => {
+  const query = new URLSearchParams({
+    yearMonth: params.yearMonth,
+  });
+
+  const response = await clientAuthHttp.get<SummaryCalendarResponse>(
+    `${ENDPOINTS.SUMMARIES.calendar()}?${query.toString()}`,
   );
 
   return response.data;

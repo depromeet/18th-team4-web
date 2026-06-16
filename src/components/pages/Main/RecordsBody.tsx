@@ -9,7 +9,7 @@ import {
   toLocalDateString,
   useCalendarStore,
   useCreateSession,
-  useGetSessions,
+  useGetSummaryCalendar,
   usePatchLastSelectedUserBook,
   type UserBookItem,
   useToastStore,
@@ -31,22 +31,20 @@ export const RecordsBody = (props: Props) => {
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const { mutateAsync: createSessionAsync } = useCreateSession();
 
-  const { data, isPending } = useGetSessions(userBookId);
-
-  const sessions = data?.sessions ?? [];
-  const bookTitle = data?.book.title;
-
   const selectedDate = useCalendarStore((s) => s.selectedDate);
   const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
+  const baseDateMs = useCalendarStore((s) => s.baseDateMs);
+  const baseDate = new Date(baseDateMs);
+  const yearMonth = `${baseDate.getFullYear()}-${String(baseDate.getMonth() + 1).padStart(2, '0')}`;
 
-  const streakDates = sessions
-    .map((s) => s.lastChattedDate.split('T')[0])
-    .filter((d): d is string => d !== undefined && d.length === 10);
+  const { data, isPending } = useGetSummaryCalendar(yearMonth);
 
-  const filteredSessions = sessions.filter((s) => s.lastChattedDate.startsWith(selectedDate));
+  const summaries = data?.summaries ?? [];
+  const streakDates = summaries.map((s) => s.summaryDate).filter((d) => d.length === 10);
+  const filteredSummaries = summaries.filter((s) => s.summaryDate === selectedDate);
 
   const isToday = selectedDate === toLocalDateString(new Date());
-  const isEmpty = !isPending && filteredSessions.length === 0;
+  const isEmpty = !isPending && filteredSummaries.length === 0;
 
   const openToast = useToastStore((s) => s.openToast);
 
@@ -81,11 +79,7 @@ export const RecordsBody = (props: Props) => {
     void handleStartChat(bookId);
   };
 
-  const handleNavigate = async (path: string) => {
-    try {
-      await patchLastSelected(userBookId);
-    } catch {}
-    setLastSelectedUserBookIdClient(userBookId);
+  const handleNavigate = (path: string) => {
     router.push(path);
   };
 
@@ -109,9 +103,8 @@ export const RecordsBody = (props: Props) => {
           />
         ) : (
           <SessionList
-            sessions={sessions}
-            filteredSessions={filteredSessions}
-            bookTitle={bookTitle}
+            summaries={summaries}
+            filteredSummaries={filteredSummaries}
             onNavigate={handleNavigate}
           />
         )}

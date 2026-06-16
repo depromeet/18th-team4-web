@@ -42,6 +42,7 @@ export const QUERY_KEY = {
    */
   summaries: {
     list: (size?: number) => ['summaries', 'list', size] as const,
+    calendar: (yearMonth: string) => ['summaries', 'calendar', yearMonth] as const,
   },
 
   /*
