@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ChevronIcon } from '@/components';
 import { cn, toLocalDateString, useCalendarStore } from '@/lib';
 import { MonthCalendar } from './MonthCalendar';
@@ -7,6 +8,7 @@ import { MonthCalendar } from './MonthCalendar';
 type Props = {
   streakDates?: string[];
   selectedDate?: string;
+  ready?: boolean;
   onDaySelect?: (dateStr: string) => void;
 };
 
@@ -23,12 +25,18 @@ const startOfWeek = (d: Date) => {
 };
 
 export const CalendarView = (props: Props) => {
-  const { streakDates = [], selectedDate, onDaySelect } = props;
+  const { streakDates = [], selectedDate, ready = false, onDaySelect } = props;
   const view = useCalendarStore((s) => s.view);
   const setView = useCalendarStore((s) => s.setView);
+
+  // localStorage에 저장된 주/월 선택을 마운트 후 적용(persist skipHydration 대응).
+  useEffect(() => {
+    void useCalendarStore.persist.rehydrate();
+  }, []);
   const baseDateMs = useCalendarStore((s) => s.baseDateMs);
   const setBaseDateMs = useCalendarStore((s) => s.setBaseDateMs);
   const baseDate = new Date(baseDateMs);
+  const monthLabel = `${baseDate.getFullYear()}. ${String(baseDate.getMonth() + 1).padStart(2, '0')}`;
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -95,7 +103,7 @@ export const CalendarView = (props: Props) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between px-[2rem] pb-[0.8rem]">
+      <div className="flex items-center px-[2rem] pb-[0.8rem]">
         <div className="relative flex items-center rounded-full bg-gray-alpha-50 px-[0.5rem] py-[0.4rem] shadow-[inset_0px_0px_4px_0px_rgba(23,28,27,0.03)]">
           <div
             aria-hidden
@@ -126,14 +134,16 @@ export const CalendarView = (props: Props) => {
           </button>
         </div>
 
+        <button
+          type="button"
+          aria-label="오늘로 이동"
+          onClick={handleTodayClick}
+          className="body2-bold min-w-0 flex-1 cursor-pointer whitespace-nowrap px-[1rem] text-left tracking-[-0.042rem] text-text-caption"
+        >
+          {monthLabel}
+        </button>
+
         <div className="flex items-center gap-[0.8rem]">
-          <button
-            type="button"
-            onClick={handleTodayClick}
-            className="cursor-pointer rounded-full border border-solid border-gray-alpha-50 bg-white px-[1.1rem] py-[1rem] text-caption1 font-semibold leading-none tracking-[-0.024em] text-text-description"
-          >
-            오늘
-          </button>
           <button
             type="button"
             aria-label="이전"
@@ -163,6 +173,7 @@ export const CalendarView = (props: Props) => {
         streakDates={streakDates}
         todayDate={today}
         selectedDate={selectedDate}
+        ready={ready}
         onDayClick={handleDaySelect}
       />
     </div>

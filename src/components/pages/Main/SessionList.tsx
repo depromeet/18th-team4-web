@@ -1,6 +1,6 @@
 import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, DocumentIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { formatDate, type SessionItem, type SessionStatus } from '@/lib';
+import { type SessionItem, type SessionStatus } from '@/lib';
 
 const SESSION_STATUS_TO_CARD: Record<
   SessionStatus,
@@ -15,11 +15,12 @@ const SESSION_STATUS_TO_CARD: Record<
 type Props = {
   sessions: SessionItem[];
   filteredSessions: SessionItem[];
+  bookTitle?: string;
   onNavigate: (path: string) => Promise<void>;
 };
 
 export const SessionList = (props: Props) => {
-  const { sessions, filteredSessions, onNavigate } = props;
+  const { sessions, filteredSessions, bookTitle, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -53,7 +54,7 @@ export const SessionList = (props: Props) => {
                 <ChatCard
                   color={color}
                   status={SESSION_STATUS_TO_CARD[session.status]}
-                  date={formatDate(session.lastChattedDate)}
+                  bookTitle={bookTitle}
                   summary={session.title}
                   bookmarked={session.status === 'CLOSED'}
                 />

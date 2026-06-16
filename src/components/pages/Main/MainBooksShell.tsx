@@ -16,7 +16,7 @@ export const MainBooksShell = (props: Props) => {
 
   return (
     <div className="flex h-dvh flex-col">
-      <RecordsBody key={selectedUserBookId} userBookId={selectedUserBookId} />
+      <RecordsBody key={selectedUserBookId} userBookId={selectedUserBookId} books={books} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ export { default as BookLogo } from './ic-book-logo.svg?react';
 export { default as Bookmark } from './ic-bookmark.svg?react';
 export { default as Check } from './ic-check.svg?react';
 export { default as Chevron } from './ic-chevron.svg?react';
+export { default as Close } from './ic-close.svg?react';
 export { default as ColorSymbol } from './ic-color-symbol.svg?react';
 export { default as DialogIcon } from './ic-dialog.svg?react';
 export { default as Document } from './ic-document.svg?react';
