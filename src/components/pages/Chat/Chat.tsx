@@ -23,10 +23,15 @@ export const Chat = (props: Props) => {
       {showIcon ? (
         <Image src={Chatbot} alt="chatbot" width={32} height={32} className="mb-[0.6rem]" />
       ) : null}
-      {isStreaming && !message ? <TypingDots /> : null}
-      <p className="body2-semibold whitespace-pre-wrap break-words tracking-[-0.03em] text-text-default">
-        {message}
-      </p>
+      {isStreaming && !message ? (
+        <div className="w-fit">
+          <TypingDots />
+        </div>
+      ) : (
+        <p className="body2-semibold whitespace-pre-wrap break-words tracking-[-0.03em] text-text-default">
+          {message}
+        </p>
+      )}
     </div>
   );
 

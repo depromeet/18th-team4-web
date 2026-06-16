@@ -80,6 +80,7 @@ const mapInfinitePagesToHistoryChats = (
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
+  USER_RATE_LIMIT_EXCEEDED: '요청이 잠시 많아요. 조금 뒤에 다시 시도해주세요.',
   AI_QUOTA_EXHAUSTED: '오늘 대화 한도를 초과했어요. 내일 다시 시도해주세요.',
   AI_PROVIDER_ERROR: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
   AI_PROVIDER_TRANSIENT: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
@@ -224,6 +225,11 @@ export const ChatContainer = () => {
           streamFinished = true;
           setIsStreaming(false);
           setStreamingContent('');
+          if (data.code === 'SESSION_LOCKED') {
+            open();
+            void refetchEligibility();
+            return;
+          }
           const errorMessage = ERROR_MESSAGES[data.code] ?? '오류가 발생했어요. 다시 시도해주세요.';
           setNewChats((prev) => [
             ...prev,
@@ -276,7 +282,7 @@ export const ChatContainer = () => {
         />
         <div className="h-[2rem] bg-text-white shrink-0" />
 
-        <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
+        <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48 pt-[1.6rem]">
           <div ref={topRef} />
           <div className="flex flex-col gap-[2.8rem]">
             {allChats.map((chat, index) => (
