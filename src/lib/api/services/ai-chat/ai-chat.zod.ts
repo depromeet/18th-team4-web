@@ -1,12 +1,20 @@
 import z from 'zod';
 import { createResponseSchema } from '@/lib';
 
-export const SessionStatusSchema = z.enum(['ACTIVE', 'SUMMARIZING', 'CLOSED', 'FAILED']);
+export const SessionStatusSchema = z.enum([
+  'ACTIVE',
+  'SUMMARIZING',
+  'SUMMARIZED',
+  'CLOSED',
+  'FAILED',
+]);
 
 export const BookSessionItemSchema = z.object({
   sessionId: z.number(),
   latestSummaryContent: z.string().nullable(),
   lastChattedDate: z.string(),
+  status: SessionStatusSchema.optional(),
+  title: z.string().optional(),
 });
 
 export const SessionItemSchema = BookSessionItemSchema.extend({

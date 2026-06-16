@@ -6,7 +6,7 @@ export const normalizeBookSessionData = (data: BookSessionResponse['data']): Boo
   book: data.book,
   sessions: data.sessions.map((session) => ({
     ...session,
-    title: session.latestSummaryContent ?? DEFAULT_SESSION_TITLE,
-    status: 'ACTIVE',
+    title: session.title ?? session.latestSummaryContent ?? DEFAULT_SESSION_TITLE,
+    status: session.status ?? (session.latestSummaryContent ? 'SUMMARIZED' : 'ACTIVE'),
   })),
 });
