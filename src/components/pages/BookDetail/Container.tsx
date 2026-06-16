@@ -2,7 +2,7 @@
 
 import Image, { type ImageProps } from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { emptyIcon, ExampleBook } from '@/assets';
 import {
@@ -59,7 +59,14 @@ const BookCoverLightbox = (props: BookCoverLightboxProps) => {
     dialogRef.current?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        dialogRef.current?.focus();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
 
@@ -103,6 +110,7 @@ export const BookDetailContainer = (props: Props) => {
   const { mutateAsync: deleteBook, isPending: isDeleting } = useDeleteUserBook();
   const openToast = useToastStore((s) => s.openToast);
   const [isCoverOpen, setIsCoverOpen] = useState(false);
+  const handleCloseCover = useCallback(() => setIsCoverOpen(false), []);
   const book = initialBookSessions?.book;
   const sessions = initialBookSessions?.sessions ?? [];
   const title = book?.title ?? '책 정보를 불러오지 못했어요';
@@ -218,7 +226,7 @@ export const BookDetailContainer = (props: Props) => {
         isOpen={isCoverOpen}
         src={coverUrl || ExampleBook}
         alt={title}
-        onClose={() => setIsCoverOpen(false)}
+        onClose={handleCloseCover}
       />
     </div>
   );
