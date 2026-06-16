@@ -16,7 +16,7 @@ export const AnimateTooltip = (props: TooltipProps) => {
   return (
     <div
       className={cn(
-        'transition-opacity duration-300',
+        'relative z-10 transition-opacity duration-300',
         visible ? 'opacity-100' : 'pointer-events-none opacity-0',
       )}
     >

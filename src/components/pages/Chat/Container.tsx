@@ -2,11 +2,25 @@
 
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { Header, HEADER_VARIANT, SummarizeModal, TextfieldChat } from '@/components';
-import { CHAT_BG_VARIANT, CHAT_STATUS, CHAT_USER, type ChatMessage, QUERY_KEY } from '@/constants';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
+import {
+  AnimateTooltip,
+  Header,
+  HEADER_VARIANT,
+  SummarizeModal,
+  TextfieldChat,
+} from '@/components';
+import {
+  CHAT_BG_VARIANT,
+  CHAT_STATUS,
+  CHAT_USER,
+  type ChatMessage,
+  PATH_NAME,
+  QUERY_KEY,
+} from '@/constants';
 import { useModal } from '@/hooks';
 import {
+  formatChatTime,
   streamChatMessage,
   useCheckSummaryEligibility,
   useGetMessages,
@@ -44,13 +58,6 @@ const stripPendingSyncedWithHistoryTail = (
   return pending;
 };
 
-const formatTime = (isoString: string): string =>
-  new Date(isoString).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true,
-  });
-
 const mapInfinitePagesToHistoryChats = (
   data:
     | {
@@ -69,15 +76,40 @@ const mapInfinitePagesToHistoryChats = (
       user: msg.role === 'USER' ? CHAT_USER.ME : CHAT_USER.AI,
       message: msg.content,
       createdAt: msg.createdAt,
-    }));
+    }))
+    .filter((chat, index, chats) => chats.findIndex((item) => item.id === chat.id) === index);
 };
 
 const ERROR_MESSAGES: Record<string, string> = {
+  USER_RATE_LIMIT_EXCEEDED: '요청이 잠시 많아요. 조금 뒤에 다시 시도해주세요.',
   AI_QUOTA_EXHAUSTED: '오늘 대화 한도를 초과했어요. 내일 다시 시도해주세요.',
   AI_PROVIDER_ERROR: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
   AI_PROVIDER_TRANSIENT: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
   AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
 };
+
+const SESSION_LIMIT_EXCEEDED_CODES = ['USER_RATE_LIMIT_EXCEEDED', 'AI_QUOTA_EXHAUSTED'] as const;
+
+type SessionLimitExceededCode = (typeof SESSION_LIMIT_EXCEEDED_CODES)[number];
+
+const isSessionLimitExceededCode = (code: string): code is SessionLimitExceededCode =>
+  SESSION_LIMIT_EXCEEDED_CODES.includes(code as SessionLimitExceededCode);
+
+const SESSION_LIMIT_MODAL_COPY: Record<SessionLimitExceededCode, ReactNode> = {
+  USER_RATE_LIMIT_EXCEEDED: (
+    <>
+      이 세션에서 보낼 수 있는 요청을 모두 사용했어요. <br /> 잠시 후 다시 시도해주세요.
+    </>
+  ),
+  AI_QUOTA_EXHAUSTED: (
+    <>
+      오늘 대화 한도를 모두 사용했어요. <br /> 내일 다시 시도해주세요.
+    </>
+  ),
+};
+
+const CHAT_FOOTER_BASE_HEIGHT = 126;
+const CHAT_BOTTOM_GAP = 16;
 
 export const ChatContainer = () => {
   const router = useRouter();
@@ -87,24 +119,29 @@ export const ChatContainer = () => {
   const consumePendingMessage = usePendingChatStore((s) => s.consume);
 
   const { isOpen, mountKey, open, close } = useModal();
-
+  const {
+    isOpen: isSessionLimitModalOpen,
+    mountKey: sessionLimitModalMountKey,
+    open: openSessionLimitModal,
+    close: closeSessionLimitModal,
+  } = useModal();
   const topRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLElement>(null);
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
+  const [footerHeight, setFooterHeight] = useState(160);
+  const [showReadyTooltip, setShowReadyTooltip] = useState(false);
+  const [sessionLimitExceededCode, setSessionLimitExceededCode] =
+    useState<SessionLimitExceededCode | null>(null);
 
   const { data: eligibilityData, refetch: refetchEligibility } =
     useCheckSummaryEligibility(sessionId);
   const canSummarize = eligibilityData?.eligible ?? false;
   const progress = eligibilityData?.progressPercent ?? 0;
-
-  const hasAutoOpenedRef = useRef(false);
-  useEffect(() => {
-    if (canSummarize && !hasAutoOpenedRef.current) {
-      hasAutoOpenedRef.current = true;
-      open();
-    }
-  }, [canSummarize, open]);
+  const isChatInputDisabled = sessionLimitExceededCode !== null;
+  const prevCanSummarizeRef = useRef(canSummarize);
+  const extraFooterOffset = Math.max(0, footerHeight - CHAT_FOOTER_BASE_HEIGHT);
 
   const {
     data: messagesData,
@@ -146,10 +183,26 @@ export const ChatContainer = () => {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  useEffect(() => {
+    if (canSummarize && !prevCanSummarizeRef.current) {
+      setShowReadyTooltip(true);
+    }
+
+    prevCanSummarizeRef.current = canSummarize;
+  }, [canSummarize]);
+
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
+  const prevAllChatsLengthRef = useRef(0);
+  const prevExtraFooterOffsetRef = useRef(0);
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
+
+  const handleCreateSummary = async () => {
+    if (!canSummarize) return;
+
+    router.push(PATH_NAME.summary.session(sessionId, undefined, true));
+  };
 
   const GREETING_MESSAGE: ChatMessage = {
     id: 'initial-greeting',
@@ -166,8 +219,39 @@ export const ChatContainer = () => {
   );
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [allChats.length, streamingContent]);
+    const footer = footerRef.current;
+    if (!footer) return;
+
+    const updateFooterHeight = () => {
+      setFooterHeight(footer.getBoundingClientRect().height);
+    };
+
+    updateFooterHeight();
+
+    const observer = new ResizeObserver(() => {
+      updateFooterHeight();
+    });
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const bottom = bottomRef.current;
+    if (!bottom) return;
+
+    const hasNewChat = allChats.length > prevAllChatsLengthRef.current;
+    const footerOffsetChanged = extraFooterOffset !== prevExtraFooterOffsetRef.current;
+
+    if (hasNewChat) {
+      bottom.scrollIntoView({ behavior: 'smooth' });
+    } else if (isStreaming || streamingContent || footerOffsetChanged) {
+      bottom.scrollIntoView({ behavior: 'auto' });
+    }
+
+    prevAllChatsLengthRef.current = allChats.length;
+    prevExtraFooterOffsetRef.current = extraFooterOffset;
+  }, [allChats.length, extraFooterOffset, isStreaming, streamingContent]);
 
   const handleSend = async (overrideText?: string) => {
     const trimmedMessage = (overrideText != null ? overrideText : message).trim();
@@ -217,6 +301,15 @@ export const ChatContainer = () => {
           streamFinished = true;
           setIsStreaming(false);
           setStreamingContent('');
+          if (data.code === 'SESSION_LOCKED') {
+            open();
+            void refetchEligibility();
+            return;
+          }
+          if (isSessionLimitExceededCode(data.code)) {
+            setSessionLimitExceededCode(data.code);
+            openSessionLimitModal();
+          }
           const errorMessage = ERROR_MESSAGES[data.code] ?? '오류가 발생했어요. 다시 시도해주세요.';
           setNewChats((prev) => [
             ...prev,
@@ -262,10 +355,41 @@ export const ChatContainer = () => {
       <div className="bg-text-white pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
 
       <div className="relative z-10 flex h-screen flex-col">
-        <Header variant={HEADER_VARIANT.CHAT} onBack={() => router.back()} progress={progress} />
+        <Header
+          variant={HEADER_VARIANT.CHAT}
+          onBack={() => router.replace(PATH_NAME.main())}
+          progress={progress}
+          showProgressTooltip={!showReadyTooltip}
+          rightSlot={
+            canSummarize ? (
+              <div className="relative flex shrink-0 flex-col items-end">
+                <button
+                  type="button"
+                  onClick={handleCreateSummary}
+                  className="body2-bold h-[3.2rem] shrink-0 cursor-pointer px-[0.4rem] text-text-default disabled:cursor-not-allowed disabled:text-text-disable"
+                >
+                  요약하기
+                </button>
+                {showReadyTooltip ? (
+                  <div className="absolute right-0 top-[calc(100%+1.2rem)]">
+                    <AnimateTooltip
+                      arrowSide="top"
+                      arrowAlignment="right"
+                      content="이제부터 요약이 가능합니다!"
+                      onClick={() => setShowReadyTooltip(false)}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ) : null
+          }
+        />
         <div className="h-[2rem] bg-text-white shrink-0" />
 
-        <main className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pb-48">
+        <main
+          className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pt-[1.6rem]"
+          style={{ paddingBottom: `${footerHeight + CHAT_BOTTOM_GAP}px` }}
+        >
           <div ref={topRef} />
           <div className="flex flex-col gap-[2.8rem]">
             {allChats.map((chat, index) => (
@@ -274,7 +398,7 @@ export const ChatContainer = () => {
                 user={chat.user}
                 time={
                   chat.user === CHAT_USER.ME && chat.createdAt
-                    ? formatTime(chat.createdAt)
+                    ? formatChatTime(chat.createdAt)
                     : undefined
                 }
                 message={chat.message}
@@ -284,14 +408,20 @@ export const ChatContainer = () => {
             {isStreaming && (
               <Chat user={CHAT_USER.AI} message={streamingContent} isStreaming showIcon />
             )}
-            <div ref={bottomRef} />
+            <div
+              ref={bottomRef}
+              style={{ scrollMarginBottom: `${extraFooterOffset + CHAT_BOTTOM_GAP}px` }}
+            />
           </div>
         </main>
 
-        <footer className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125">
+        <footer
+          ref={footerRef}
+          className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125"
+        >
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
-            status={canSummarize ? CHAT_STATUS.DISABLED : CHAT_STATUS.DEFAULT}
+            status={isChatInputDisabled ? CHAT_STATUS.DISABLED : CHAT_STATUS.DEFAULT}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onSend={handleSend}
@@ -300,6 +430,15 @@ export const ChatContainer = () => {
       </div>
 
       {canSummarize && <SummarizeModal key={mountKey} isOpen={isOpen} onCancel={close} />}
+      {sessionLimitExceededCode ? (
+        <SummarizeModal
+          key={sessionLimitModalMountKey}
+          isOpen={isSessionLimitModalOpen}
+          onCancel={closeSessionLimitModal}
+          title="대화 한도를 초과했어요"
+          description={SESSION_LIMIT_MODAL_COPY[sessionLimitExceededCode]}
+        />
+      ) : null}
     </div>
   );
 };

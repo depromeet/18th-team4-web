@@ -1,23 +1,44 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME, SUMMARY_TAB } from '@/constants';
-import { type SummaryData, useSummary, useToastStore, useUpdateSummary } from '@/lib';
+import {
+  type SummaryData,
+  type SummaryDetail,
+  useSummary,
+  useSummaryDetail,
+  useToastStore,
+  useUpdateSummary,
+} from '@/lib';
 
 type Props = {
   summaryId: string;
-  initialSummary: SummaryData | null;
+  sessionId: string;
+  source?: 'detail' | 'session';
+  initialSummary: SummaryDetail | null;
+  initialSessionSummary?: SummaryData | null;
 };
 
 export const SummaryEditContainer = (props: Props) => {
-  const { summaryId, initialSummary } = props;
+  const { summaryId, sessionId, source = 'detail', initialSummary, initialSessionSummary } = props;
   const router = useRouter();
   const openToast = useToastStore((state) => state.openToast);
-  const { mutate: saveSummary, isPending } = useUpdateSummary(summaryId);
+  const isSessionSource = source === 'session';
+  const detailSummaryId = isSessionSource ? initialSessionSummary?.summaryId : Number(summaryId);
+  const { mutate: saveSummary, isPending } = useUpdateSummary(
+    sessionId,
+    Number.isFinite(detailSummaryId) ? String(detailSummaryId) : undefined,
+  );
 
-  const { data } = useSummary(summaryId, { initialData: initialSummary });
+  const { data: detailSummary } = useSummaryDetail(summaryId, initialSummary, !isSessionSource);
+  const { data: sessionSummary } = useSummary(sessionId, {
+    enabled: isSessionSource,
+    initialData: initialSessionSummary,
+  });
+  const data = isSessionSource ? sessionSummary : detailSummary;
+  const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const [title, setTitle] = useState(data?.title ?? '');
   const [body, setBody] = useState(data?.body ?? '');
   const [hydrated, setHydrated] = useState(!!data);
@@ -30,7 +51,18 @@ export const SummaryEditContainer = (props: Props) => {
     setBody(data.body);
   }
 
-  const handleBack = () => router.push(PATH_NAME.summary.detail(summaryId, SUMMARY_TAB.SUMMARY));
+  useEffect(() => {
+    const textarea = titleRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [title]);
+
+  const detailHref = isSessionSource
+    ? PATH_NAME.summary.session(sessionId, SUMMARY_TAB.SUMMARY)
+    : PATH_NAME.summary.detail(summaryId, SUMMARY_TAB.SUMMARY);
+  const handleBack = () => router.push(detailHref);
 
   const handleSave = () => {
     const nextTitle = title.trim();
@@ -44,7 +76,7 @@ export const SummaryEditContainer = (props: Props) => {
     saveSummary(
       { title: nextTitle, body: nextBody },
       {
-        onSuccess: () => router.push(PATH_NAME.summary.detail(summaryId, SUMMARY_TAB.SUMMARY)),
+        onSuccess: () => router.push(detailHref),
         onError: () =>
           openToast({ type: 'error', message: '저장에 실패했어요. 다시 시도해주세요.' }),
       },
@@ -70,12 +102,13 @@ export const SummaryEditContainer = (props: Props) => {
       />
 
       <div className="flex min-h-0 flex-1 flex-col gap-[1.2rem] px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
-        <input
-          type="text"
+        <textarea
+          ref={titleRef}
+          rows={1}
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="요약 제목"
-          className="headline1-extrabold w-full tracking-[-0.03em] text-text-default outline-none placeholder:text-text-caption"
+          className="headline1-extrabold max-h-[16rem] w-full resize-none overflow-hidden tracking-[-0.03em] text-text-default outline-none placeholder:text-text-caption"
         />
         <textarea
           value={body}

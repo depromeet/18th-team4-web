@@ -41,7 +41,10 @@ export const QUERY_KEY = {
    * 감상 기록
    */
   summaries: {
+    all: () => ['summaries'] as const,
     list: (size?: number) => ['summaries', 'list', size] as const,
+    detail: (summaryId: string) => ['summaries', 'detail', summaryId] as const,
+    calendar: (yearMonth: string) => ['summaries', 'calendar', yearMonth] as const,
   },
 
   /*

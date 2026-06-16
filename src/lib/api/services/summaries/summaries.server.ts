@@ -1,7 +1,13 @@
 import { cache } from 'react';
 import { ENDPOINTS } from '@/constants';
+import { publicHttp } from '@/lib';
 import { serverAuthHttp } from '@/lib/api/http/serverAuthHttp';
-import { type SummaryListRequest, type SummaryListResponse } from './summaries.type';
+import {
+  type SummaryDetail,
+  type SummaryDetailResponse,
+  type SummaryListRequest,
+  type SummaryListResponse,
+} from './summaries.type';
 
 export const getSummariesServer = cache(async (params: SummaryListRequest) => {
   const query = new URLSearchParams({
@@ -14,4 +20,12 @@ export const getSummariesServer = cache(async (params: SummaryListRequest) => {
   );
 
   return response.data;
+});
+
+export const getSummaryDetailServer = cache(async (summaryId: string): Promise<SummaryDetail> => {
+  const response = await publicHttp.get<SummaryDetailResponse>(
+    ENDPOINTS.SUMMARIES.detail(summaryId),
+  );
+
+  return response.data.summary;
 });

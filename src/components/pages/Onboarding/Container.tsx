@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { completeOnboardingAction } from '@/app/actions';
-import { Kakao, Logo } from '@/assets';
+import { Logo } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
 import { ONBOARDING_STEPS, PATH_NAME } from '@/constants';
 import { StepProgress } from './StepProgress';
@@ -32,7 +32,7 @@ export const OnboardingContainer = () => {
   if (isLastStep) {
     return (
       <main className="relative flex h-dvh flex-col overflow-hidden bg-white">
-        <section className="relative z-10 flex flex-col items-center pt-[4.9rem]">
+        <section className="relative z-10 flex flex-1 flex-col items-center pt-[4.9rem]">
           <StepProgress stepIds={stepIds} activeId={step.id} />
 
           <figure className="mt-[5.2rem] flex flex-col items-center">
@@ -48,21 +48,22 @@ export const OnboardingContainer = () => {
               당신을 위해
             </figcaption>
           </figure>
-          <div className="relative mt-[3.4rem] h-[20.3rem] w-[23.8rem]">
-            {step.image && (
-              <Image src={step.image} alt="Readum book" fill priority className="object-contain" />
-            )}
+          <div className="flex flex-1 items-center justify-center pt-[2rem]">
+            <div className="relative h-[20.3rem] w-[23.8rem]">
+              {step.image && (
+                <Image
+                  src={step.image}
+                  alt="Readum book"
+                  fill
+                  priority
+                  className="object-contain"
+                />
+              )}
+            </div>
           </div>
         </section>
 
         <footer className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2rem] pt-[4rem]">
-          <button
-            type="button"
-            className="body1-bold flex h-[6rem] w-full cursor-pointer items-center justify-center gap-[1rem] rounded-2xl bg-[#FFE812] text-text-default"
-          >
-            <Kakao className="h-[1.8rem] w-[2rem]" />
-            카카오로 로그인하기
-          </button>
           <Button
             variant={BUTTON_VARIANT.BLACK}
             size="lg"

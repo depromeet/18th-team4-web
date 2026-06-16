@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type RefObject, useEffect, useRef } from 'react';
 import {
@@ -131,11 +132,13 @@ const RecordsList = (props: RecordsListProps) => {
       ) : (
         records.map((record, index) => (
           <li key={`${record.createdAt}-${record.bookTitle}-${index}`}>
-            <ChatCard
-              color={chatCardColorByIndex(index)}
-              bookTitle={record.bookTitle}
-              summary={record.content}
-            />
+            <Link href={PATH_NAME.summary.detail(String(record.summaryId))} className="block">
+              <ChatCard
+                color={chatCardColorByIndex(index)}
+                bookTitle={record.bookTitle}
+                summary={record.content}
+              />
+            </Link>
           </li>
         ))
       )}

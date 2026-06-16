@@ -12,12 +12,21 @@ type HeaderProps = React.ComponentProps<'header'> &
     onBack?: () => void;
     progress?: number;
     rightSlot?: React.ReactNode;
+    showProgressTooltip?: boolean;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
 
 export const Header = (props: HeaderProps) => {
-  const { variant = HEADER_VARIANT.HOME, className, onBack, progress, rightSlot, ...rest } = props;
+  const {
+    variant = HEADER_VARIANT.HOME,
+    className,
+    onBack,
+    progress,
+    rightSlot,
+    showProgressTooltip = true,
+    ...rest
+  } = props;
 
   const handleBack = () => {
     if (!onBack) return;
@@ -67,7 +76,7 @@ export const Header = (props: HeaderProps) => {
         </button>
       )}
 
-      {variant === HEADER_VARIANT.BACK && rightSlot}
+      {(variant === HEADER_VARIANT.BACK || variant === HEADER_VARIANT.CHAT) && rightSlot}
 
       {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
         <figure className="absolute bottom-0 left-[2rem] right-[2rem] m-0 h-[0.3rem] rounded-[999px] bg-gray-10">
@@ -83,9 +92,11 @@ export const Header = (props: HeaderProps) => {
             className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
             style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           />
-          <figcaption className="pt-[1.2rem]">
-            <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
-          </figcaption>
+          {showProgressTooltip ? (
+            <figcaption className="pt-[1.2rem]">
+              <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
+            </figcaption>
+          ) : null}
         </figure>
       )}
     </header>

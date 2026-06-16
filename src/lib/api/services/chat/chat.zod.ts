@@ -17,22 +17,20 @@ export const TokenEventSchema = z.object({
 
 export const DoneEventSchema = z.object({
   messageId: z.coerce.number(),
-  tokenCount: z.coerce.number(),
+  tokenCount: z.unknown().optional(),
   createdAt: z.string(),
 });
 
 export const RateLimitSchema = z.object({
-  retryAfterSeconds: z.number(),
+  retryAfterSeconds: z.number().optional(),
+  limitRequests: z.number().optional(),
+  remainingRequests: z.number().optional(),
+  resetRequestsSeconds: z.number().optional(),
+  resetTokensSeconds: z.number().optional(),
 });
 
 export const ErrorEventSchema = z.object({
-  code: z.enum([
-    'AI_RATE_LIMIT_BURST',
-    'AI_QUOTA_EXHAUSTED',
-    'AI_PROVIDER_ERROR',
-    'AI_PROVIDER_TRANSIENT',
-    'AI_STREAM_INTERRUPTED',
-  ]),
+  code: z.string(),
   message: z.string(),
   rateLimit: RateLimitSchema.optional(),
 });

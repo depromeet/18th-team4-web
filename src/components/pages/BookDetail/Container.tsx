@@ -1,7 +1,9 @@
 'use client';
 
-import Image from 'next/image';
+import Image, { type ImageProps } from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { emptyIcon, ExampleBook } from '@/assets';
 import {
   CHAT_CARD_COLOR_SEQUENCE,
@@ -27,8 +29,72 @@ const SESSION_STATUS_TO_CARD: Record<
 > = {
   ACTIVE: CHAT_CARD_STATUS.DEFAULT,
   SUMMARIZING: CHAT_CARD_STATUS.LOADING,
+  SUMMARIZED: CHAT_CARD_STATUS.DEFAULT,
   CLOSED: CHAT_CARD_STATUS.DEFAULT,
   FAILED: CHAT_CARD_STATUS.ERROR,
+};
+
+const getSessionPath = (sessionId: number, status: SessionStatus) => {
+  if (status === 'ACTIVE') return PATH_NAME.chat.detail(String(sessionId));
+  return PATH_NAME.summary.session(String(sessionId));
+};
+
+type BookCoverLightboxProps = {
+  isOpen: boolean;
+  src: ImageProps['src'];
+  alt: string;
+  onClose: () => void;
+};
+
+const BookCoverLightbox = (props: BookCoverLightboxProps) => {
+  const { alt, isOpen, onClose, src } = props;
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousActiveElement = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialogRef.current?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        dialogRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      previousActiveElement?.focus();
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="책 표지 확대"
+      tabIndex={-1}
+      className="animate-[fade-in_0.2s_ease-out_both] fixed inset-0 z-modal flex cursor-zoom-out items-center justify-center bg-black/90 p-[2.4rem] outline-none"
+      onClick={onClose}
+    >
+      <div className="animate-lightbox-zoom relative aspect-[104/154] h-auto max-h-[72dvh] w-[min(26rem,68vw)] overflow-hidden rounded-[1.6rem] shadow-[0_2.4rem_5.6rem_rgba(0,0,0,0.34)]">
+        <Image src={src} alt={alt} fill className="object-cover" sizes="68vw" priority />
+      </div>
+    </div>,
+    document.body,
+  );
 };
 
 type Props = {
@@ -43,6 +109,8 @@ export const BookDetailContainer = (props: Props) => {
   const { isOpen, mountKey, open, close } = useModal();
   const { mutateAsync: deleteBook, isPending: isDeleting } = useDeleteUserBook();
   const openToast = useToastStore((s) => s.openToast);
+  const [isCoverOpen, setIsCoverOpen] = useState(false);
+  const handleCloseCover = useCallback(() => setIsCoverOpen(false), []);
   const book = initialBookSessions?.book;
   const sessions = initialBookSessions?.sessions ?? [];
   const title = book?.title ?? '책 정보를 불러오지 못했어요';
@@ -92,7 +160,12 @@ export const BookDetailContainer = (props: Props) => {
           </button>
         </div>
 
-        <div className="relative h-[15.4rem] w-[10.4rem] shrink-0 overflow-hidden rounded-[1.2rem] border border-gray-alpha-100">
+        <button
+          type="button"
+          onClick={() => setIsCoverOpen(true)}
+          className="relative h-[15.4rem] w-[10.4rem] shrink-0 cursor-zoom-in overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 transition-transform duration-300 ease-out active:scale-[0.96]"
+          aria-label={`${title} 표지 확대`}
+        >
           <Image
             src={coverUrl || ExampleBook}
             alt={title}
@@ -100,7 +173,7 @@ export const BookDetailContainer = (props: Props) => {
             className="object-cover"
             sizes="104px"
           />
-        </div>
+        </button>
       </section>
 
       {sessions.length === 0 ? (
@@ -116,19 +189,22 @@ export const BookDetailContainer = (props: Props) => {
           <ol className="flex list-none flex-col gap-[0.8rem] pb-[4rem]">
             {sessions.map((session, index) => {
               const color = CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length];
+              const hasSummary = session.status === 'SUMMARIZED' || !!session.latestSummaryContent;
+              const path = getSessionPath(session.sessionId, session.status);
 
               return (
                 <li key={session.sessionId}>
                   <button
                     type="button"
                     className="w-full cursor-pointer text-left"
-                    onClick={() => router.push(PATH_NAME.chat.detail(String(session.sessionId)))}
+                    onClick={() => router.push(path)}
                   >
                     <ChatCard
                       color={color}
                       status={SESSION_STATUS_TO_CARD[session.status]}
                       date={formatDate(session.lastChattedDate)}
                       summary={session.title}
+                      bookmarked={hasSummary}
                     />
                   </button>
                 </li>
@@ -145,6 +221,12 @@ export const BookDetailContainer = (props: Props) => {
         onCancel={close}
         onConfirm={() => void handleDeleteBook()}
         confirmDisabled={isDeleting}
+      />
+      <BookCoverLightbox
+        isOpen={isCoverOpen}
+        src={coverUrl || ExampleBook}
+        alt={title}
+        onClose={handleCloseCover}
       />
     </div>
   );

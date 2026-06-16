@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import { ChatCard, chatCardColorByIndex, Empty, Loading } from '@/components';
 import { MYPAGE_TAB, PATH_NAME, PREVIEW_COUNT } from '@/constants';
-import { type SummaryListData, useGetSummaries } from '@/lib';
+import { cn, type SummaryListData, useGetSummaries } from '@/lib';
 import { MoreButton } from './MoreButton';
 
 type Props = {
@@ -31,14 +32,21 @@ export const Records = (props: Props) => {
           description="채팅으로 감상 기록을 시작해봐요!"
         />
       ) : (
-        <ul className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pt-[2.4rem]">
+        <ul
+          className={cn(
+            'flex list-none flex-col gap-[0.4rem] px-[2.4rem] pt-[2.4rem]',
+            !hasMoreRecords && 'pb-[2.4rem]',
+          )}
+        >
           {previewRecords.map((record, index) => (
             <li key={`${record.createdAt}-${record.bookTitle}-${index}`}>
-              <ChatCard
-                color={chatCardColorByIndex(index)}
-                bookTitle={record.bookTitle}
-                summary={record.content}
-              />
+              <Link href={PATH_NAME.summary.detail(String(record.summaryId))} className="block">
+                <ChatCard
+                  color={chatCardColorByIndex(index)}
+                  bookTitle={record.bookTitle}
+                  summary={record.content}
+                />
+              </Link>
             </li>
           ))}
         </ul>
