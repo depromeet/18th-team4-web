@@ -55,6 +55,7 @@ const buildStrip = (
   weekCount: number,
   focusYear: number,
   focusMonth: number,
+  includeAdjacentMonth: boolean,
   streakSet: Set<string>,
   todayDate?: Date,
 ): WeekRow[] => {
@@ -76,13 +77,14 @@ const buildStrip = (
         cellDate.getFullYear() === todayDate.getFullYear() &&
         cellDate.getMonth() === todayDate.getMonth() &&
         cellDate.getDate() === todayDate.getDate();
-      const state: DayState = !isCurrentMonth
-        ? 'disabled'
-        : isFuture
-          ? 'future'
-          : streakSet.has(dateStr)
-            ? 'active'
-            : 'default';
+      const state: DayState =
+        !includeAdjacentMonth && !isCurrentMonth
+          ? 'disabled'
+          : isFuture
+            ? 'future'
+            : streakSet.has(dateStr)
+              ? 'active'
+              : 'default';
 
       days.push({ date: cellDate.getDate(), dateStr, isCurrentMonth, state, isToday });
     }
@@ -124,9 +126,17 @@ export const MonthCalendar = (props: Props) => {
 
   const weekCount = weekDiff(rangeStartMs, rangeEndMs) + 1;
   const streakSet = new Set(streakDates);
-  const weeks = buildStrip(rangeStartMs, weekCount, focusYear, focusMonth, streakSet, todayDate);
 
   const isWeek = view === 'week';
+  const weeks = buildStrip(
+    rangeStartMs,
+    weekCount,
+    focusYear,
+    focusMonth,
+    isWeek,
+    streakSet,
+    todayDate,
+  );
 
   // 스트립 안에서 각 뷰가 상단에 보여줄 주 인덱스
   const baseWeekIndex = weekDiff(rangeStartMs, startOfWeek(baseDate).getTime());
@@ -163,8 +173,9 @@ export const MonthCalendar = (props: Props) => {
             style={{ height: `${ROW_HEIGHT_REM}rem` }}
           >
             {week.days.map((cell, dayIndex) => {
-              const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
-              const isClickable = cell.isCurrentMonth && cell.state !== 'future';
+              const isVisibleDate = isWeek || cell.isCurrentMonth;
+              const isSelected = isVisibleDate && cell.dateStr === selectedDate;
+              const isClickable = isVisibleDate && cell.state !== 'future';
               const handleClick = () => {
                 if (isClickable) onDayClick?.(cell.dateStr);
               };
@@ -179,7 +190,7 @@ export const MonthCalendar = (props: Props) => {
                     'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
                     'cursor-pointer disabled:cursor-default',
                     isSelected && 'bg-gray-alpha-50',
-                    !cell.isCurrentMonth && 'opacity-30',
+                    !isWeek && !cell.isCurrentMonth && 'opacity-30',
                   )}
                 >
                   <span className="shrink-0 text-center text-[1rem] font-semibold leading-[1.4] tracking-[-0.02em] text-text-caption">
