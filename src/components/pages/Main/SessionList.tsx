@@ -13,6 +13,8 @@ type Props = {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TARGET_HOUR = 6;
+const PIE_RADIUS = 5;
+const PIE_CIRCUMFERENCE = 2 * Math.PI * PIE_RADIUS;
 
 const getNextSixState = () => {
   const now = new Date();
@@ -52,20 +54,31 @@ const SixAMCountdownPie = () => {
     return <span className="size-[1.4rem] shrink-0 rounded-full bg-gray-alpha-50" />;
   }
 
-  const degrees = Math.round(state.remainingRatio * 360);
+  const dashOffset = PIE_CIRCUMFERENCE * (1 - state.remainingRatio);
 
   return (
-    <span
-      role="img"
-      aria-label={state.label}
-      title={state.label}
-      className="relative size-[1.4rem] shrink-0 rounded-full"
-      style={{
-        background: `conic-gradient(var(--color-green-darkest) ${degrees}deg, var(--color-gray-10) ${degrees}deg 360deg)`,
-      }}
-    >
-      <span className="absolute inset-[0.35rem] rounded-full bg-white" />
-    </span>
+    <svg role="img" aria-label={state.label} className="size-[1.4rem] shrink-0" viewBox="0 0 14 14">
+      <title>{state.label}</title>
+      <circle
+        cx="7"
+        cy="7"
+        r={PIE_RADIUS}
+        fill="none"
+        stroke="var(--color-gray-10)"
+        strokeWidth="4"
+      />
+      <circle
+        cx="7"
+        cy="7"
+        r={PIE_RADIUS}
+        fill="none"
+        stroke="var(--color-green-darkest)"
+        strokeDasharray={PIE_CIRCUMFERENCE}
+        strokeDashoffset={dashOffset}
+        strokeWidth="4"
+        transform="rotate(-90 7 7)"
+      />
+    </svg>
   );
 };
 
