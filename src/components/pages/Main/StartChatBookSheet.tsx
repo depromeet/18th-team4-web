@@ -95,7 +95,7 @@ export const StartChatBookSheet = (props: Props) => {
   return (
     <BottomSheet open={open} collapsedMaxHeight="0px" onClose={onClose}>
       <div className="relative flex max-h-full min-h-0 flex-1 flex-col">
-        <div className="flex shrink-0 items-center justify-between px-[2.4rem] pt-[3.2rem]">
+        <div className="flex shrink-0 items-center justify-between px-[2.4rem] pt-[3.2rem] pb-[2.4rem] border-b border-b-[#EEE]">
           <h2 className="headline2-extrabold tracking-[-0.06rem] text-text-default">
             어떤 책으로 대화를 나눌까요?
           </h2>
@@ -111,7 +111,7 @@ export const StartChatBookSheet = (props: Props) => {
 
         <ul
           className={cn(
-            'min-h-0 flex-1 list-none overflow-y-auto overscroll-contain px-[1rem] pt-[2.4rem]',
+            'min-h-0 flex-1 list-none overflow-y-auto overscroll-contain px-[1rem] pt-[0.8rem]',
             pickedId === undefined ? 'pb-[2.4rem]' : 'pb-[11rem]',
           )}
         >
