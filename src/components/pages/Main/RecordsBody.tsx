@@ -103,7 +103,6 @@ export const RecordsBody = (props: Props) => {
           />
         ) : (
           <SessionList
-            summaries={summaries}
             filteredSummaries={filteredSummaries}
             onNavigate={handleNavigate}
           />

@@ -6,7 +6,6 @@ import { PATH_NAME } from '@/constants';
 import { type SummaryCalendarItem } from '@/lib';
 
 type Props = {
-  summaries: SummaryCalendarItem[];
   filteredSummaries: SummaryCalendarItem[];
   onNavigate: (path: string) => void;
 };
@@ -83,7 +82,7 @@ const SixAMCountdownPie = () => {
 };
 
 export const SessionList = (props: Props) => {
-  const { summaries, filteredSummaries, onNavigate } = props;
+  const { filteredSummaries, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -95,11 +94,10 @@ export const SessionList = (props: Props) => {
         </p>
       </div>
       <ol className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-32">
-        {filteredSummaries.map((summary) => {
-          const originalIndex = summaries.indexOf(summary);
+        {filteredSummaries.map((summary, index) => {
           const color =
             CHAT_CARD_COLOR_SEQUENCE[
-              (summaries.length - 1 - originalIndex) % CHAT_CARD_COLOR_SEQUENCE.length
+              (filteredSummaries.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
             ];
           const path = PATH_NAME.summary.detail(String(summary.summaryId));
 
