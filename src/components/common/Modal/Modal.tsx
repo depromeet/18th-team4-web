@@ -80,53 +80,55 @@ export const Modal = (props: Props) => {
         )}
         onClick={dismissWithSlide}
       />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="summary-modal-title"
-        aria-describedby="summary-modal-description"
-        className={cn(
-          'fixed inset-0 z-modal m-auto flex h-fit max-h-[90dvh] w-[min(33rem,calc(100vw-4.8rem))] flex-col overflow-hidden rounded-[20px] bg-text-white',
-          isExiting ? 'animate-modal-sheet-exit' : 'animate-modal-sheet-enter',
-        )}
-        onAnimationEnd={handleExitAnimationEnd}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <div className="relative flex min-h-0 w-full flex-1 flex-col items-center gap-[3rem] overflow-y-auto overscroll-contain p-[2.4rem] pt-[2.8rem]">
-          <header className="flex flex-col items-center gap-[0.2rem] text-center">
-            <h3 id="summary-modal-title" className="text-text-default headline2-bold mt-[1.4rem]">
-              {title}
-            </h3>
-            <p id="summary-modal-description" className="body2-medium text-text-description">
-              {content}
-            </p>
-          </header>
+      <div className="pointer-events-none fixed inset-0 z-modal flex items-center justify-center p-[2.4rem]">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+          className={cn(
+            'pointer-events-auto flex max-h-[calc(100dvh-4.8rem)] w-full max-w-[33rem] flex-col overflow-hidden rounded-[20px] bg-text-white',
+            isExiting ? 'animate-modal-sheet-exit' : 'animate-modal-sheet-enter',
+          )}
+          onAnimationEnd={handleExitAnimationEnd}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <div className="relative flex min-h-0 w-full flex-col items-center gap-[3rem] overflow-y-auto overscroll-contain p-[2.4rem] pt-[2.8rem]">
+            <header className="flex flex-col items-center gap-[0.2rem] text-center">
+              <h3 id="modal-title" className="text-text-default headline2-bold mt-[1.4rem]">
+                {title}
+              </h3>
+              <p id="modal-description" className="body2-medium text-text-description">
+                {content}
+              </p>
+            </header>
 
-          <footer className="flex w-full gap-[1rem]">
-            {isDestructiveModal ? (
+            <footer className="flex w-full gap-[1rem]">
+              {isDestructiveModal ? (
+                <Button
+                  variant={BUTTON_VARIANT.LIGHTGRAY}
+                  size="lg"
+                  className="rounded-[1.6rem]"
+                  onClick={dismissWithSlide}
+                  disabled={isExiting || confirmDisabled}
+                >
+                  취소
+                </Button>
+              ) : null}
+
               <Button
-                variant={BUTTON_VARIANT.LIGHTGRAY}
+                variant={BUTTON_VARIANT.BLACK}
                 size="lg"
                 className="rounded-[1.6rem]"
-                onClick={dismissWithSlide}
+                onClick={handleConfirm}
                 disabled={isExiting || confirmDisabled}
               >
-                취소
+                {isDestructiveModal ? '삭제하기' : '확인'}
               </Button>
-            ) : null}
-
-            <Button
-              variant={BUTTON_VARIANT.BLACK}
-              size="lg"
-              className="rounded-[1.6rem]"
-              onClick={handleConfirm}
-              disabled={isExiting || confirmDisabled}
-            >
-              {isDestructiveModal ? '삭제하기' : '확인'}
-            </Button>
-          </footer>
+            </footer>
+          </div>
         </div>
       </div>
     </>,
