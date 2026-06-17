@@ -52,7 +52,7 @@ const WeekDayButton = (props: DayButtonProps) => {
       >
         <span
           className={cn(
-            'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8px_currentColor]',
+            'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8pt_currentColor]',
             day.state === 'default' && 'text-text-description',
             day.state === 'active' && 'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',
             day.state === 'future' && 'text-gray-100',

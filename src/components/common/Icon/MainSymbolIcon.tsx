@@ -7,5 +7,5 @@ type Props = SVGProps<SVGSVGElement>;
 export const MainSymbolIcon = (props: Props) => {
   const { className, ...rest } = props;
 
-  return <MainSymbol className={cn('w-20 h-[6.6rem]', className)} {...rest} />;
+  return <MainSymbol className={cn('h-[6.6rem] w-20 overflow-visible', className)} {...rest} />;
 };

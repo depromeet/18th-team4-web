@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation';
 import { OnboardingContainer } from '@/components';
-import { PATH_NAME } from '@/constants';
 import { getUserBooksServer, type Session } from '@/lib';
 import { MainBooksShell } from './MainBooksShell';
 
@@ -14,9 +12,9 @@ export const MainContainer = async ({ session }: Props) => {
     return <OnboardingContainer />;
   }
 
-  // 2. 온보딩 완료, 책 미등록 — 책 등록 페이지로
+  // 2. 온보딩 완료, 책 미등록 — 홈으로
   if (!session.hasRegisteredBooks) {
-    redirect(PATH_NAME.register.list());
+    return <MainBooksShell books={[]} />;
   }
 
   // 3. 온보딩 완료 + 책 등록 완료

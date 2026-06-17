@@ -8,8 +8,15 @@ export const generateMetadata = async (): Promise<Metadata> => {
   };
 };
 
-const page = () => {
-  return <RegisterComplete />;
+type PageProps = {
+  searchParams: Promise<{ sessionId?: string | string[] }>;
+};
+
+const page = async ({ searchParams }: PageProps) => {
+  const { sessionId } = await searchParams;
+  const normalizedSessionId = Array.isArray(sessionId) ? sessionId[0] : sessionId;
+
+  return <RegisterComplete sessionId={normalizedSessionId} />;
 };
 
 export default page;

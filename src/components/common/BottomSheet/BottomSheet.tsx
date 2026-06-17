@@ -8,6 +8,7 @@ type BottomSheetProps = {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
+  ariaLabel?: string;
   collapsedMaxHeight?: string;
   onMaxHeightTransitionEnd?: (openAfterTransition: boolean) => void;
 };
@@ -18,7 +19,14 @@ const noOpSubscribe = () => () => {};
 const BOTTOM_SHEET_MAX_OPEN = 'calc(100dvh - 7.8rem - 0.5rem)';
 
 export const BottomSheet = (props: BottomSheetProps) => {
-  const { children, collapsedMaxHeight, onClose, onMaxHeightTransitionEnd, open } = props;
+  const {
+    ariaLabel = '선택',
+    children,
+    collapsedMaxHeight,
+    onClose,
+    onMaxHeightTransitionEnd,
+    open,
+  } = props;
   const mounted = useSyncExternalStore(
     noOpSubscribe,
     () => true,
@@ -84,9 +92,9 @@ export const BottomSheet = (props: BottomSheetProps) => {
         onClick={onClose}
       />
       <aside
-        aria-label="책 선택"
+        aria-label={ariaLabel}
         aria-modal={open ? 'true' : undefined}
-        className="pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-0 min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden bg-white shadow-[0_-8px_32px_rgb(23_39_35/0.1)] outline-none transition-[max-height,border-top-left-radius,border-top-right-radius] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
+        className="pointer-events-auto absolute inset-x-0 bottom-0 flex min-h-0 min-w-0 max-w-full flex-col overflow-x-hidden overflow-y-hidden rounded-t-[3rem] bg-white shadow-[0_-8px_32px_rgb(23_39_35/0.1)] outline-none transition-[max-height,border-top-left-radius,border-top-right-radius] duration-680 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none"
         role="dialog"
         style={{
           maxHeight: maxHeight ?? undefined,

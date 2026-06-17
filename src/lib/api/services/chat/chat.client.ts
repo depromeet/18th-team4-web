@@ -7,6 +7,40 @@ const SSE_RETRY_MAX = 3;
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
+type ApiErrorBody = {
+  code?: string;
+  errorCode?: string;
+  message?: string;
+  data?: {
+    code?: string;
+    errorCode?: string;
+    message?: string;
+  };
+};
+
+const parsePreStreamError = async (response: Response): Promise<ErrorEvent> => {
+  let body: ApiErrorBody | undefined;
+  try {
+    body = (await response.json()) as ApiErrorBody;
+  } catch {
+    body = undefined;
+  }
+
+  const retryAfter = Number(response.headers.get('Retry-After'));
+  const code =
+    body?.errorCode ??
+    body?.code ??
+    body?.data?.errorCode ??
+    body?.data?.code ??
+    (response.status === 429 ? 'USER_RATE_LIMIT_EXCEEDED' : 'API_ERROR');
+
+  return {
+    code,
+    message: body?.message ?? body?.data?.message ?? 'API Error',
+    rateLimit: Number.isFinite(retryAfter) ? { retryAfterSeconds: retryAfter } : undefined,
+  };
+};
+
 export const createChatSession = async (): Promise<number> => {
   const response = await clientAuthHttp.post<void, CreateSessionResponse>(
     ENDPOINTS.AI_CHAT.createSession(),
@@ -39,16 +73,9 @@ export const streamChatMessage = async (
     });
   }
 
-  // pre-stream rate limit → Retry-After 헤더 확인 후 재시도
-  if (response.status === 429 && retryCount < SSE_RETRY_MAX) {
-    const retryAfter = Number(response.headers.get('Retry-After') ?? 5);
-    callbacks.onRetry?.();
-    await sleep(retryAfter * 1000);
-    return streamChatMessage(sessionId, content, callbacks, retryCount + 1);
-  }
-
   if (!response.ok) {
-    throw new HttpError({ message: 'API Error', status: response.status });
+    callbacks.onError(await parsePreStreamError(response));
+    return;
   }
 
   const reader = response.body?.getReader();

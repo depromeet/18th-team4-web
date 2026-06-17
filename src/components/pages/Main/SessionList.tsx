@@ -1,48 +1,108 @@
-import { CHAT_CARD_COLOR_SEQUENCE, CHAT_CARD_STATUS, ChatCard, DocumentIcon } from '@/components';
-import { PATH_NAME } from '@/constants';
-import { formatDate, type SessionItem, type SessionStatus } from '@/lib';
+'use client';
 
-const SESSION_STATUS_TO_CARD: Record<
-  SessionStatus,
-  (typeof CHAT_CARD_STATUS)[keyof typeof CHAT_CARD_STATUS]
-> = {
-  ACTIVE: CHAT_CARD_STATUS.DEFAULT,
-  SUMMARIZING: CHAT_CARD_STATUS.LOADING,
-  CLOSED: CHAT_CARD_STATUS.DEFAULT,
-  FAILED: CHAT_CARD_STATUS.ERROR,
-};
+import { useEffect, useState } from 'react';
+import { CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
+import { PATH_NAME } from '@/constants';
+import { type SummaryCalendarItem } from '@/lib';
 
 type Props = {
-  filteredSessions: SessionItem[];
-  onNavigate: (path: string) => Promise<void>;
+  filteredSummaries: SummaryCalendarItem[];
+  onNavigate: (path: string) => void;
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TARGET_HOUR = 6;
+const PIE_RADIUS = 5;
+const PIE_CIRCUMFERENCE = 2 * Math.PI * PIE_RADIUS;
+
+const getNextSixState = () => {
+  const now = new Date();
+  const nextSix = new Date(now);
+  nextSix.setHours(TARGET_HOUR, 0, 0, 0);
+
+  if (nextSix.getTime() <= now.getTime()) {
+    nextSix.setDate(nextSix.getDate() + 1);
+  }
+
+  const remainingMs = nextSix.getTime() - now.getTime();
+  const remainingMinutes = Math.max(0, Math.ceil(remainingMs / (60 * 1000)));
+  const remainingHours = Math.floor(remainingMinutes / 60);
+  const minutes = remainingMinutes % 60;
+
+  return {
+    remainingRatio: Math.min(1, Math.max(0, remainingMs / DAY_MS)),
+    label:
+      remainingHours > 0
+        ? `오전 6시까지 ${remainingHours}시간 ${minutes}분 남음`
+        : `오전 6시까지 ${minutes}분 남음`,
+  };
+};
+
+const SixAMCountdownPie = () => {
+  const [state, setState] = useState<ReturnType<typeof getNextSixState> | null>(null);
+
+  useEffect(() => {
+    const update = () => setState(getNextSixState());
+    update();
+
+    const id = window.setInterval(update, 60 * 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  if (!state) {
+    return <span className="size-[1.4rem] shrink-0 rounded-full bg-gray-alpha-50" />;
+  }
+
+  const dashOffset = PIE_CIRCUMFERENCE * (1 - state.remainingRatio);
+
+  return (
+    <svg role="img" aria-label={state.label} className="size-[1.4rem] shrink-0" viewBox="0 0 14 14">
+      <title>{state.label}</title>
+      <circle
+        cx="7"
+        cy="7"
+        r={PIE_RADIUS}
+        fill="none"
+        stroke="var(--color-gray-10)"
+        strokeWidth="4"
+      />
+      <circle
+        cx="7"
+        cy="7"
+        r={PIE_RADIUS}
+        fill="none"
+        stroke="var(--color-green-darkest)"
+        strokeDasharray={PIE_CIRCUMFERENCE}
+        strokeDashoffset={dashOffset}
+        strokeWidth="4"
+        transform="rotate(-90 7 7)"
+      />
+    </svg>
+  );
 };
 
 export const SessionList = (props: Props) => {
-  const { filteredSessions, onNavigate } = props;
+  const { filteredSummaries, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
       <div className="flex items-center gap-[0.4rem] px-[2.4rem]">
-        <DocumentIcon className="shrink-0 text-text-caption" />
-        <p className="body2-semibold tracking-[-0.042rem]">
+        <SixAMCountdownPie />
+        <p className="body2-semibold flex min-w-0 items-center gap-[0.4rem] tracking-[-0.042rem]">
           <span className="text-text-description">오전 6시에</span>
           <span className="text-text-caption"> AI가 독후감을 작성해요</span>
         </p>
       </div>
       <ol className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-32">
-        {filteredSessions.map((session, index) => {
-          const sessionIdStr = String(session.sessionId);
+        {filteredSummaries.map((summary, index) => {
           const color =
             CHAT_CARD_COLOR_SEQUENCE[
-              (filteredSessions.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+              (filteredSummaries.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
             ];
-          const path =
-            session.status === 'CLOSED' || session.status === 'SUMMARIZING'
-              ? PATH_NAME.summary.detail(sessionIdStr)
-              : PATH_NAME.chat.detail(sessionIdStr);
+          const path = PATH_NAME.summary.detail(String(summary.summaryId));
 
           return (
-            <li key={session.sessionId}>
+            <li key={summary.summaryId}>
               <button
                 type="button"
                 className="w-full cursor-pointer text-left"
@@ -50,10 +110,9 @@ export const SessionList = (props: Props) => {
               >
                 <ChatCard
                   color={color}
-                  status={SESSION_STATUS_TO_CARD[session.status]}
-                  date={formatDate(session.lastChattedDate)}
-                  summary={session.title}
-                  bookmarked={session.status === 'CLOSED'}
+                  bookTitle={summary.bookTitle}
+                  summary={summary.title}
+                  bookmarked
                 />
               </button>
             </li>

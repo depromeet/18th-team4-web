@@ -1,7 +1,6 @@
 import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import {
-  BaseInput,
   containerVariants,
   inputVariants,
   sendButtonVariants,
@@ -11,7 +10,7 @@ import { SendIcon } from '@/components/common/Icon';
 import { CHAT_BG_VARIANT, CHAT_PLACEHOLDER, CHAT_STATUS } from '@/constants';
 import { cn } from '@/lib';
 
-type Props = Omit<React.ComponentProps<'input'>, 'disabled'> &
+type Props = Omit<React.ComponentProps<'textarea'>, 'disabled'> &
   VariantProps<typeof containerVariants> & {
     onSend?: () => void;
   };
@@ -25,8 +24,19 @@ export const TextfieldChat = (props: Props) => {
     status === CHAT_STATUS.ERROR ||
     status === CHAT_STATUS.LOADING;
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.nativeEvent.isComposing && !isDisabled) {
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useLayoutEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 144)}px`;
+  }, [rest.value]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && !isDisabled) {
+      e.preventDefault();
       onSend?.();
     }
     rest.onKeyDown?.(e);
@@ -37,9 +47,14 @@ export const TextfieldChat = (props: Props) => {
       className={cn(containerVariants({ bgVariant, status }))}
       aria-busy={status === CHAT_STATUS.LOADING ? true : undefined}
     >
-      <BaseInput
+      <textarea
+        ref={textareaRef}
         disabled={isDisabled}
-        className={cn(inputVariants({ status }))}
+        rows={1}
+        className={cn(
+          'w-full min-w-0 resize-none overflow-y-auto outline-none disabled:cursor-not-allowed',
+          inputVariants({ status }),
+        )}
         placeholder={placeholder}
         {...rest}
         onKeyDown={handleKeyDown}

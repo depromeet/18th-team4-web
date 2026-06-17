@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { DAY_LABELS } from '@/constants';
 import { cn, toLocalDateString } from '@/lib';
 
@@ -27,6 +28,8 @@ type Props = {
   todayDate?: Date;
   selectedDate?: string;
   className?: string;
+  /** 세션 로드가 끝나 스트립 위치가 안정된 뒤에만 true. 마운트·데이터 로드 중에는 transition을 끈다. */
+  ready?: boolean;
   onDayClick?: (dateStr: string) => void;
 };
 
@@ -52,6 +55,7 @@ const buildStrip = (
   weekCount: number,
   focusYear: number,
   focusMonth: number,
+  includeAdjacentMonth: boolean,
   streakSet: Set<string>,
   todayDate?: Date,
 ): WeekRow[] => {
@@ -73,13 +77,14 @@ const buildStrip = (
         cellDate.getFullYear() === todayDate.getFullYear() &&
         cellDate.getMonth() === todayDate.getMonth() &&
         cellDate.getDate() === todayDate.getDate();
-      const state: DayState = !isCurrentMonth
-        ? 'disabled'
-        : isFuture
-          ? 'future'
-          : streakSet.has(dateStr)
-            ? 'active'
-            : 'default';
+      const state: DayState =
+        !includeAdjacentMonth && !isCurrentMonth
+          ? 'disabled'
+          : isFuture
+            ? 'future'
+            : streakSet.has(dateStr)
+              ? 'active'
+              : 'default';
 
       days.push({ date: cellDate.getDate(), dateStr, isCurrentMonth, state, isToday });
     }
@@ -100,8 +105,20 @@ export const MonthCalendar = (props: Props) => {
     todayDate,
     selectedDate,
     className,
+    ready = false,
     onDayClick,
   } = props;
+
+  // 데이터 로드로 위치가 안정된 다음 프레임부터만 transition을 켜서,
+  // 마운트·streakDates 도착에 따른 초기 위치 보정이 애니메이션 없이 즉시 반영되게 한다.
+  const [animate, setAnimate] = useState(false);
+  useEffect(() => {
+    if (!ready || animate) {
+      return;
+    }
+    const id = requestAnimationFrame(() => setAnimate(true));
+    return () => cancelAnimationFrame(id);
+  }, [ready, animate]);
 
   const baseDate = new Date(baseDateMs);
   const focusYear = baseDate.getFullYear();
@@ -109,9 +126,17 @@ export const MonthCalendar = (props: Props) => {
 
   const weekCount = weekDiff(rangeStartMs, rangeEndMs) + 1;
   const streakSet = new Set(streakDates);
-  const weeks = buildStrip(rangeStartMs, weekCount, focusYear, focusMonth, streakSet, todayDate);
 
   const isWeek = view === 'week';
+  const weeks = buildStrip(
+    rangeStartMs,
+    weekCount,
+    focusYear,
+    focusMonth,
+    isWeek,
+    streakSet,
+    todayDate,
+  );
 
   // 스트립 안에서 각 뷰가 상단에 보여줄 주 인덱스
   const baseWeekIndex = weekDiff(rangeStartMs, startOfWeek(baseDate).getTime());
@@ -128,13 +153,17 @@ export const MonthCalendar = (props: Props) => {
   return (
     <div
       className={cn(
-        'w-full overflow-hidden transition-[height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        'w-full overflow-hidden',
+        animate && 'transition-[height] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
         className,
       )}
       style={{ height: `${visibleRows * ROW_HEIGHT_REM}rem` }}
     >
       <div
-        className="flex flex-col transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+        className={cn(
+          'flex flex-col',
+          animate && 'transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+        )}
         style={{ transform: `translateY(-${topIndex * ROW_HEIGHT_REM}rem)` }}
       >
         {weeks.map((week) => (
@@ -144,8 +173,9 @@ export const MonthCalendar = (props: Props) => {
             style={{ height: `${ROW_HEIGHT_REM}rem` }}
           >
             {week.days.map((cell, dayIndex) => {
-              const isSelected = cell.isCurrentMonth && cell.dateStr === selectedDate;
-              const isClickable = cell.isCurrentMonth && cell.state !== 'future';
+              const isVisibleDate = isWeek || cell.isCurrentMonth;
+              const isSelected = isVisibleDate && cell.dateStr === selectedDate;
+              const isClickable = isVisibleDate && cell.state !== 'future';
               const handleClick = () => {
                 if (isClickable) onDayClick?.(cell.dateStr);
               };
@@ -160,7 +190,7 @@ export const MonthCalendar = (props: Props) => {
                     'flex min-w-0 flex-1 flex-col items-center gap-[0.4rem] rounded-[10px] py-[0.6rem]',
                     'cursor-pointer disabled:cursor-default',
                     isSelected && 'bg-gray-alpha-50',
-                    !cell.isCurrentMonth && 'opacity-30',
+                    !isWeek && !cell.isCurrentMonth && 'opacity-30',
                   )}
                 >
                   <span className="shrink-0 text-center text-[1rem] font-semibold leading-[1.4] tracking-[-0.02em] text-text-caption">
@@ -176,7 +206,7 @@ export const MonthCalendar = (props: Props) => {
                   >
                     <span
                       className={cn(
-                        'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8px_currentColor]',
+                        'body2-bold text-center tracking-[-0.03em] [paint-order:stroke_fill] [-webkit-text-stroke:0.8pt_currentColor]',
                         cell.state === 'default' && 'text-text-description',
                         cell.state === 'active' &&
                           'text-white [text-shadow:0px_0px_1.125px_rgba(0,0,0,0.32)]',

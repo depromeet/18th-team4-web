@@ -88,6 +88,12 @@ export const ENDPOINTS = {
   SUMMARIES: {
     // 내 감상 기록 목록 조회
     list: () => '/summaries',
+
+    // 감상 기록 상세 조회
+    detail: (summaryId: string) => `/summaries/${summaryId}`,
+
+    // 월별 감상 기록 조회 (홈 캘린더)
+    calendar: () => '/summaries/calendar',
   },
 
   /*

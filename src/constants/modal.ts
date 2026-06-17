@@ -4,12 +4,12 @@ export const MODAL_TYPE = {
     content: '관련된 요약과 대화 내용이 모두 삭제돼요.',
   },
   LOGOUT: {
-    title: '아직 준비중입니다!',
-    content: '현재 로그인 기능은 지원하지 않습니다.',
+    title: '로그아웃 할까요?',
+    content: '현재는 로그아웃시 재 로그인이 불가합니다.',
   },
   WITHDRAW: {
-    title: '아직 준비중입니다!',
-    content: '현재 로그인 기능은 지원하지 않습니다.',
+    title: '회원을 탈퇴할까요?',
+    content: '등록한 책과 대화 내용이 모두 삭제돼요.',
   },
 } as const;
 

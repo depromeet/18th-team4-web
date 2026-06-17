@@ -7,6 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import { revalidateMypageAction } from '@/app/actions';
 import { QUERY_KEY } from '@/constants';
 import { addUserBook, deleteUserBook, getUserBooks } from './user-books.client';
 import { type UserBookListData } from './user-books.type';
@@ -45,8 +46,16 @@ export const useGetInfiniteUserBooks = (
 };
 
 export const useAddUserBook = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (bookExternalId: string) => addUserBook({ bookExternalId }),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY.userBooks.all() }),
+        revalidateMypageAction(),
+      ]);
+    },
   });
 };
 
@@ -56,7 +65,10 @@ export const useDeleteUserBook = () => {
   return useMutation({
     mutationFn: (userBookId: number) => deleteUserBook({ userBookId }),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: QUERY_KEY.userBooks.all() });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: QUERY_KEY.userBooks.all() }),
+        revalidateMypageAction(),
+      ]);
     },
   });
 };

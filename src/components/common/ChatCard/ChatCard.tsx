@@ -42,7 +42,7 @@ export const ChatCard = (props: ChatCardProps) => {
     <article className={cn(chatCardVariants({ color }), className)}>
       <div className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0px_4px_32px_0px_rgba(255,255,255,0.65)]" />
 
-      <div className="relative flex min-w-0 flex-1 flex-col gap-[0.2rem]">
+      <div className="relative flex min-w-0 flex-1 flex-col">
         {(isDefault || isLoading) && (bookTitle ?? date) && (
           <p className="body2-semibold line-clamp-1 w-full shrink-0 break-words tracking-[-0.042rem] text-[rgba(0,0,0,0.27)]">
             {bookTitle ?? date}
