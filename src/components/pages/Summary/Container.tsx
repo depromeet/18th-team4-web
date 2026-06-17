@@ -170,7 +170,7 @@ export const SummaryContainer = (props: Props) => {
     <div className="flex h-dvh flex-col bg-background-primary-white">
       <SummaryHeader
         summaryId={String(editableSummaryId ?? summaryId)}
-        editHref={editHref}
+        editHref={canShowEdit ? editHref : undefined}
         showEdit={canShowEdit}
       />
 
