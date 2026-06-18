@@ -71,9 +71,15 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
 
     try {
       const errorBody = await res.json();
-      message = errorBody?.message ?? message;
-      errorCode = errorBody?.errorCode ?? errorBody?.code ?? errorBody?.data?.errorCode;
-      path = errorBody?.path;
+      // 백엔드 에러 응답은 { error: { message, ... } } 형태로 감싸져 옴
+      message = errorBody?.error?.message ?? errorBody?.message ?? message;
+      errorCode =
+        errorBody?.error?.errorCode ??
+        errorBody?.error?.code ??
+        errorBody?.errorCode ??
+        errorBody?.code ??
+        errorBody?.data?.errorCode;
+      path = errorBody?.error?.path ?? errorBody?.path;
     } catch {
       // non-json 에러 응답 대비
     }
