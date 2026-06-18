@@ -44,7 +44,7 @@ export const Records = (props: Props) => {
                 <ChatCard
                   color={chatCardColorByIndex(index)}
                   bookTitle={record.bookTitle}
-                  summary={record.content}
+                  summary={record.sessionTitle}
                 />
               </Link>
             </li>
