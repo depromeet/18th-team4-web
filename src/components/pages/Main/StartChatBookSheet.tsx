@@ -92,6 +92,10 @@ export const StartChatBookSheet = (props: Props) => {
     onConfirm(pickedId);
   };
 
+  const handleSelectBook = (userBookId: number) => {
+    setPickedId((prev) => (prev === userBookId ? undefined : userBookId));
+  };
+
   return (
     <BottomSheet open={open} collapsedMaxHeight="0px" onClose={onClose}>
       <div className="relative flex max-h-full min-h-0 flex-1 flex-col">
@@ -120,7 +124,7 @@ export const StartChatBookSheet = (props: Props) => {
               key={book.userBookId}
               book={book}
               selected={pickedId === book.userBookId}
-              onSelect={setPickedId}
+              onSelect={handleSelectBook}
             />
           ))}
         </ul>

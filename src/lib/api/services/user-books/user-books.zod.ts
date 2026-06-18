@@ -31,6 +31,7 @@ export const AddUserBookResponseSchema = createResponseSchema(UserBookDataSchema
 export const UserBookItemSchema = z.object({
   userBookId: z.number(),
   bookId: z.number(),
+  bookExternalId: z.string().optional(),
   title: z.string(),
   publisher: z.string(),
   publishedYear: z.number(),

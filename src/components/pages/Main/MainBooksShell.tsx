@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { Header, HEADER_VARIANT } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { getLastSelectedUserBookIdClient, type UserBookItem } from '@/lib';
@@ -23,9 +24,17 @@ export const MainBooksShell = (props: Props) => {
   const selectedUserBookId = fromClient !== undefined ? fromClient : initialSelectedUserBookId;
   const selectedDate = useCalendarStore((s) => s.selectedDate);
   const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
+  const [todayStr, setTodayStr] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setTodayStr(toLocalDateString(new Date()));
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   if (selectedUserBookId === undefined) {
-    const isToday = selectedDate === toLocalDateString(new Date());
+    const isToday = todayStr !== null && selectedDate === todayStr;
 
     return (
       <main className="relative flex h-dvh flex-col overflow-hidden bg-white">

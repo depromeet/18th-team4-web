@@ -23,11 +23,11 @@ export const SummaryListRequestSchema = z.object({
 });
 
 export const SummaryCalendarItemSchema = z.object({
-  summaryId: z.number(),
-  summaryDate: z.string(),
-  title: z.string(),
-  body: z.string(),
+  chatSessionId: z.number(),
+  summaryId: z.number().nullable(),
   bookTitle: z.string(),
+  chatSummary: z.string(),
+  lastChattedAt: z.string(),
 });
 
 export const SummaryDetailSchema = z.object({
@@ -43,7 +43,7 @@ export const SummaryDetailResponseSchema = createResponseSchema(
 );
 
 export const SummaryCalendarDataSchema = z.object({
-  summaries: z.array(SummaryCalendarItemSchema),
+  records: z.array(SummaryCalendarItemSchema),
 });
 
 export const SummaryCalendarResponseSchema = createResponseSchema(SummaryCalendarDataSchema);

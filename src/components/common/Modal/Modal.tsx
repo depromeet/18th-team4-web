@@ -22,6 +22,7 @@ export const Modal = (props: Props) => {
   const { title, content } = MODAL_TYPE[modalType];
   const isDestructiveModal =
     modalType === 'DELETE' || modalType === 'LOGOUT' || modalType === 'WITHDRAW';
+  const hasCancelButton = isDestructiveModal || modalType === 'DUPLICATE_BOOK';
   const [isExiting, setIsExiting] = useState(false);
   const exitFinishedRef = useRef(false);
 
@@ -106,7 +107,7 @@ export const Modal = (props: Props) => {
             </header>
 
             <footer className="flex w-full gap-[1rem]">
-              {isDestructiveModal ? (
+              {hasCancelButton ? (
                 <Button
                   variant={BUTTON_VARIANT.LIGHTGRAY}
                   size="lg"

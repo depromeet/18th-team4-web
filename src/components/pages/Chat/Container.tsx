@@ -83,9 +83,11 @@ const mapInfinitePagesToHistoryChats = (
 const ERROR_MESSAGES: Record<string, string> = {
   USER_RATE_LIMIT_EXCEEDED: '요청이 잠시 많아요. 조금 뒤에 다시 시도해주세요.',
   AI_QUOTA_EXHAUSTED: '오늘 대화 한도를 초과했어요. 내일 다시 시도해주세요.',
-  AI_PROVIDER_ERROR: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
+  AI_PROVIDER_ERROR: '오류가 발생했어요. 다시 시도해주세요.',
   AI_PROVIDER_TRANSIENT: '일시적인 오류가 발생했어요. 잠시 후 다시 시도해주세요.',
   AI_STREAM_INTERRUPTED: '응답 중 연결이 끊겼어요. 다시 시도해주세요.',
+  GUARDRAIL_BLOCKED_INPUT:
+    '현재 등록된 책과 연관이 없는 내용이에요. 연관된 내용으로 다시 시도해주세요.',
 };
 
 const SESSION_LIMIT_EXCEEDED_CODES = ['USER_RATE_LIMIT_EXCEEDED', 'AI_QUOTA_EXHAUSTED'] as const;

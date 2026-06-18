@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { toLocalDateString } from '@/lib';
 
 type CalendarView = 'week' | 'month';
+
+const INITIAL_CALENDAR_DATE = '2026-06-01';
+const INITIAL_CALENDAR_DATE_MS = Date.UTC(2026, 5, 1);
 
 type CalendarState = {
   selectedDate: string;
@@ -17,9 +19,9 @@ export const useCalendarStore = create<CalendarState>()(
   devtools(
     persist(
       (set) => ({
-        selectedDate: toLocalDateString(new Date()),
+        selectedDate: INITIAL_CALENDAR_DATE,
         view: 'week',
-        baseDateMs: Date.now(),
+        baseDateMs: INITIAL_CALENDAR_DATE_MS,
         setSelectedDate: (date) => set({ selectedDate: date }),
         setView: (view) => set({ view }),
         setBaseDateMs: (ms) => set({ baseDateMs: ms }),
