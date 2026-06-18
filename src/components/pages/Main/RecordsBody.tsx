@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header, HEADER_VARIANT, Loading } from '@/components';
 import { PATH_NAME } from '@/constants';
 import {
@@ -47,7 +47,15 @@ export const RecordsBody = (props: Props) => {
     (record) => record.lastChattedAt.split('T')[0] === selectedDate,
   );
 
-  const isToday = selectedDate === toLocalDateString(new Date());
+  const [todayStr, setTodayStr] = useState<string | null>(null);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setTodayStr(toLocalDateString(new Date()));
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const isToday = todayStr !== null && selectedDate === todayStr;
   const isEmpty = !isPending && filteredRecords.length === 0;
 
   const openToast = useToastStore((s) => s.openToast);

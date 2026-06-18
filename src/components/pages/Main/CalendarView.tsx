@@ -70,6 +70,7 @@ export const CalendarView = (props: Props) => {
   const baseDate = new Date(baseDateMs);
   const baseYear = baseDate.getFullYear();
   const baseMonth = baseDate.getMonth();
+  const [todayMs, setTodayMs] = useState<number | null>(null);
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
   const [draftYear, setDraftYear] = useState(baseYear);
   const [draftMonth, setDraftMonth] = useState(baseMonth + 1);
@@ -79,7 +80,9 @@ export const CalendarView = (props: Props) => {
   const selectedMonthRef = useRef<HTMLButtonElement | null>(null);
   const yearScrollRafRef = useRef<number | null>(null);
   const monthScrollRafRef = useRef<number | null>(null);
-  const currentYear = new Date().getFullYear();
+  const today = todayMs === null ? undefined : new Date(todayMs);
+  const todayStr = today ? toLocalDateString(today) : selectedDate;
+  const currentYear = today?.getFullYear() ?? baseYear;
   const startYear = MIN_YEAR;
   const endYear = Math.max(currentYear, baseYear) + YEAR_SLOT_RADIUS;
   const yearOptions = Array.from(
@@ -103,23 +106,35 @@ export const CalendarView = (props: Props) => {
     return () => cancelAnimationFrame(id);
   }, [isMonthPickerOpen]);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayStr = toLocalDateString(today);
+  useEffect(() => {
+    const nextToday = new Date();
+    nextToday.setHours(0, 0, 0, 0);
+    const nextTodayStr = toLocalDateString(nextToday);
 
-  const earliestStr = streakDates.length ? streakDates.reduce((a, b) => (a < b ? a : b)) : todayStr;
+    setTodayMs(nextToday.getTime());
+    setBaseDateMs(nextToday.getTime());
+    onDaySelect?.(nextTodayStr);
+    // 처음 마운트될 때만 서버/클라이언트 공통 초기값을 실제 로컬 오늘로 교체한다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const earliestStr = streakDates.length
+    ? streakDates.reduce((a, b) => (a < b ? a : b))
+    : (todayStr ?? selectedDate ?? toLocalDateString(baseDate));
   const [ey, em, ed] = earliestStr.split('-').map(Number);
-  const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : today;
+  const fallbackToday = today ?? baseDate;
+  const earliestDate = ey && em && ed ? new Date(ey, em - 1, ed) : fallbackToday;
   const firstOfFocusMonth = new Date(baseDate.getFullYear(), baseDate.getMonth(), 1);
-  const firstOfTodayMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const earliestOrToday = earliestDate.getTime() < today.getTime() ? earliestDate : today;
+  const firstOfTodayMonth = new Date(fallbackToday.getFullYear(), fallbackToday.getMonth(), 1);
+  const earliestOrToday =
+    earliestDate.getTime() < fallbackToday.getTime() ? earliestDate : fallbackToday;
   const monthRangeStartAnchor =
     earliestOrToday.getTime() < firstOfFocusMonth.getTime() ? earliestOrToday : firstOfFocusMonth;
   const weekRangeStartAnchor =
     earliestOrToday.getTime() < firstOfTodayMonth.getTime() ? earliestOrToday : firstOfTodayMonth;
   const rangeStartAnchor = view === 'week' ? weekRangeStartAnchor : monthRangeStartAnchor;
   const rangeStart = startOfWeek(rangeStartAnchor);
-  const futureAnchor = baseDate.getTime() > today.getTime() ? baseDate : today;
+  const futureAnchor = baseDate.getTime() > fallbackToday.getTime() ? baseDate : fallbackToday;
   const rangeEndWeek = startOfWeek(
     new Date(futureAnchor.getFullYear(), futureAnchor.getMonth() + 2, 0),
   );
@@ -217,6 +232,7 @@ export const CalendarView = (props: Props) => {
   };
 
   const handleTodayClick = () => {
+    if (!today || !todayStr) return;
     setBaseDateMs(today.getTime());
     onDaySelect?.(todayStr);
   };
