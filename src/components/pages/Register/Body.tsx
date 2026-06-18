@@ -174,7 +174,9 @@ export const RegisterBody = () => {
                         year={book.publishedYear}
                         publisher={book.publisher}
                         selected={selectedIsbn === book.isbn13}
-                        onClick={() => setSelectedIsbn(book.isbn13)}
+                        onClick={() =>
+                          setSelectedIsbn((prev) => (prev === book.isbn13 ? null : book.isbn13))
+                        }
                       />
                     ))}
                   </ul>
