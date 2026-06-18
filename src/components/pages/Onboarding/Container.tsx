@@ -6,11 +6,13 @@ import { useState, useTransition } from 'react';
 import { completeOnboardingAction } from '@/app/actions';
 import { Logo } from '@/assets';
 import { Button, BUTTON_VARIANT } from '@/components';
-import { ONBOARDING_STEPS, PATH_NAME } from '@/constants';
+import { ONBOARDING_STEPS } from '@/constants';
+import { useToastStore } from '@/lib';
 import { StepProgress } from './StepProgress';
 
 export const OnboardingContainer = () => {
   const router = useRouter();
+  const openToast = useToastStore((s) => s.openToast);
   const [isPending, startTransition] = useTransition();
   const [stepIndex, setStepIndex] = useState(0);
 
@@ -25,7 +27,13 @@ export const OnboardingContainer = () => {
   const handleSkipLoginClick = () => {
     startTransition(async () => {
       const result = await completeOnboardingAction();
-      if (result.success) router.push(PATH_NAME.main());
+
+      if (!result.success) {
+        openToast({ type: 'error', message: '잠시 후 다시 시도해주세요.' });
+        return;
+      }
+
+      router.refresh();
     });
   };
 
