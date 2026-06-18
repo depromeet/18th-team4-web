@@ -108,12 +108,7 @@ export const SessionList = (props: Props) => {
                 className="w-full cursor-pointer text-left"
                 onClick={() => void onNavigate(path)}
               >
-                <ChatCard
-                  color={color}
-                  bookTitle={summary.bookTitle}
-                  summary={summary.title}
-                  bookmarked
-                />
+                <ChatCard color={color} bookTitle={summary.bookTitle} summary={summary.title} />
               </button>
             </li>
           );
