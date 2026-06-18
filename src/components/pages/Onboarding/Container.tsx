@@ -71,7 +71,7 @@ export const OnboardingContainer = () => {
           </div>
         </section>
 
-        <footer className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2rem] pt-[4rem]">
+        <footer className="relative z-10 mt-auto flex flex-col gap-[0.8rem] bg-gradient-to-b from-transparent to-white px-[2.4rem] pb-[2.4rem] pt-[4rem]">
           <Button
             variant={BUTTON_VARIANT.BLACK}
             size="lg"
