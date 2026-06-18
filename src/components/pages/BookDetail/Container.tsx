@@ -189,7 +189,6 @@ export const BookDetailContainer = (props: Props) => {
           <ol className="flex list-none flex-col gap-[0.8rem] pb-[4rem]">
             {sessions.map((session, index) => {
               const color = CHAT_CARD_COLOR_SEQUENCE[index % CHAT_CARD_COLOR_SEQUENCE.length];
-              const hasSummary = session.status === 'SUMMARIZED' || !!session.latestSummaryContent;
               const path = getSessionPath(session.sessionId, session.status);
 
               return (
@@ -204,7 +203,6 @@ export const BookDetailContainer = (props: Props) => {
                       status={SESSION_STATUS_TO_CARD[session.status]}
                       date={formatDate(session.lastChattedDate)}
                       summary={session.title}
-                      bookmarked={hasSummary}
                     />
                   </button>
                 </li>
