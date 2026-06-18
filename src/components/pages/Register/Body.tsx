@@ -128,7 +128,11 @@ export const RegisterBody = () => {
 
   return (
     <>
-      <Header variant={HEADER_VARIANT.BACK} className="shrink-0" onBack={() => router.back()} />
+      <Header
+        variant={HEADER_VARIANT.BACK}
+        className="shrink-0 bg-white"
+        onBack={() => router.back()}
+      />
 
       <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
         <section className="shrink-0 px-[2.4rem] py-[0.8rem] text-text-default headline1-extrabold">
