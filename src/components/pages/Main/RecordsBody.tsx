@@ -39,12 +39,16 @@ export const RecordsBody = (props: Props) => {
 
   const { data, isPending } = useGetSummaryCalendar(yearMonth);
 
-  const summaries = data?.summaries ?? [];
-  const streakDates = summaries.map((s) => s.summaryDate).filter((d) => d.length === 10);
-  const filteredSummaries = summaries.filter((s) => s.summaryDate === selectedDate);
+  const records = data?.records ?? [];
+  const streakDates = records
+    .map((record) => record.lastChattedAt.split('T')[0] ?? '')
+    .filter((date) => date.length === 10);
+  const filteredRecords = records.filter(
+    (record) => record.lastChattedAt.split('T')[0] === selectedDate,
+  );
 
   const isToday = selectedDate === toLocalDateString(new Date());
-  const isEmpty = !isPending && filteredSummaries.length === 0;
+  const isEmpty = !isPending && filteredRecords.length === 0;
 
   const openToast = useToastStore((s) => s.openToast);
 
@@ -102,10 +106,7 @@ export const RecordsBody = (props: Props) => {
             message={isToday ? '오늘의 첫 대화를 시작해볼까요?' : '이 날은 대화 기록이 없어요'}
           />
         ) : (
-          <SessionList
-            filteredSummaries={filteredSummaries}
-            onNavigate={handleNavigate}
-          />
+          <SessionList records={filteredRecords} onNavigate={handleNavigate} />
         )}
       </div>
       <StartChatFab onClick={handleStartChatClick} />

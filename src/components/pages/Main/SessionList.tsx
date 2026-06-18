@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
+import { BookmarkCheckIcon, CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { type SummaryCalendarItem } from '@/lib';
 
 type Props = {
-  filteredSummaries: SummaryCalendarItem[];
+  records: SummaryCalendarItem[];
   onNavigate: (path: string) => void;
 };
 
@@ -82,7 +82,7 @@ const SixAMCountdownPie = () => {
 };
 
 export const SessionList = (props: Props) => {
-  const { filteredSummaries, onNavigate } = props;
+  const { records, onNavigate } = props;
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -94,21 +94,37 @@ export const SessionList = (props: Props) => {
         </p>
       </div>
       <ol className="flex list-none flex-col gap-[0.4rem] px-[2.4rem] pb-32">
-        {filteredSummaries.map((summary, index) => {
+        {records.map((record, index) => {
           const color =
             CHAT_CARD_COLOR_SEQUENCE[
-              (filteredSummaries.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
+              (records.length - 1 - index) % CHAT_CARD_COLOR_SEQUENCE.length
             ];
-          const path = PATH_NAME.summary.detail(String(summary.summaryId));
+          const isSummarized = record.summaryId !== null;
+          const path = isSummarized
+            ? PATH_NAME.summary.detail(String(record.summaryId))
+            : PATH_NAME.chat.detail(String(record.chatSessionId));
 
           return (
-            <li key={summary.summaryId}>
+            <li key={record.chatSessionId}>
               <button
                 type="button"
                 className="w-full cursor-pointer text-left"
                 onClick={() => void onNavigate(path)}
               >
-                <ChatCard color={color} bookTitle={summary.bookTitle} summary={summary.title} />
+                <div className="relative">
+                  <ChatCard
+                    color={color}
+                    bookTitle={record.bookTitle}
+                    summary={record.chatSummary}
+                    className={isSummarized ? 'pr-[6rem]' : undefined}
+                  />
+                  {isSummarized ? (
+                    <BookmarkCheckIcon
+                      color={color}
+                      className="absolute top-[1.2rem] right-[1.6rem] h-[3.2rem] w-[2.8rem]"
+                    />
+                  ) : null}
+                </div>
               </button>
             </li>
           );
