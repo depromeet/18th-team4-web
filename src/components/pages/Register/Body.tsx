@@ -9,6 +9,7 @@ import {
   HEADER_VARIANT,
   ListItem,
   Loading,
+  Modal,
   TextfieldSearch,
 } from '@/components';
 import { PATH_NAME } from '@/constants';
@@ -16,9 +17,12 @@ import { useDebouncing } from '@/hooks';
 import {
   BOOK_SEARCH_MIN_CHARS,
   countBookSearchKeywordUnits,
+  HttpError,
+  setLastSelectedUserBookIdClient,
   useAddUserBook,
   useBookSearch,
   useCreateSession,
+  useGetUserBooks,
 } from '@/lib';
 
 const SEARCH_DEBOUNCE_UI_MS = 500;
@@ -35,6 +39,7 @@ export const RegisterBody = () => {
 
   const [query, setQuery] = useState('');
   const [selectedIsbn, setSelectedIsbn] = useState<string | null>(null);
+  const [duplicateUserBookId, setDuplicateUserBookId] = useState<number | null>(null);
 
   const debouncedKeywordUi = useDebouncing(query, SEARCH_DEBOUNCE_UI_MS);
   const debouncedKeywordApi = useDebouncing(query, SEARCH_DEBOUNCE_API_MS, {
@@ -43,6 +48,7 @@ export const RegisterBody = () => {
 
   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useBookSearch(debouncedKeywordApi);
+  const { data: userBooksData, refetch: refetchUserBooks } = useGetUserBooks();
 
   const { mutateAsync: addBookAsync, isPending: isAddingBook } = useAddUserBook();
   const { mutateAsync: createSessionAsync, isPending: isCreatingSession } = useCreateSession();
@@ -119,11 +125,53 @@ export const RegisterBody = () => {
 
   const isPending = isAddingBook || isCreatingSession;
 
+  const findRegisteredUserBookId = async () => {
+    if (!selectedBook) return null;
+
+    const userBooks = ((await refetchUserBooks()).data ?? userBooksData)?.books ?? [];
+    const registeredBook = userBooks.find(
+      (book) =>
+        book.bookExternalId === selectedBook.isbn13 ||
+        (book.title === selectedBook.title &&
+          book.publisher === selectedBook.publisher &&
+          book.publishedYear === selectedBook.publishedYear),
+    );
+
+    return registeredBook?.userBookId ?? null;
+  };
+
+  const startChatWithBook = async (userBookId: number) => {
+    const sessionData = await createSessionAsync(userBookId);
+    setLastSelectedUserBookIdClient(userBookId);
+    router.push(`${PATH_NAME.register.complete()}?sessionId=${sessionData.sessionId}`);
+  };
+
   const handleRegister = async () => {
     if (!selectedIsbn) return;
-    const registeredBook = await addBookAsync(selectedIsbn);
-    const sessionData = await createSessionAsync(registeredBook.id);
-    router.push(`${PATH_NAME.register.complete()}?sessionId=${sessionData.sessionId}`);
+    try {
+      const registeredBook = await addBookAsync(selectedIsbn);
+      await startChatWithBook(registeredBook.id);
+    } catch (error) {
+      const isDuplicateBookError =
+        error instanceof HttpError &&
+        (error.status === 409 || error.message.includes('이미 책장에 등록된 도서'));
+
+      if (!isDuplicateBookError) {
+        throw error;
+      }
+
+      const registeredUserBookId = await findRegisteredUserBookId();
+      if (registeredUserBookId === null) {
+        throw error;
+      }
+
+      setDuplicateUserBookId(registeredUserBookId);
+    }
+  };
+
+  const handleDuplicateConfirm = () => {
+    if (duplicateUserBookId === null) return;
+    void startChatWithBook(duplicateUserBookId);
   };
 
   return (
@@ -210,6 +258,14 @@ export const RegisterBody = () => {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={duplicateUserBookId !== null}
+        modalType="DUPLICATE_BOOK"
+        onCancel={() => setDuplicateUserBookId(null)}
+        onConfirm={handleDuplicateConfirm}
+        confirmDisabled={isCreatingSession}
+      />
     </>
   );
 };
