@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-type ToastType = 'error';
+type ToastType = 'error' | 'success';
 
 export type ToastItem = {
   id: string;
@@ -22,7 +22,7 @@ type ToastState = {
 
 export const useToastStore = create<ToastState>()(
   devtools(
-    (set, get) => ({
+    (set) => ({
       toasts: [],
       openToast: ({ type, message, duration = DEFAULT_DURATION }) => {
         const id = crypto.randomUUID();

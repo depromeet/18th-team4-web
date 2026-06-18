@@ -76,7 +76,10 @@ export const SummaryEditContainer = (props: Props) => {
     saveSummary(
       { title: nextTitle, body: nextBody },
       {
-        onSuccess: () => router.push(detailHref),
+        onSuccess: () => {
+          openToast({ type: 'success', message: '수정이 완료되었어요!' });
+          router.push(detailHref);
+        },
         onError: () =>
           openToast({ type: 'error', message: '저장에 실패했어요. 다시 시도해주세요.' }),
       },

@@ -1,14 +1,16 @@
 import { type ReactNode } from 'react';
-import { WarningIcon } from '@/components';
+import { CheckIcon, WarningIcon } from '@/components';
 import { cn } from '@/lib';
 import { toastGlowVariants, toastIconVariants, type ToastType } from './toastVariants';
 
 const TOAST_ICON: Record<ToastType, (className: string) => ReactNode> = {
   error: (className) => <WarningIcon className={className} />,
+  success: (className) => <CheckIcon className={className} />,
 };
 
 const TOAST_ROLE: Record<ToastType, 'alert' | 'status'> = {
   error: 'alert',
+  success: 'status',
 };
 
 type Props = {
