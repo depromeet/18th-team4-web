@@ -1,0 +1,52 @@
+'use client';
+
+import { type InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '@/constants';
+import { getSummaries, getSummaryCalendar, getSummaryDetail } from './summaries.client';
+import { type SummaryDetail, type SummaryListData } from './summaries.type';
+
+export const useGetSummaries = (initialData?: SummaryListData | null, pageSize?: number) => {
+  return useInfiniteQuery<
+    SummaryListData,
+    Error,
+    InfiniteData<SummaryListData>,
+    ReturnType<typeof QUERY_KEY.summaries.list>,
+    number
+  >({
+    queryKey: QUERY_KEY.summaries.list(pageSize),
+    queryFn: ({ pageParam }) => getSummaries({ page: pageParam, size: pageSize }),
+    initialPageParam: 1,
+    initialData: initialData
+      ? {
+          pages: [initialData],
+          pageParams: [1],
+        }
+      : undefined,
+    getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
+    staleTime: 0,
+  });
+};
+
+export const useGetSummaryCalendar = (yearMonth: string) => {
+  return useQuery({
+    queryKey: QUERY_KEY.summaries.calendar(yearMonth),
+    queryFn: () => getSummaryCalendar({ yearMonth }),
+    staleTime: 0,
+  });
+};
+
+export const useSummaryDetail = (
+  summaryId: string,
+  initialData?: SummaryDetail | null,
+  enabled = true,
+) => {
+  return useQuery<SummaryDetail | null>({
+    queryKey: QUERY_KEY.summaries.detail(summaryId),
+    queryFn: () => getSummaryDetail(summaryId),
+    enabled: enabled && !!summaryId,
+    initialData: initialData ?? undefined,
+    staleTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+};

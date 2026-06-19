@@ -1,13 +1,112 @@
 export const ENDPOINTS = {
   /*
-   * EXAMPLE
-   * 사용자 - 논문 아카이브
+   * 내 책장 - 사용자가 등록한 도서(책장) 관리
    */
-  PAPER: {
-    // 논문 아카이브 목록 조회
-    archieve: () => '/paper-archives',
+  USER_BOOKS: {
+    // 내 책장 도서 목록 조회
+    list: () => '/user-books',
 
-    // 논문 아카이브 상세 조회
-    detail: (id: number) => `/paper-archives/${id}`,
+    // 내 책장 도서 추가
+    add: () => '/user-books',
+
+    // 내 책장 도서 삭제
+    delete: (userBookId: number) => `/user-books/${userBookId}`,
+  },
+
+  /*
+   * 도서 검색 - 외부 도서 검색 (알라딘 API 기반)
+   */
+  BOOKS: {
+    // 키워드 도서 검색
+    search: () => '/books',
+  },
+
+  /*
+   * 사용자 세션 - 사용자 세션 발급 / 조회 / 온보딩 완료 처리
+   */
+  USERS: {
+    // 현재 세션 정보 조회
+    me: () => '/users/me',
+
+    // 내 프로필 조회
+    profile: () => '/users/me/profile',
+
+    // 닉네임 수정
+    nickname: () => '/users/me/nickname',
+
+    // 사용자 세션 생성
+    create: () => '/users/sessions',
+
+    // 온보딩 완료 처리
+    onboarding: () => '/users/me/onboarding',
+  },
+
+  /*
+   * 인증 - Access Token 재발급 및 로그아웃
+   */
+  AUTH: {
+    // Access Token 재발급
+    refresh: () => '/auth/refresh',
+
+    // 로그아웃
+    logout: () => '/auth/logout',
+  },
+
+  /*
+   * AI 채팅 - AI와 책 한 권에 대해 대화하는 채팅 세션 및 메시지 관리
+   */
+  AI_CHAT: {
+    // AI 채팅 세션 생성
+    createSession: () => '/ai-chat/sessions',
+
+    // 책별 AI 채팅 세션 목록 조회
+    getSessions: (userBookId: number) => `/ai-chat/books/${userBookId}/sessions`,
+
+    // 세션의 메시지 이력 조회 (페이지네이션)
+    getMessages: (sessionId: string) => `/ai-chat/sessions/${sessionId}/messages`,
+
+    // 메시지 전송 (SSE 스트리밍 응답)
+    sendMessage: (sessionId: string) => `/ai-chat/sessions/${sessionId}/messages`,
+
+    // 감상문 초안 생성 가능 여부 조회
+    checkSummaryEligibility: (sessionId: string) =>
+      `/ai-chat/sessions/${sessionId}/summary-draft/eligibility`,
+
+    // 감상문 초안 생성
+    createSummaryDraft: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary-draft`,
+
+    // 감상문 조회
+    getSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
+
+    // 감상문 수정
+    updateSummary: (sessionId: string) => `/ai-chat/sessions/${sessionId}/summary`,
+  },
+
+  /*
+   * 감상 기록 - 사용자가 완성한 감상문 목록 조회
+   */
+  SUMMARIES: {
+    // 내 감상 기록 목록 조회
+    list: () => '/summaries',
+
+    // 감상 기록 상세 조회
+    detail: (summaryId: string) => `/summaries/${summaryId}`,
+
+    // 월별 감상 기록 조회 (홈 캘린더)
+    calendar: () => '/summaries/calendar',
+  },
+
+  /*
+   * 예시 (참고용) - 신규 기능 작성 시 구조 참조용 템플릿 컨트롤러
+   */
+  EXAMPLES: {
+    // 예시 목록 조회
+    list: () => '/examples',
+
+    // 예시 단건 조회
+    detail: (id: string) => `/examples/${id}`,
+
+    // 예시 생성
+    create: () => '/examples',
   },
 } as const;

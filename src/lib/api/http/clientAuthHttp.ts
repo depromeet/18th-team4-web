@@ -58,4 +58,17 @@ export const clientAuthHttp = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
   },
+
+  stream: (url: string, body?: unknown): Promise<Response> => {
+    const token = getClientToken();
+    return fetch(`${API_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      credentials: 'include',
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  },
 };

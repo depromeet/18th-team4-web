@@ -5,6 +5,16 @@
 - `src/` 내부 import는 항상 **`@/`** alias 사용. `../`로 디렉터리 경계를 넘지 않습니다.
 - alias 정의는 `tsconfig.json`의 `paths` 한 곳에서만.
 - 폴더에는 반드시 `index.ts`를 두고 named re-export로 묶어 **import 한 줄로 정리**합니다.
+- **`index.ts`가 있으면 항상 가장 추상화된 경로로 import합니다.** 내부 파일 경로를 직접 지정하지 않습니다.
+
+```ts
+// GOOD
+import { GrainyOverlay } from '@/components';
+
+// BAD — index.ts가 있는데 내부 경로를 직접 지정
+import { GrainyOverlay } from '@/components/common/GrainyOverlay';
+import { GrainyOverlay } from '@/components/common/GrainyOverlay/GrainyOverlay';
+```
 
 ```tsx
 // GOOD

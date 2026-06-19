@@ -28,15 +28,35 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
 
   const { ...fetchOptions } = options;
 
+  // 서버 사이드에서 쿠키 자동 전달
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  };
+
+  if (typeof window === 'undefined') {
+    try {
+      const { cookies } = await import('next/headers');
+      const cookieStore = await cookies();
+      const cookieString = cookieStore
+        .getAll()
+        .map((cookie) => `${cookie.name}=${cookie.value}`)
+        .join('; ');
+
+      if (cookieString) {
+        (headers as Record<string, string>)['Cookie'] = cookieString;
+      }
+    } catch (error) {
+      console.warn('Failed to get cookies:', error);
+    }
+  }
+
   let res: Response;
   try {
     res = await fetch(requestUrl, {
       credentials: 'include',
       ...fetchOptions,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(options.headers || {}),
-      },
+      headers,
     });
   } catch (error) {
     throw new HttpError({
@@ -44,18 +64,6 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
       status: 503,
     });
   }
-
-  console.groupCollapsed('api call');
-  console.log('METHOD:', options.method);
-  console.log('URL:', url);
-  console.log('HEADERS:', {
-    'Content-Type': 'application/json',
-    ...(options.headers || {}),
-  });
-  console.groupEnd();
-  console.groupCollapsed('api response');
-  console.log(res);
-  console.groupEnd();
   if (!res.ok) {
     let message = 'API Error';
     let errorCode: string | undefined;
@@ -63,9 +71,15 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
 
     try {
       const errorBody = await res.json();
-      message = errorBody?.message ?? message;
-      errorCode = errorBody?.errorCode ?? errorBody?.code ?? errorBody?.data?.errorCode;
-      path = errorBody?.path;
+      // 백엔드 에러 응답은 { error: { message, ... } } 형태로 감싸져 옴
+      message = errorBody?.error?.message ?? errorBody?.message ?? message;
+      errorCode =
+        errorBody?.error?.errorCode ??
+        errorBody?.error?.code ??
+        errorBody?.errorCode ??
+        errorBody?.code ??
+        errorBody?.data?.errorCode;
+      path = errorBody?.error?.path ?? errorBody?.path;
     } catch {
       // non-json 에러 응답 대비
     }
@@ -82,12 +96,14 @@ export const httpBase = async <T>(url: string, options: ApiRequestInit = {}): Pr
     return (await res.blob()) as T;
   }
 
+  // 204 No Content 또는 응답 본문이 없는 경우
+  if (res.status === 204 || res.headers.get('content-length') === '0') {
+    return undefined as T;
+  }
+
   const contentType = res.headers.get('content-type') ?? '';
   if (!contentType.includes('application/json')) {
-    throw new HttpError({
-      message: 'Invalid API response format',
-      status: res.status || 502,
-    });
+    return undefined as T;
   }
 
   try {

@@ -1,0 +1,164 @@
+'use client';
+
+import { type VariantProps } from 'class-variance-authority';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Logo } from '@/assets';
+import { ArrowIcon, PlusIcon, UserIcon } from '@/components';
+import { PATH_NAME } from '@/constants';
+import { cn } from '@/lib';
+import { HEADER_VARIANT, HeaderVariant, headerVariants } from './headerVariants';
+
+type HeaderProps = React.ComponentProps<'header'> &
+  VariantProps<typeof headerVariants> & {
+    glassOnScroll?: boolean;
+    onBack?: () => void;
+    progress?: number;
+    rightSlot?: React.ReactNode;
+    spacerClassName?: string;
+  };
+
+const SLIDE_OUT_DURATION_MS = 280;
+
+const HEADER_SPACER_HEIGHT: Record<HeaderVariant, string> = {
+  [HEADER_VARIANT.HOME]: 'h-[6.1rem]',
+  [HEADER_VARIANT.BACK]: 'h-[6rem]',
+  [HEADER_VARIANT.CHAT]: 'h-[6rem]',
+};
+
+const isPageScrolled = () => {
+  if (typeof window === 'undefined') return false;
+
+  if (window.scrollY > 2 || document.documentElement.scrollTop > 2 || document.body.scrollTop > 2) {
+    return true;
+  }
+
+  return Array.from(document.querySelectorAll<HTMLElement>('[class*="overflow-y-auto"]')).some(
+    (el) => el.scrollTop > 2,
+  );
+};
+
+export const Header = (props: HeaderProps) => {
+  const {
+    variant = HEADER_VARIANT.HOME,
+    className,
+    glassOnScroll = false,
+    onBack,
+    progress,
+    rightSlot,
+    spacerClassName,
+    ...rest
+  } = props;
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!glassOnScroll) return;
+
+    let frame = 0;
+
+    const updateScrollState = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        setIsScrolled(isPageScrolled());
+      });
+    };
+
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { capture: true, passive: true });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateScrollState, { capture: true });
+    };
+  }, [glassOnScroll]);
+
+  const handleBack = () => {
+    if (!onBack) return;
+    const pageEl = document.querySelector('[data-page-transition]') as HTMLElement | null;
+    if (pageEl) {
+      pageEl.classList.remove('page-fade-in');
+      pageEl.classList.add('page-slide-out');
+      setTimeout(onBack, SLIDE_OUT_DURATION_MS);
+    } else {
+      onBack();
+    }
+  };
+
+  return (
+    <>
+      <header
+        className={cn(
+          headerVariants({ variant }),
+          className,
+          glassOnScroll &&
+            isScrolled &&
+            'border-b border-white/40 bg-white/65 shadow-[0_0.8rem_2.4rem_rgba(23,28,27,0.06)] backdrop-blur-[24px] backdrop-saturate-150',
+        )}
+        {...rest}
+      >
+        {variant === HEADER_VARIANT.HOME && (
+          <>
+            <div className="relative h-[2.9rem] w-[12.3rem] shrink-0 overflow-hidden">
+              <Image src={Logo} alt="logo" className="absolute" />
+            </div>
+            <div className="flex shrink-0 items-center gap-[1.6rem]">
+              <Link
+                href={PATH_NAME.register.list()}
+                aria-label="책 추가하기"
+                className="relative flex shrink-0 size-[3rem] cursor-pointer items-center justify-center"
+              >
+                <PlusIcon className="size-[3rem] fill-icon-tertiary" />
+              </Link>
+              <Link
+                href={PATH_NAME.mypage.main()}
+                aria-label="프로필"
+                className="relative flex shrink-0 size-[2rem] cursor-pointer items-center justify-center"
+              >
+                <UserIcon className="size-[2rem] text-icon-tertiary" />
+              </Link>
+            </div>
+          </>
+        )}
+
+        {(variant === HEADER_VARIANT.BACK || variant === HEADER_VARIANT.CHAT) && (
+          <button
+            aria-label="뒤로가기"
+            onClick={handleBack}
+            className="flex shrink-0 cursor-pointer items-center justify-center"
+          >
+            <ArrowIcon
+              className={cn(
+                '-rotate-90 size-[2.4rem] transition-colors duration-200',
+                glassOnScroll && isScrolled ? 'fill-text-default' : 'fill-icon-primary',
+              )}
+            />
+          </button>
+        )}
+
+        {(variant === HEADER_VARIANT.BACK || variant === HEADER_VARIANT.CHAT) && rightSlot}
+
+        {variant === HEADER_VARIANT.CHAT && progress !== undefined && (
+          <figure className="absolute bottom-0 left-[2rem] right-[2rem] m-0 h-[0.3rem] rounded-[999px] bg-gray-10">
+            <meter
+              aria-label="요약 생성 진행도"
+              value={Math.min(100, Math.max(0, progress))}
+              min={0}
+              max={100}
+              className="sr-only"
+            />
+            <div
+              aria-hidden="true"
+              className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
+              style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+            />
+          </figure>
+        )}
+      </header>
+      <div
+        aria-hidden
+        className={cn('w-full shrink-0', HEADER_SPACER_HEIGHT[variant!], spacerClassName)}
+      />
+    </>
+  );
+};

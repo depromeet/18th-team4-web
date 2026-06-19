@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="73" viewBox="0 0 50 73" fill="none" preserveAspectRatio="xMidYMid slice">
+  <!-- 알라딘 썸네일 미제공 시 대체 (회색 채우기만 — 외곽선은 목록 카드 레이아웃에서 처리) -->
+  <rect width="50" height="73" fill="#DADDDD" />
+</svg>

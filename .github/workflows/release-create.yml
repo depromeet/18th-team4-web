@@ -23,16 +23,19 @@ on:
         default: false
         type: boolean
 
+# 보안: pull_request_target을 쓰지 않고 권한을 좁힌다.
 permissions:
   contents: write
   pull-requests: read
 
+# 동시에 여러 main PR이 병합돼도 릴리즈 job은 순차 실행한다.
 concurrency:
   group: main-release
   cancel-in-progress: false
 
 jobs:
   release:
+    # 자동 트리거는 병합된 PR만, 수동 트리거는 항상 실행한다.
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true }}
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +48,6 @@ jobs:
       - name: Resolve release version
         id: version
         env:
-          EVENT_NAME: ${{ github.event_name }}
           PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
           MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
           INPUT_VERSION: ${{ github.event.inputs.version }}
@@ -53,7 +55,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             next_tag="$INPUT_VERSION"
             target="${INPUT_TARGET:-main}"
           else
@@ -106,7 +108,6 @@ jobs:
           echo "다음 릴리즈 태그: $next_tag (target: $target)"
 
       - name: Create GitHub Release
-        if: ${{ steps.version.outputs.skip != 'true' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_TAG: ${{ steps.version.outputs.next_tag }}

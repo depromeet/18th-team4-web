@@ -1,1 +1,689 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-primary: #1fafa3;
+
+  --color-green-lightest: #e9fbfa;
+  --color-green-lighter: #b1e2dc;
+  --color-green-light: #94d5ce;
+  --color-green-medium: #75c9bf;
+  --color-green-neutral: #53bcb1;
+  --color-green-primary: #1fafa3;
+  --color-green-bold: #0aa99c;
+  --color-green-strong: #1d857c;
+  --color-green-dark: #195d56;
+  --color-green-darker: #123734;
+  --color-green-darkest: #041614;
+
+  --color-gray-white: #ffffff;
+  --color-gray-10: #e7eaea;
+  --color-gray-20: #dfe6e6;
+  --color-gray-50: #dadddd;
+  --color-gray-100: #ced1d1;
+  --color-gray-200: #a9adad;
+  --color-gray-300: #858a8a;
+  --color-gray-400: #737777;
+  --color-gray-500: #595c5c;
+  --color-gray-600: #474a4a;
+  --color-gray-700: #2f3131;
+  --color-gray-800: #222726;
+  --color-gray-900: #171c1b;
+
+  --color-gray-alpha-10: color-mix(in srgb, #171c1b 3%, transparent);
+  --color-gray-alpha-50: color-mix(in srgb, #171c1b 5%, transparent);
+  --color-gray-alpha-100: color-mix(in srgb, #171c1b 10%, transparent);
+  --color-gray-alpha-200: color-mix(in srgb, #171c1b 20%, transparent);
+  --color-gray-alpha-300: color-mix(in srgb, #171c1b 30%, transparent);
+  --color-gray-alpha-400: color-mix(in srgb, #171c1b 40%, transparent);
+  --color-gray-alpha-500: color-mix(in srgb, #171c1b 50%, transparent);
+  --color-gray-alpha-600: color-mix(in srgb, #171c1b 60%, transparent);
+  --color-gray-alpha-700: color-mix(in srgb, #171c1b 70%, transparent);
+  --color-gray-alpha-800: color-mix(in srgb, #171c1b 80%, transparent);
+  --color-gray-alpha-900: color-mix(in srgb, #171c1b 90%, transparent);
+
+  --color-primary-base: #f1f2f6;
+  --color-primary-white: #ffffff;
+  --color-dim: color-mix(in srgb, #171c1b 50%, transparent);
+  --color-negative: #e65a5a;
+  --color-disabled: #f0f1f1;
+
+  --color-text-white: #ffffff;
+  --color-text-disable: #a9adad;
+  --color-text-caption: #858a8a;
+  --color-text-description: #474a4a;
+  --color-text-default: #171c1b;
+
+  --color-icon-white: #ffffff;
+  --color-icon-disabled: #ced1d1;
+  --color-icon-quaternary: #a9adad;
+  --color-icon-tertiary: #595c5c;
+  --color-icon-secondary: #2f3131;
+  --color-icon-primary: #171c1b;
+  --color-icon-dot: #c0c6c6;
+
+  --color-background-primary-base: #f1f2f6;
+  --color-background-primary-white: #ffffff;
+  --color-summary-card-bg: color-mix(in srgb, #e4f8d6 80%, transparent);
+
+  --color-border-default: #ced1d1;
+  --color-border-white: #ffffff;
+
+  /* 카드 색상 variant 텍스트 (palette/sub) */
+  --color-sub-teal: #086767;
+  --color-sub-magenta: #60183d;
+  --color-sub-yellow: #864c16;
+  --color-sub-sky: #256d85;
+  --color-sub-green: #385c0a;
+  --color-sub-purple: #3b3d88;
+  --color-sub-blue: #325390;
+
+  --shadow-chat: 0 0 32px 0 rgba(0, 0, 0, 0.08);
+  --shadow-chat-toast: 0 0 32px 0 rgba(0, 0, 0, 0.16);
+  --background-image-gradient-line: linear-gradient(
+    90deg,
+    rgba(207, 220, 220, 0) 0%,
+    #cfdcdc 50%,
+    rgba(207, 220, 220, 0) 100%
+  );
+
+  /* 채팅 입력 푸터: 피그마 밀키 화이트 글래스 (회색 베이스 X), 대각 은은한 하이라이트 */
+  --background-image-gradient-footer: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.22) 45%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  --background-image-gradient-chat: radial-gradient(
+    111.94% 35.07% at 50.13% 88.57%,
+    rgba(252, 255, 222, 0.21) 15.8%,
+    rgba(252, 255, 222, 0.4) 25.08%,
+    rgba(90, 197, 188, 0.03) 73.04%,
+    rgba(10, 169, 156, 0.04) 88.26%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
+  --font-sans: 'SUIT Variable', 'SUIT', sans-serif;
+
+  --text-headline1: 2.4rem;
+  --text-headline2: 2rem;
+  --text-title1: 1.8rem;
+  --text-body1: 1.6rem;
+  --text-body2: 1.4rem;
+  --text-caption1: 1.2rem;
+  --text-caption2: 1rem;
+
+  --leading-headline1: 1.35;
+  --leading-headline2: 1.4;
+  --leading-title1: 1.4;
+  --leading-body1: 1.5;
+  --leading-body2: 1.5;
+  --leading-caption1: 1.4;
+  --leading-caption1-reading: 1.5;
+  --leading-caption2: 1.4rem;
+}
+
+@source inline("text-sub-teal text-sub-magenta text-sub-yellow text-sub-sky text-sub-green text-sub-purple text-sub-blue");
+@source inline("fill-sub-teal fill-sub-magenta fill-sub-yellow fill-sub-sky fill-sub-green fill-sub-purple fill-sub-blue");
+
+@utility headline1-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
+  font-weight: 500;
+}
+
+@utility headline1-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
+  font-weight: 700;
+}
+
+@utility headline1-extrabold {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline1);
+  line-height: var(--leading-headline1);
+  font-weight: 800;
+}
+
+@utility headline2-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
+  font-weight: 500;
+}
+
+@utility headline2-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
+  font-weight: 700;
+}
+
+@utility headline2-extrabold {
+  font-family: var(--font-sans);
+  font-size: var(--text-headline2);
+  line-height: var(--leading-headline2);
+  font-weight: 800;
+}
+
+@utility title1-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-title1);
+  line-height: var(--leading-title1);
+  font-weight: 500;
+}
+
+@utility title1-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-title1);
+  line-height: var(--leading-title1);
+  font-weight: 700;
+}
+
+@utility body1-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
+  font-weight: 500;
+}
+
+@utility body1-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
+  font-weight: 700;
+}
+
+@utility body1-extrabold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body1);
+  line-height: var(--leading-body1);
+  font-weight: 800;
+}
+
+@utility body2-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
+  font-weight: 500;
+}
+
+@utility body2-semibold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
+  font-weight: 600;
+}
+
+@utility body2-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-body2);
+  line-height: var(--leading-body2);
+  font-weight: 700;
+}
+
+@utility caption1-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1);
+  font-weight: 500;
+}
+
+@utility caption1-medium-reading {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1-reading);
+  font-weight: 500;
+}
+
+@utility caption1-bold {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption1);
+  line-height: var(--leading-caption1);
+  font-weight: 700;
+}
+
+@utility caption2-medium {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption2);
+  line-height: var(--leading-caption2);
+  font-weight: 500;
+}
+
+@utility z-modal {
+  z-index: 100;
+}
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility chat-scrollbar {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #dadddd transparent;
+  padding-right: 2.8rem;
+
+  &::-webkit-scrollbar {
+    width: 1.6rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dadddd;
+    border: 0.5rem solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+}
+
+@utility summary-card-shadow {
+  box-shadow:
+    inset 0 4px 32px rgba(255, 255, 255, 0.65),
+    0 4px 20px rgba(0, 0, 0, 0.13);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    translate: 0 -0.6rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility animate-toast-in {
+  animation: toast-in 0.2s ease-out both;
+}
+
+/* 요약 마무리 모달: 아래에서 슬라이드 인 — 센터링은 inset-0 m-auto가 담당 */
+@keyframes modal-sheet-enter {
+  from {
+    opacity: 0;
+    transform: translateY(min(40vh, 28rem));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-modal-sheet-enter {
+  animation: modal-sheet-enter 0.48s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+/* 취소·배경 시 아래로 내려가며 닫힘 — 확인 버튼은 이 클래스를 쓰지 않음 */
+@keyframes modal-sheet-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(min(40vh, 28rem));
+  }
+}
+
+@keyframes typing-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-typing-dot {
+  animation: typing-dot 1.8s ease-in-out infinite;
+}
+
+@utility animate-modal-sheet-exit {
+  animation: modal-sheet-exit 0.38s cubic-bezier(0.4, 0, 0.58, 1) both;
+}
+
+@keyframes summary-title-gradient {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@utility animate-summary-title-gradient {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-text-default) 0%,
+    var(--color-text-default) 42%,
+    var(--color-green-primary) 50%,
+    var(--color-text-default) 58%,
+    var(--color-text-default) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: summary-title-gradient 3s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-modal-sheet-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .animate-summary-title-gradient {
+    animation: none !important;
+    background-position: 0 50% !important;
+  }
+
+  .animate-modal-sheet-exit {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: none !important;
+  }
+}
+
+@layer base {
+  html {
+    font-size: 62.5%; /* 1rem = 10px */
+    font-family: var(--font-sans);
+  }
+}
+
+@utility max-w-mobile-responsive {
+  max-width: none;
+
+  @media (width > 444px) {
+    max-width: 37.5rem; /* 375px (1rem = 10px) */
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    /* IE and Edge */
+    -ms-overflow-style: none;
+    /* Firefox */
+    scrollbar-width: none;
+  }
+  /* Chrome, Safari, Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .loading-wave {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .loading-wave__dot {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 4rem;
+    background-color: var(--color-text-disable);
+    animation: loading-bar-grow 1.2s ease-in-out infinite;
+  }
+
+  .loading-wave__dot:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .loading-wave__dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .chat-symbol-soft-blink {
+    animation: chat-color-symbol-soft-blink 2.2s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-symbol-soft-blink {
+      animation: none;
+    }
+  }
+}
+
+.page-fade-in {
+  animation: fade-in 0.5s ease-in-out both;
+  pointer-events: auto;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-slide-out {
+  animation: slide-out-right 0.28s ease-in both;
+  pointer-events: none;
+}
+
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0.6;
+  }
+}
+
+@keyframes lightbox-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-lightbox-zoom {
+  animation: lightbox-zoom-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes list-fill-up {
+  from {
+    opacity: 0;
+    transform: translateY(2.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-list-fill {
+  animation: list-fill-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.register-button-shell {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.58, 1),
+    opacity 0.3s ease-in;
+}
+
+.register-button-content {
+  transform: translateY(2.4rem);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.register-button-shell-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease-out;
+}
+
+.register-button-shell-open .register-button-content {
+  transform: translateY(0);
+}
+
+.register-button-shell-closed .register-button-content {
+  transform: translateY(2.4rem);
+}
+
+.start-chat-button-shell {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.58, 1),
+    opacity 0.3s ease-in;
+}
+
+.start-chat-button-content {
+  transform: translateY(2.4rem);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.start-chat-button-shell-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease-out;
+}
+
+.start-chat-button-shell-open .start-chat-button-content {
+  transform: translateY(0);
+}
+
+.start-chat-button-shell-closed .start-chat-button-content {
+  transform: translateY(2.4rem);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes symbol-pop {
+  0% {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-1.8rem);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-1.1rem);
+    opacity: 1;
+  }
+  68% {
+    transform: translateY(-1.6rem);
+    opacity: 1;
+  }
+  84% {
+    transform: translateY(-1.25rem);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-1.35rem);
+    opacity: 1;
+  }
+}
+
+@utility animate-symbol-pop {
+  animation: symbol-pop 1.8s ease-in-out both;
+}
+
+@utility animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes loading-bar-grow {
+  0%,
+  100% {
+    height: 0.8rem;
+  }
+  40%,
+  60% {
+    height: 2.8rem;
+  }
+}
+
+/* 스트리밍 커서: 짧은 페이드로 ON/OFF (시스템 입력 커서 느낌) */
+@keyframes text-caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility animate-text-caret-blink {
+  animation: text-caret-blink 1.06s linear infinite;
+}
+
+@keyframes calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-calendar-in {
+  animation: calendar-fade-in 0.22s ease-out both;
+}
+
+@utility progress-gradient {
+  background: -webkit-linear-gradient(left, #858a8a 0%, #47efe4 143.7%);
+  background: linear-gradient(90deg, #858a8a 0%, #47efe4 143.7%);
+}
+
+/* 채팅 플레이스홀더 ColorSymbol 아이콘 — 과하지 않게 투명도만 살짝 */
+@keyframes chat-color-symbol-soft-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.52;
+  }
+}

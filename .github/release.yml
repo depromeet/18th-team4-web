@@ -25,4 +25,4 @@ changelog:
         - ci
     - title: 기타 변경사항
       labels:
-        - "*"
+        - '*'

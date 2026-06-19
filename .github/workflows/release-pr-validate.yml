@@ -6,6 +6,7 @@ on:
     types: [opened, edited, synchronize, labeled, unlabeled, reopened, ready_for_review]
     branches: [main]
 
+# 보안: pull_request_target을 쓰지 않고, 이벤트 payload만 읽으므로 read 권한이면 충분하다.
 permissions:
   contents: read
 

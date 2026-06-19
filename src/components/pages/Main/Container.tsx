@@ -1,21 +1,41 @@
-import Link from 'next/link';
-import { PATH_NAME } from '@/constants';
-import { MainBody } from './Body';
+import { OnboardingContainer } from '@/components';
+import { getUserBooksServer, type Session } from '@/lib';
+import { MainBooksShell } from './MainBooksShell';
 
-export default function MainContainer() {
-  return (
-    <div className="min-h-screen bg-zinc-100 flex justify-center">
-      <div className="w-full max-w-sm bg-zinc-50 flex flex-col min-h-screen">
-        <MainBody />
+type Props = {
+  session: Session | null;
+};
 
-        <section className="px-6 pb-10">
-          <Link href={PATH_NAME.register.list()}>
-            <button className="w-full h-14 bg-zinc-900 text-white rounded-full text-sm font-semibold tracking-wide hover:bg-zinc-700 transition-colors">
-              30초 만에 시작하기
-            </button>
-          </Link>
-        </section>
+export const MainContainer = async ({ session }: Props) => {
+  // 1. 세션 없음(API 실패·race condition 폴백) 또는 온보딩 미완료
+  if (session === null || !session.onboardingCompleted) {
+    return <OnboardingContainer />;
+  }
+
+  // 2. 온보딩 완료, 책 미등록 — 홈으로
+  if (!session.hasRegisteredBooks) {
+    return <MainBooksShell books={[]} />;
+  }
+
+  // 3. 온보딩 완료 + 책 등록 완료
+  const userBooksData = await getUserBooksServer().catch(() => null);
+  const books = userBooksData?.books ?? [];
+
+  const fromSessionId = session.lastSelectedUserBookId;
+  const firstBookId = books[0]?.userBookId;
+  const hasSessionBook =
+    typeof fromSessionId === 'number' &&
+    Number.isFinite(fromSessionId) &&
+    books.some((b) => b.userBookId === fromSessionId);
+  const initialSelectedUserBookId = hasSessionBook ? fromSessionId : firstBookId;
+
+  if (initialSelectedUserBookId === undefined) {
+    return (
+      <div className="flex h-dvh flex-col items-center justify-center gap-[2.4rem] px-[2.4rem]">
+        <p className="body1-medium text-center text-text-caption">책 목록을 불러오지 못했어요</p>
       </div>
-    </div>
-  );
-}
+    );
+  }
+
+  return <MainBooksShell books={books} initialSelectedUserBookId={initialSelectedUserBookId} />;
+};
