@@ -1,8 +1,7 @@
 name: Release Create
 
-# main으로 PR이 병합되면 release:* label에 따라 GitHub Release와 태그를 생성한다.
+# main으로 PR이 병합되면 Bump-* label에 따라 GitHub Release와 태그를 생성한다.
 # workflow_dispatch로 수동 보정(버전 고정/재시도)도 가능하다.
-# 자세한 정책은 docs/plans/main-release-workflow.md 참조.
 on:
   pull_request:
     types: [closed]
@@ -44,14 +43,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          # 태그 비교를 위해 전체 히스토리와 태그를 가져온다.
           fetch-depth: 0
 
       - name: Resolve release version
         id: version
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          # 사용자 입력은 env로 받아 JSON 파싱/검증한다.
           PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
           MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
           INPUT_VERSION: ${{ github.event.inputs.version }}
@@ -59,62 +55,48 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            # 수동 보정: 입력 버전을 그대로 사용한다.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             next_tag="$INPUT_VERSION"
             target="${INPUT_TARGET:-main}"
           else
-            # 병합된 PR의 release:* label을 추출한다.
-            release_labels=$(printf '%s' "$PR_LABELS" | jq -c '[.[] | select(startswith("release:"))]')
-            count=$(printf '%s' "$release_labels" | jq 'length')
+            bump_labels=$(printf '%s' "$PR_LABELS" | jq -c '[.[] | select(. == "Bump-First" or . == "Bump-Second" or . == "Bump-Third")]')
+            count=$(printf '%s' "$bump_labels" | jq 'length')
 
             if [ "$count" -ne 1 ]; then
-              echo "::error::release label이 정확히 하나여야 합니다. 현재 개수: $count"
+              echo "::error::Bump label이 정확히 하나여야 합니다. 현재 개수: $count"
               exit 1
             fi
 
-            release_label=$(printf '%s' "$release_labels" | jq -r '.[0]')
-
-            if [ "$release_label" = "release:skip" ]; then
-              echo "release:skip label이므로 릴리즈를 생성하지 않습니다."
-              echo "skip=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-
-            # 병합 커밋 SHA를 릴리즈 대상으로 삼는다.
+            bump_label=$(printf '%s' "$bump_labels" | jq -r '.[0]')
             target="$MERGE_SHA"
 
-            # 최신 vA.B.C 태그를 기준으로 다음 버전을 계산한다.
             latest_tag="$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
             if [ -z "$latest_tag" ]; then
               latest_tag="v0.0.0"
             fi
             echo "최신 태그: $latest_tag"
 
-            # v 접두사를 떼고 major.minor.patch로 분해한다.
             version="${latest_tag#v}"
             major="${version%%.*}"
             rest="${version#*.}"
             minor="${rest%%.*}"
             patch="${rest##*.}"
 
-            case "$release_label" in
-              release:major) major=$((major + 1)); minor=0; patch=0 ;;
-              release:minor) minor=$((minor + 1)); patch=0 ;;
-              release:patch) patch=$((patch + 1)) ;;
-              *) echo "::error::알 수 없는 release label: $release_label"; exit 1 ;;
+            case "$bump_label" in
+              Bump-First) major=$((major + 1)); minor=0; patch=0 ;;
+              Bump-Second) minor=$((minor + 1)); patch=0 ;;
+              Bump-Third) patch=$((patch + 1)) ;;
+              *) echo "::error::알 수 없는 Bump label: $bump_label"; exit 1 ;;
             esac
 
             next_tag="v${major}.${minor}.${patch}"
           fi
 
-          # 버전 형식을 검증한다.
           if ! printf '%s' "$next_tag" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
             echo "::error::버전 형식이 올바르지 않습니다: $next_tag (예: v1.2.3)"
             exit 1
           fi
 
-          # 이미 존재하는 태그면 실패한다. 자동으로 다음 patch로 넘기지 않는다.
           if git rev-parse -q --verify "refs/tags/$next_tag" >/dev/null; then
             echo "::error::태그가 이미 존재합니다: $next_tag. 릴리즈 히스토리 불일치를 숨기지 않습니다."
             exit 1
@@ -126,9 +108,7 @@ jobs:
           echo "다음 릴리즈 태그: $next_tag (target: $target)"
 
       - name: Create GitHub Release
-        if: ${{ steps.version.outputs.skip != 'true' }}
         env:
-          # gh 인증은 GITHUB_TOKEN을 GH_TOKEN으로 넘긴다.
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_TAG: ${{ steps.version.outputs.next_tag }}
           TARGET: ${{ steps.version.outputs.target }}

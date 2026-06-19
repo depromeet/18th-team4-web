@@ -1,0 +1,28 @@
+changelog:
+  exclude:
+    labels:
+      - Bump-First
+      - Bump-Second
+      - Bump-Third
+      - dependencies
+      - ignore-for-release
+  categories:
+    - title: 🚀 기능
+      labels:
+        - feat
+        - feature
+        - enhancement
+    - title: 🐛 버그 수정
+      labels:
+        - fix
+        - bug
+        - bugfix
+    - title: 🧹 유지보수
+      labels:
+        - chore
+        - refactor
+        - docs
+        - ci
+    - title: 기타 변경사항
+      labels:
+        - '*'
