@@ -1,0 +1,141 @@
+name: Release Create
+
+# main으로 PR이 병합되면 Bump-* label에 따라 GitHub Release와 태그를 생성한다.
+# workflow_dispatch로 수동 보정(버전 고정/재시도)도 가능하다.
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version, e.g. v1.2.3'
+        required: true
+        type: string
+      target:
+        description: 'Target branch, tag, or SHA'
+        required: false
+        default: main
+        type: string
+      prerelease:
+        description: 'Mark as prerelease'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: main-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Resolve release version
+        id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          INPUT_TARGET: ${{ github.event.inputs.target }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            next_tag="$INPUT_VERSION"
+            target="${INPUT_TARGET:-main}"
+          else
+            bump_labels=$(printf '%s' "$PR_LABELS" | jq -c '[.[] | select(. == "Bump-First" or . == "Bump-Second" or . == "Bump-Third")]')
+            count=$(printf '%s' "$bump_labels" | jq 'length')
+
+            if [ "$count" -ne 1 ]; then
+              echo "::error::Bump label이 정확히 하나여야 합니다. 현재 개수: $count"
+              exit 1
+            fi
+
+            bump_label=$(printf '%s' "$bump_labels" | jq -r '.[0]')
+            target="$MERGE_SHA"
+
+            latest_tag="$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+            if [ -z "$latest_tag" ]; then
+              latest_tag="v0.0.0"
+            fi
+            echo "최신 태그: $latest_tag"
+
+            version="${latest_tag#v}"
+            major="${version%%.*}"
+            rest="${version#*.}"
+            minor="${rest%%.*}"
+            patch="${rest##*.}"
+
+            case "$bump_label" in
+              Bump-First) major=$((major + 1)); minor=0; patch=0 ;;
+              Bump-Second) minor=$((minor + 1)); patch=0 ;;
+              Bump-Third) patch=$((patch + 1)) ;;
+              *) echo "::error::알 수 없는 Bump label: $bump_label"; exit 1 ;;
+            esac
+
+            next_tag="v${major}.${minor}.${patch}"
+          fi
+
+          if ! printf '%s' "$next_tag" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::버전 형식이 올바르지 않습니다: $next_tag (예: v1.2.3)"
+            exit 1
+          fi
+
+          if git rev-parse -q --verify "refs/tags/$next_tag" >/dev/null; then
+            echo "::error::태그가 이미 존재합니다: $next_tag. 릴리즈 히스토리 불일치를 숨기지 않습니다."
+            exit 1
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "next_tag=$next_tag" >> "$GITHUB_OUTPUT"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          echo "다음 릴리즈 태그: $next_tag (target: $target)"
+
+      - name: Create GitHub Release
+        if: ${{ steps.version.outputs.skip != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_TAG: ${{ steps.version.outputs.next_tag }}
+          TARGET: ${{ steps.version.outputs.target }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+        run: |
+          set -euo pipefail
+
+          args=(
+            "$NEXT_TAG"
+            --target "$TARGET"
+            --title "$NEXT_TAG"
+            --generate-notes
+            --fail-on-no-commits
+          )
+
+          if [ "${PRERELEASE:-false}" = "true" ]; then
+            args+=(--prerelease)
+          fi
+
+          gh release create "${args[@]}"
+
+          release_url=$(gh release view "$NEXT_TAG" --json url --jq '.url')
+          echo "릴리즈 생성 완료: $release_url"
+
+          {
+            echo "## 릴리즈 생성 완료"
+            echo ""
+            echo "- 버전: \`$NEXT_TAG\`"
+            echo "- 대상: \`$TARGET\`"
+            echo "- URL: $release_url"
+          } >> "$GITHUB_STEP_SUMMARY"

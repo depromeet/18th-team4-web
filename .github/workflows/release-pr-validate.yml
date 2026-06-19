@@ -1,0 +1,62 @@
+name: Release PR Validate
+
+# main 대상 PR에 Bump-* label이 정확히 하나 있는지 검증한다.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, labeled, unlabeled, reopened, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-release-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate release label
+        env:
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          PR_BASE: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+
+          allowed='["Bump-First","Bump-Second","Bump-Third"]'
+
+          bump_labels=$(printf '%s' "$PR_LABELS" | jq -c '[.[] | select(. == "Bump-First" or . == "Bump-Second" or . == "Bump-Third")]')
+          count=$(printf '%s' "$bump_labels" | jq 'length')
+
+          if [ "$count" -eq 0 ]; then
+            echo "::error::main 대상 PR에는 Bump-First, Bump-Second, Bump-Third 중 하나가 필요합니다."
+            echo "현재 Bump label이 없습니다."
+            exit 1
+          fi
+
+          if [ "$count" -gt 1 ]; then
+            current=$(printf '%s' "$bump_labels" | jq -r 'join(", ")')
+            echo "::error::main 대상 PR에는 Bump-First, Bump-Second, Bump-Third 중 하나만 필요합니다."
+            echo "현재 label: $current"
+            exit 1
+          fi
+
+          label=$(printf '%s' "$bump_labels" | jq -r '.[0]')
+
+          if ! printf '%s' "$allowed" | jq -e --arg l "$label" 'index($l) != null' > /dev/null; then
+            echo "::error::알 수 없는 Bump label입니다: $label"
+            echo "허용 label: Bump-First, Bump-Second, Bump-Third"
+            exit 1
+          fi
+
+          if [ "$PR_BASE" != "main" ]; then
+            echo "::error::이 워크플로우는 main 대상 PR에서만 동작합니다. 현재 base: $PR_BASE"
+            exit 1
+          fi
+
+          case "$PR_HEAD" in
+            dev | hotfix/*)
+              : ;;
+            *)
+              echo "::warning::일반 릴리즈 PR의 head는 dev 또는 hotfix/* 를 권장합니다. 현재 head: $PR_HEAD" ;;
+          esac
+
+          echo "Bump label 검증 통과: $label (head: $PR_HEAD -> base: $PR_BASE)"
