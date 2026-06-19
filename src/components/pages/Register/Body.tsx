@@ -241,20 +241,25 @@ export const RegisterBody = () => {
               )}
             </div>
 
-            {shouldShowButton && (
-              <section className="btn-appear shrink-0 overflow-hidden bg-primary-base">
-                <div className="px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
-                  <Button
-                    size="lg"
-                    disabled={isPending}
-                    onClick={handleRegister}
-                    className="w-full rounded-[1.6rem]"
-                  >
-                    {isPending ? '등록 중...' : '책 등록하기'}
-                  </Button>
-                </div>
-              </section>
-            )}
+            <section
+              className={`register-button-shell shrink-0 bg-white ${
+                shouldShowButton
+                  ? 'register-button-shell-open'
+                  : 'register-button-shell-closed pointer-events-none select-none'
+              }`}
+              aria-hidden={!shouldShowButton}
+            >
+              <div className="register-button-content min-h-0 overflow-hidden px-[2.4rem] pt-[1.6rem] pb-[max(2.4rem,env(safe-area-inset-bottom))]">
+                <Button
+                  size="lg"
+                  disabled={isPending || !shouldShowButton}
+                  onClick={handleRegister}
+                  className="w-full rounded-[1.6rem]"
+                >
+                  {isPending ? '등록 중...' : '책 등록하기'}
+                </Button>
+              </div>
+            </section>
           </div>
         )}
       </div>
