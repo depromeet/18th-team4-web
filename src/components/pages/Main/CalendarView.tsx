@@ -92,7 +92,8 @@ export const CalendarView = (props: Props) => {
   const monthOptions = MONTHS.filter(
     (month) => draftYear > MIN_YEAR || month >= MIN_MONTH_INDEX + 1,
   );
-  const monthLabel = `${baseYear}. ${String(baseMonth + 1).padStart(2, '0')}`;
+  const monthText = String(baseMonth + 1).padStart(2, '0');
+  const monthLabel = `${baseYear}. ${monthText}`;
   const minCalendarMonthMs = MIN_CALENDAR_DATE.getTime();
 
   useEffect(() => {
@@ -273,10 +274,11 @@ export const CalendarView = (props: Props) => {
         <button
           type="button"
           onClick={openMonthPicker}
-          className="body2-bold min-w-0 flex-1 cursor-pointer whitespace-nowrap px-[1rem] text-left tracking-[-0.042rem] text-text-caption"
+          className="body2-bold min-w-0 flex-1 cursor-pointer whitespace-nowrap px-[1rem] text-left tracking-[-0.042rem] text-text-caption [font-variant-numeric:tabular-nums]"
           aria-label={`${monthLabel} 연월 선택`}
         >
-          {monthLabel}
+          <span className="body2-bold">{baseYear}</span>
+          <span className="body2-bold">. {monthText}</span>
         </button>
 
         <div className="flex items-center gap-[0.8rem]">

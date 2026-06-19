@@ -3,7 +3,8 @@ export const PATH_NAME = {
 
   chat: {
     list: () => '/chat',
-    detail: (sessionId: string) => `/chat/${sessionId}`,
+    start: () => '/chat',
+    detail: () => '/chat',
   },
 
   register: {

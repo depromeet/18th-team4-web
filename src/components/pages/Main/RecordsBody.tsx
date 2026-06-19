@@ -8,9 +8,9 @@ import {
   setLastSelectedUserBookIdClient,
   toLocalDateString,
   useCalendarStore,
-  useCreateSession,
   useGetSummaryCalendar,
   usePatchLastSelectedUserBook,
+  usePendingChatStore,
   type UserBookItem,
   useToastStore,
 } from '@/lib';
@@ -29,7 +29,7 @@ export const RecordsBody = (props: Props) => {
   const { userBookId, books } = props;
   const router = useRouter();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
-  const { mutateAsync: createSessionAsync } = useCreateSession();
+  const setPendingUserBookId = usePendingChatStore((s) => s.setUserBookId);
 
   const selectedDate = useCalendarStore((s) => s.selectedDate);
   const setSelectedDate = useCalendarStore((s) => s.setSelectedDate);
@@ -64,14 +64,14 @@ export const RecordsBody = (props: Props) => {
 
   const handleStartChat = async (bookId: number) => {
     try {
-      const sessionData = await createSessionAsync(bookId);
       try {
         await patchLastSelected(bookId);
       } catch {
         console.warn('[RecordsBody] lastSelectedUserBookId 동기화 실패');
       }
       setLastSelectedUserBookIdClient(bookId);
-      router.push(PATH_NAME.chat.detail(String(sessionData.sessionId)));
+      setPendingUserBookId(bookId);
+      router.push(PATH_NAME.chat.start());
     } catch {
       openToast({ type: 'error', message: '대화를 시작할 수 없어요. 잠시 후 다시 시도해주세요.' });
     }

@@ -7,7 +7,6 @@ import { CHAT_STATUS, PATH_NAME } from '@/constants';
 import {
   cn,
   setLastSelectedUserBookIdClient,
-  useCreateSession,
   usePatchLastSelectedUserBook,
   usePendingChatStore,
   type UserBookItem,
@@ -22,7 +21,6 @@ type Props = {
 export const MainFooter = (props: Props) => {
   const { books = [], selectedUserBookId, onSelectUserBook } = props;
   const router = useRouter();
-  const { mutateAsync: createSessionAsync } = useCreateSession();
   const { mutateAsync: patchLastSelected } = usePatchLastSelectedUserBook();
   const peekRef = useRef<HTMLDivElement | null>(null);
 
@@ -38,21 +36,22 @@ export const MainFooter = (props: Props) => {
   const sheetOpen = hasMultipleBooks && isSheetOpen;
 
   const setPendingMessage = usePendingChatStore((s) => s.set);
+  const setPendingUserBookId = usePendingChatStore((s) => s.setUserBookId);
 
   const handleSend = async () => {
     const trimmed = inputValue.trim();
     if (!trimmed || isNavigatingToChat) return;
     setIsNavigatingToChat(true);
     setPendingMessage(trimmed);
+    setPendingUserBookId(selectedUserBookId);
     try {
-      const data = await createSessionAsync(selectedUserBookId);
       try {
         await patchLastSelected(selectedUserBookId);
       } catch {
         console.warn('[MainFooter] lastSelectedUserBookId 동기화 실패');
       }
       setLastSelectedUserBookIdClient(selectedUserBookId);
-      router.push(PATH_NAME.chat.detail(String(data.sessionId)));
+      router.push(PATH_NAME.chat.start());
     } catch {
       setIsNavigatingToChat(false);
       // 세션 생성 실패 시 상위(쿼리/토스트 등)에서 처리

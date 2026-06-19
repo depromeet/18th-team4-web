@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { BookmarkCheckIcon, CHAT_CARD_COLOR_SEQUENCE, ChatCard } from '@/components';
 import { PATH_NAME } from '@/constants';
-import { type SummaryCalendarItem } from '@/lib';
+import { type SummaryCalendarItem, usePendingChatStore } from '@/lib';
 
 type Props = {
   records: SummaryCalendarItem[];
@@ -83,6 +83,7 @@ const SixAMCountdownPie = () => {
 
 export const SessionList = (props: Props) => {
   const { records, onNavigate } = props;
+  const setPendingSessionId = usePendingChatStore((s) => s.setSessionId);
 
   return (
     <div className="mt-[2.4rem] flex flex-col gap-[1.2rem]">
@@ -102,14 +103,19 @@ export const SessionList = (props: Props) => {
           const isSummarized = record.summaryId !== null;
           const path = isSummarized
             ? PATH_NAME.summary.detail(String(record.summaryId))
-            : PATH_NAME.chat.detail(String(record.chatSessionId));
+            : PATH_NAME.chat.detail();
 
           return (
             <li key={record.chatSessionId}>
               <button
                 type="button"
                 className="w-full cursor-pointer text-left"
-                onClick={() => void onNavigate(path)}
+                onClick={() => {
+                  if (!isSummarized) {
+                    setPendingSessionId(String(record.chatSessionId));
+                  }
+                  void onNavigate(path);
+                }}
               >
                 <div className="relative">
                   <ChatCard
