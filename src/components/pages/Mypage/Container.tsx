@@ -129,6 +129,7 @@ export const MypageContainer = (props: Props) => {
       <Header
         variant={HEADER_VARIANT.BACK}
         onBack={() => router.push(PATH_NAME.main())}
+        glassOnScroll
         className="bg-white"
       />
 

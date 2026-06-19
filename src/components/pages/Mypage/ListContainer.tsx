@@ -164,7 +164,12 @@ export const MypageListContainer = (props: Props) => {
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
-      <Header variant={HEADER_VARIANT.BACK} onBack={() => router.back()} className="bg-white" />
+      <Header
+        variant={HEADER_VARIANT.BACK}
+        onBack={() => router.back()}
+        glassOnScroll
+        className="bg-white"
+      />
 
       <TabView
         value={activeTab}
