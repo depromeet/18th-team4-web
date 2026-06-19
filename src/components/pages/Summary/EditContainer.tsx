@@ -117,7 +117,7 @@ export const SummaryEditContainer = (props: Props) => {
           value={body}
           onChange={(event) => setBody(event.target.value)}
           placeholder="요약 내용을 입력하세요."
-          className="caption1-medium-reading w-full flex-1 resize-none tracking-[-0.03em] text-text-description outline-none placeholder:text-text-caption"
+          className="body1-medium w-full flex-1 resize-none tracking-[-0.04em] text-text-description outline-none placeholder:text-text-caption"
         />
       </div>
     </div>

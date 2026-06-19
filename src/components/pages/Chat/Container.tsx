@@ -138,6 +138,7 @@ export const ChatContainer = () => {
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
   const [footerHeight, setFooterHeight] = useState(160);
+  const [showProgressTooltip, setShowProgressTooltip] = useState(false);
   const [showReadyTooltip, setShowReadyTooltip] = useState(false);
   const [sessionLimitExceededCode, setSessionLimitExceededCode] =
     useState<SessionLimitExceededCode | null>(null);
@@ -203,6 +204,27 @@ export const ChatContainer = () => {
   const prevExtraFooterOffsetRef = useRef(0);
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const appRoot = document.querySelector('body > main') as HTMLElement | null;
+    const prevHtmlBackground = html.style.backgroundColor;
+    const prevBodyBackground = body.style.backgroundColor;
+    const prevAppRootBackground = appRoot?.style.backgroundColor;
+
+    html.style.backgroundColor = '#ffffff';
+    body.style.backgroundColor = '#ffffff';
+    if (appRoot) appRoot.style.backgroundColor = '#ffffff';
+
+    return () => {
+      html.style.backgroundColor = prevHtmlBackground;
+      body.style.backgroundColor = prevBodyBackground;
+      if (appRoot && prevAppRootBackground !== undefined) {
+        appRoot.style.backgroundColor = prevAppRootBackground;
+      }
+    };
+  }, []);
 
   const handleCreateSummary = async () => {
     if (!canSummarize || !sessionId) return;
@@ -291,6 +313,7 @@ export const ChatContainer = () => {
         const sessionData = await createSessionAsync(pendingUserBookId);
         activeSessionId = String(sessionData.sessionId);
         setCreatedSessionId(activeSessionId);
+        setShowProgressTooltip(true);
         clearPendingUserBookId();
       }
 
@@ -390,7 +413,7 @@ export const ChatContainer = () => {
           variant={HEADER_VARIANT.CHAT}
           onBack={() => router.replace(PATH_NAME.main())}
           progress={progress}
-          showProgressTooltip={!showReadyTooltip}
+          spacerClassName="hidden"
           rightSlot={
             canSummarize ? (
               <div className="relative flex shrink-0 flex-col items-end">
@@ -415,6 +438,15 @@ export const ChatContainer = () => {
             ) : null
           }
         />
+        {showProgressTooltip ? (
+          <div className="fixed left-1/2 top-[7.2rem] z-40 w-full max-w-mobile-responsive -translate-x-1/2 px-[2.4rem]">
+            <AnimateTooltip
+              arrowSide="top"
+              arrowAlignment="left"
+              content="요약 생성까지 필요한 대화량이에요"
+            />
+          </div>
+        ) : null}
         <div className="h-[2rem] bg-text-white shrink-0" />
 
         <main
