@@ -405,15 +405,14 @@ export const ChatContainer = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="bg-text-white pointer-events-none absolute inset-x-0 bottom-0 top-[30%]" />
+    <div className="relative min-h-dvh">
+      <div className="bg-text-white pointer-events-none fixed bottom-0 left-1/2 top-[30%] z-0 w-full max-w-mobile-responsive -translate-x-1/2" />
 
-      <div className="relative z-10 flex h-screen flex-col">
+      <div className="relative z-10">
         <Header
           variant={HEADER_VARIANT.CHAT}
           onBack={() => router.replace(PATH_NAME.main())}
           progress={progress}
-          spacerClassName="hidden"
           rightSlot={
             canSummarize ? (
               <div className="relative flex shrink-0 flex-col items-end">
@@ -447,10 +446,10 @@ export const ChatContainer = () => {
             />
           </div>
         ) : null}
-        <div className="h-[2rem] bg-text-white shrink-0" />
+        <div className="h-[2rem] bg-text-white" />
 
         <main
-          className="bg-text-white scrollbar-hide min-h-0 flex-1 overflow-y-auto px-[2.4rem] pt-[1.6rem]"
+          className="bg-text-white px-[2.4rem] pt-[1.6rem]"
           style={{ paddingBottom: `${footerHeight + CHAT_BOTTOM_GAP}px` }}
         >
           <div ref={topRef} />
@@ -473,14 +472,14 @@ export const ChatContainer = () => {
             )}
             <div
               ref={bottomRef}
-              style={{ scrollMarginBottom: `${extraFooterOffset + CHAT_BOTTOM_GAP}px` }}
+              style={{ scrollMarginBottom: `${footerHeight + CHAT_BOTTOM_GAP}px` }}
             />
           </div>
         </main>
 
         <footer
           ref={footerRef}
-          className="bg-white/68 bg-gradient-footer absolute inset-x-0 bottom-0 z-20 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125"
+          className="bg-white/68 bg-gradient-footer fixed bottom-0 left-1/2 z-20 w-full max-w-mobile-responsive -translate-x-1/2 rounded-t-[24px] border border-white/35 border-b-0 px-[2.4rem] py-8 shadow-[0_-10px_36px_-14px_rgba(23,28,27,0.06)] backdrop-blur-[42px] backdrop-saturate-125"
         >
           <TextfieldChat
             bgVariant={CHAT_BG_VARIANT.WHITE}
