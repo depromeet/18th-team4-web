@@ -129,17 +129,26 @@ export const StartChatBookSheet = (props: Props) => {
           ))}
         </ul>
 
-        {pickedId !== undefined && (
-          <div className="btn-appear pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden bg-gradient-to-b from-transparent to-white to-[20%] px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
+        <div
+          className={cn(
+            'start-chat-button-shell pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-b from-transparent to-white to-[20%]',
+            pickedId !== undefined
+              ? 'start-chat-button-shell-open'
+              : 'start-chat-button-shell-closed',
+          )}
+          aria-hidden={pickedId === undefined}
+        >
+          <div className="start-chat-button-content min-h-0 overflow-hidden px-[2.4rem] pt-[3.2rem] pb-[2.4rem]">
             <button
               type="button"
               onClick={handleConfirm}
-              className="body1-bold pointer-events-auto w-full cursor-pointer rounded-[1.6rem] bg-gray-900 py-[1.8rem] text-center text-white"
+              disabled={pickedId === undefined}
+              className="body1-bold pointer-events-auto w-full cursor-pointer rounded-[1.6rem] bg-gray-900 py-[1.8rem] text-center text-white disabled:cursor-default"
             >
               확인
             </button>
           </div>
-        )}
+        </div>
       </div>
     </BottomSheet>
   );
