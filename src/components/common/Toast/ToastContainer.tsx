@@ -25,9 +25,12 @@ export const ToastContainer = () => {
   const toasts = useToastStore((s) => s.toasts);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-0 z-50 mx-auto flex w-full max-w-mobile-responsive flex-col items-center gap-[0.8rem] px-[2.4rem] pt-[2.4rem]">
+    <div className="pointer-events-none fixed inset-x-0 top-0 z-50 mx-auto flex w-full max-w-mobile-responsive flex-col items-center gap-[0.8rem] overflow-visible px-[2.4rem] pt-[2.4rem]">
       {toasts.map((toast) => (
-        <div key={toast.id} className="pointer-events-auto w-full flex justify-center">
+        <div
+          key={toast.id}
+          className="pointer-events-auto flex w-full justify-center overflow-visible"
+        >
           <ToastTimer id={toast.id} duration={toast.duration} />
           <Toast type={toast.type} message={toast.message} />
         </div>
