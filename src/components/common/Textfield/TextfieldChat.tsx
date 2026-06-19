@@ -52,7 +52,7 @@ export const TextfieldChat = (props: Props) => {
         disabled={isDisabled}
         rows={1}
         className={cn(
-          'scrollbar-hide w-full min-w-0 resize-none overflow-y-auto outline-none disabled:cursor-not-allowed',
+          'chat-scrollbar w-full min-w-0 resize-none overflow-y-auto outline-none disabled:cursor-not-allowed',
           inputVariants({ status }),
         )}
         placeholder={placeholder}
