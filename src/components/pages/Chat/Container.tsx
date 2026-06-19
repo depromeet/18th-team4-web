@@ -204,6 +204,27 @@ export const ChatContainer = () => {
 
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const appRoot = document.querySelector('body > main') as HTMLElement | null;
+    const prevHtmlBackground = html.style.backgroundColor;
+    const prevBodyBackground = body.style.backgroundColor;
+    const prevAppRootBackground = appRoot?.style.backgroundColor;
+
+    html.style.backgroundColor = '#ffffff';
+    body.style.backgroundColor = '#ffffff';
+    if (appRoot) appRoot.style.backgroundColor = '#ffffff';
+
+    return () => {
+      html.style.backgroundColor = prevHtmlBackground;
+      body.style.backgroundColor = prevBodyBackground;
+      if (appRoot && prevAppRootBackground !== undefined) {
+        appRoot.style.backgroundColor = prevAppRootBackground;
+      }
+    };
+  }, []);
+
   const handleCreateSummary = async () => {
     if (!canSummarize || !sessionId) return;
 
