@@ -21,8 +21,8 @@ import {
   setLastSelectedUserBookIdClient,
   useAddUserBook,
   useBookSearch,
-  useCreateSession,
   useGetUserBooks,
+  usePendingChatStore,
 } from '@/lib';
 
 const SEARCH_DEBOUNCE_UI_MS = 500;
@@ -36,6 +36,7 @@ const SearchMinLengthHint = () => {
 
 export const RegisterBody = () => {
   const router = useRouter();
+  const setPendingUserBookId = usePendingChatStore((s) => s.setUserBookId);
 
   const [query, setQuery] = useState('');
   const [selectedIsbn, setSelectedIsbn] = useState<string | null>(null);
@@ -51,7 +52,6 @@ export const RegisterBody = () => {
   const { data: userBooksData, refetch: refetchUserBooks } = useGetUserBooks();
 
   const { mutateAsync: addBookAsync, isPending: isAddingBook } = useAddUserBook();
-  const { mutateAsync: createSessionAsync, isPending: isCreatingSession } = useCreateSession();
 
   const minKeywordUnits = BOOK_SEARCH_MIN_CHARS ?? 2;
 
@@ -123,7 +123,7 @@ export const RegisterBody = () => {
     if (!query.trim()) return;
   };
 
-  const isPending = isAddingBook || isCreatingSession;
+  const isPending = isAddingBook;
 
   const findRegisteredUserBookId = async () => {
     if (!selectedBook) return null;
@@ -141,9 +141,9 @@ export const RegisterBody = () => {
   };
 
   const startChatWithBook = async (userBookId: number) => {
-    const sessionData = await createSessionAsync(userBookId);
     setLastSelectedUserBookIdClient(userBookId);
-    router.push(`${PATH_NAME.register.complete()}?sessionId=${sessionData.sessionId}`);
+    setPendingUserBookId(userBookId);
+    router.push(PATH_NAME.register.complete());
   };
 
   const handleRegister = async () => {
@@ -269,7 +269,6 @@ export const RegisterBody = () => {
         modalType="DUPLICATE_BOOK"
         onCancel={() => setDuplicateUserBookId(null)}
         onConfirm={handleDuplicateConfirm}
-        confirmDisabled={isCreatingSession}
       />
     </>
   );

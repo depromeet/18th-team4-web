@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import {
   AnimateTooltip,
@@ -23,6 +23,7 @@ import {
   formatChatTime,
   streamChatMessage,
   useCheckSummaryEligibility,
+  useCreateSession,
   useGetMessages,
   usePendingChatStore,
 } from '@/lib';
@@ -115,10 +116,14 @@ const CHAT_BOTTOM_GAP = 16;
 
 export const ChatContainer = () => {
   const router = useRouter();
-  const params = useParams<{ sessionId: string }>();
-  const sessionId = params.sessionId;
+  const pendingSessionId = usePendingChatStore((s) => s.sessionId);
+  const [createdSessionId, setCreatedSessionId] = useState<string | null>(null);
+  const sessionId = pendingSessionId ?? createdSessionId ?? '';
   const queryClient = useQueryClient();
   const consumePendingMessage = usePendingChatStore((s) => s.consume);
+  const pendingUserBookId = usePendingChatStore((s) => s.userBookId);
+  const clearPendingUserBookId = usePendingChatStore((s) => s.clearUserBookId);
+  const { mutateAsync: createSessionAsync } = useCreateSession();
 
   const { isOpen, mountKey, open, close } = useModal();
   const {
@@ -150,7 +155,6 @@ export const ChatContainer = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isFetched,
   } = useGetMessages(sessionId);
 
   const historyChats: ChatMessage[] = mapInfinitePagesToHistoryChats(messagesData);
@@ -201,7 +205,7 @@ export const ChatContainer = () => {
   const visiblePendingChats = stripPendingSyncedWithHistoryTail(historyChats, newChats);
 
   const handleCreateSummary = async () => {
-    if (!canSummarize) return;
+    if (!canSummarize || !sessionId) return;
 
     router.push(PATH_NAME.summary.session(sessionId, undefined, true));
   };
@@ -213,8 +217,7 @@ export const ChatContainer = () => {
   };
 
   const baseChats = [...historyChats, ...visiblePendingChats];
-  const firstIsAI = historyChats.length > 0 && historyChats[0].user === CHAT_USER.AI;
-  const allChats = isFetched && !firstIsAI ? [GREETING_MESSAGE, ...baseChats] : baseChats;
+  const allChats = [GREETING_MESSAGE, ...baseChats];
   const lastAIIndex = allChats.reduce(
     (last, chat, i) => (chat.user === CHAT_USER.AI ? i : last),
     -1,
@@ -273,9 +276,25 @@ export const ChatContainer = () => {
     setStreamingContent('');
     let accumulated = '';
     let streamFinished = false;
+    let activeSessionId = sessionId;
 
     try {
-      await streamChatMessage(sessionId, trimmedMessage, {
+      if (!activeSessionId) {
+        if (
+          !pendingUserBookId ||
+          !Number.isSafeInteger(pendingUserBookId) ||
+          pendingUserBookId <= 0
+        ) {
+          throw new Error('Missing userBookId');
+        }
+
+        const sessionData = await createSessionAsync(pendingUserBookId);
+        activeSessionId = String(sessionData.sessionId);
+        setCreatedSessionId(activeSessionId);
+        clearPendingUserBookId();
+      }
+
+      await streamChatMessage(activeSessionId, trimmedMessage, {
         onToken: (delta) => {
           accumulated += delta;
           setStreamingContent(accumulated);
@@ -297,7 +316,9 @@ export const ChatContainer = () => {
               message: accumulated,
             },
           ]);
-          void queryClient.invalidateQueries({ queryKey: QUERY_KEY.aiChat.messages(sessionId) });
+          void queryClient.invalidateQueries({
+            queryKey: QUERY_KEY.aiChat.messages(activeSessionId),
+          });
         },
         onError: (data) => {
           streamFinished = true;
@@ -305,7 +326,7 @@ export const ChatContainer = () => {
           setStreamingContent('');
           if (data.code === 'SESSION_LOCKED') {
             open();
-            void refetchEligibility();
+            if (activeSessionId) void refetchEligibility();
             return;
           }
           if (isSessionLimitExceededCode(data.code)) {
@@ -327,6 +348,14 @@ export const ChatContainer = () => {
       streamFinished = true;
       setIsStreaming(false);
       setStreamingContent('');
+      setNewChats((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          user: CHAT_USER.AI,
+          message: '대화를 시작할 수 없어요. 잠시 후 다시 시도해주세요.',
+        },
+      ]);
     } finally {
       if (!streamFinished) {
         setIsStreaming(false);
@@ -338,7 +367,7 @@ export const ChatContainer = () => {
           ]);
         }
       }
-      if (!canSummarize) void refetchEligibility();
+      if (activeSessionId && !canSummarize) void refetchEligibility();
     }
   };
 

@@ -20,6 +20,7 @@ import {
   formatDate,
   type SessionStatus,
   useDeleteUserBook,
+  usePendingChatStore,
   useToastStore,
 } from '@/lib';
 
@@ -35,7 +36,7 @@ const SESSION_STATUS_TO_CARD: Record<
 };
 
 const getSessionPath = (sessionId: number, status: SessionStatus) => {
-  if (status === 'ACTIVE') return PATH_NAME.chat.detail(String(sessionId));
+  if (status === 'ACTIVE') return PATH_NAME.chat.detail();
   return PATH_NAME.summary.session(String(sessionId));
 };
 
@@ -108,6 +109,7 @@ export const BookDetailContainer = (props: Props) => {
   const router = useRouter();
   const { isOpen, mountKey, open, close } = useModal();
   const { mutateAsync: deleteBook, isPending: isDeleting } = useDeleteUserBook();
+  const setPendingSessionId = usePendingChatStore((s) => s.setSessionId);
   const openToast = useToastStore((s) => s.openToast);
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const handleCloseCover = useCallback(() => setIsCoverOpen(false), []);
@@ -196,7 +198,12 @@ export const BookDetailContainer = (props: Props) => {
                   <button
                     type="button"
                     className="w-full cursor-pointer text-left"
-                    onClick={() => router.push(path)}
+                    onClick={() => {
+                      if (session.status === 'ACTIVE') {
+                        setPendingSessionId(String(session.sessionId));
+                      }
+                      router.push(path);
+                    }}
                   >
                     <ChatCard
                       color={color}

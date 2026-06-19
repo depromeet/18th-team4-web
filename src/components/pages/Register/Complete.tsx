@@ -4,17 +4,12 @@ import { useRouter } from 'next/navigation';
 import { Header, HEADER_VARIANT, MainSymbolIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 
-type Props = {
-  sessionId?: string;
-};
-
-export const RegisterComplete = (props: Props) => {
-  const { sessionId } = props;
+export const RegisterComplete = () => {
   const router = useRouter();
 
   const handleAnimationEnd = () => {
     router.refresh();
-    router.replace(sessionId ? PATH_NAME.chat.detail(sessionId) : PATH_NAME.main());
+    router.replace(PATH_NAME.chat.start());
   };
 
   return (
