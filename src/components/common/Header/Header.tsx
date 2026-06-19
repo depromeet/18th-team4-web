@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Logo } from '@/assets';
-import { AnimateTooltip, ArrowIcon, PlusIcon, UserIcon } from '@/components';
+import { ArrowIcon, PlusIcon, UserIcon } from '@/components';
 import { PATH_NAME } from '@/constants';
 import { cn } from '@/lib';
 import { HEADER_VARIANT, HeaderVariant, headerVariants } from './headerVariants';
@@ -16,7 +16,7 @@ type HeaderProps = React.ComponentProps<'header'> &
     onBack?: () => void;
     progress?: number;
     rightSlot?: React.ReactNode;
-    showProgressTooltip?: boolean;
+    spacerClassName?: string;
   };
 
 const SLIDE_OUT_DURATION_MS = 280;
@@ -47,7 +47,7 @@ export const Header = (props: HeaderProps) => {
     onBack,
     progress,
     rightSlot,
-    showProgressTooltip = true,
+    spacerClassName,
     ...rest
   } = props;
   const [isScrolled, setIsScrolled] = useState(false);
@@ -152,15 +152,13 @@ export const Header = (props: HeaderProps) => {
               className="h-full rounded-[999px] bg-gray-700 transition-[width] duration-300 ease-out"
               style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
             />
-            {showProgressTooltip ? (
-              <figcaption className="pt-[1.2rem]">
-                <AnimateTooltip arrowAlignment="left" content="요약 생성까지 필요한 대화량이에요" />
-              </figcaption>
-            ) : null}
           </figure>
         )}
       </header>
-      <div aria-hidden className={cn('w-full shrink-0', HEADER_SPACER_HEIGHT[variant!])} />
+      <div
+        aria-hidden
+        className={cn('w-full shrink-0', HEADER_SPACER_HEIGHT[variant!], spacerClassName)}
+      />
     </>
   );
 };

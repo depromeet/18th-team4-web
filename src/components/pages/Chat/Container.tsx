@@ -390,7 +390,7 @@ export const ChatContainer = () => {
           variant={HEADER_VARIANT.CHAT}
           onBack={() => router.replace(PATH_NAME.main())}
           progress={progress}
-          showProgressTooltip={!showReadyTooltip}
+          spacerClassName="hidden"
           rightSlot={
             canSummarize ? (
               <div className="relative flex shrink-0 flex-col items-end">
