@@ -19,10 +19,22 @@ export const BookCard = (props: Props) => {
           aria-hidden
           className="absolute inset-0 rotate-6 overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 opacity-80 shadow-[0_0_3.2rem_rgba(0,0,0,0.18)]"
         >
-          <Image src={coverSrc} alt="" fill className="object-cover blur-[0.25rem]" sizes="104px" />
+          <Image
+            src={coverSrc}
+            alt=""
+            fill
+            className="rounded-[inherit] object-cover blur-[0.25rem]"
+            sizes="104px"
+          />
         </div>
         <div className="relative h-full w-full overflow-hidden rounded-[1.2rem] border border-gray-alpha-100 shadow-[0_0_3.2rem_rgba(0,0,0,0.18)]">
-          <Image src={coverSrc} alt={book.title} fill className="object-cover" sizes="104px" />
+          <Image
+            src={coverSrc}
+            alt={book.title}
+            fill
+            className="rounded-[inherit] object-cover"
+            sizes="104px"
+          />
         </div>
         <span
           className={cn(
