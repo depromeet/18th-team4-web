@@ -138,6 +138,7 @@ export const ChatContainer = () => {
   const [message, setMessage] = useState('');
   const [newChats, setNewChats] = useState<ChatMessage[]>([]);
   const [footerHeight, setFooterHeight] = useState(160);
+  const [showProgressTooltip, setShowProgressTooltip] = useState(false);
   const [showReadyTooltip, setShowReadyTooltip] = useState(false);
   const [sessionLimitExceededCode, setSessionLimitExceededCode] =
     useState<SessionLimitExceededCode | null>(null);
@@ -312,6 +313,7 @@ export const ChatContainer = () => {
         const sessionData = await createSessionAsync(pendingUserBookId);
         activeSessionId = String(sessionData.sessionId);
         setCreatedSessionId(activeSessionId);
+        setShowProgressTooltip(true);
         clearPendingUserBookId();
       }
 
@@ -436,6 +438,15 @@ export const ChatContainer = () => {
             ) : null
           }
         />
+        {showProgressTooltip ? (
+          <div className="fixed left-1/2 top-[7.2rem] z-40 w-full max-w-mobile-responsive -translate-x-1/2 px-[2.4rem]">
+            <AnimateTooltip
+              arrowSide="top"
+              arrowAlignment="left"
+              content="요약 생성까지 필요한 대화량이에요"
+            />
+          </div>
+        ) : null}
         <div className="h-[2rem] bg-text-white shrink-0" />
 
         <main
