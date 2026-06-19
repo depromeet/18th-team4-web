@@ -4,7 +4,7 @@ import { createResponseSchema } from '@/lib';
 export const SummaryListItemSchema = z.object({
   summaryId: z.number(),
   bookTitle: z.string(),
-  content: z.string(),
+  sessionTitle: z.string(),
   createdAt: z.string(),
 });
 
