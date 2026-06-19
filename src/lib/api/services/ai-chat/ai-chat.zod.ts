@@ -11,6 +11,7 @@ export const SessionStatusSchema = z.enum([
 
 export const BookSessionItemSchema = z.object({
   sessionId: z.number(),
+  sessionTitle: z.string().nullable().optional(),
   latestSummaryContent: z.string().nullable(),
   lastChattedDate: z.string(),
   status: SessionStatusSchema.optional(),
